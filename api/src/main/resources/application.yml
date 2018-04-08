@@ -4,7 +4,7 @@ spring:
     url: jdbc:mysql://localhost:3306/photos?useSSL=false
     username: root
     password: michal
-  #jpa:
-    #hibernate.ddl-auto: update
-    #generate-ddl: true
-    #show-sql: true
+  jpa:
+    hibernate.ddl-auto: update
+    generate-ddl: true
+    show-sql: true
