@@ -20,15 +20,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeRequests()
-                .antMatchers("/api/v1/**").hasRole(ADMIN)
-                .and()
-                .formLogin();
+                .antMatchers("**/**").permitAll();
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-                .withUser("admin").password("{noop}admin").roles(USER,ADMIN);
+                .withUser("admin").password("{noop}admin").roles(USER, ADMIN);
 
     }
 }

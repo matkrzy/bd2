@@ -2,9 +2,7 @@ package com.photos.api.models;
 
 import org.springframework.hateoas.ResourceSupport;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -12,7 +10,8 @@ import javax.validation.constraints.NotNull;
  * @version 1.0
  */
 
-
+@Entity
+@Table(name = "photo_exif")
 public class PhotoExif extends ResourceSupport {
 
     @Id

@@ -11,7 +11,8 @@ import javax.validation.constraints.NotNull;
  * @version 1.0
  */
 
-
+@Entity
+@Table(name = "share")
 public class Share extends ResourceSupport {
 
     @Id

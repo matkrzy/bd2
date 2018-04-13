@@ -11,7 +11,8 @@ import java.sql.Timestamp;
  * @version 1.0
  */
 
-
+@Entity
+@Table(name = "rate")
 public class Rate extends ResourceSupport {
 
     @Id

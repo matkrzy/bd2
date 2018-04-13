@@ -10,7 +10,8 @@ import javax.validation.constraints.NotNull;
  * @version 1.0
  */
 
-
+@Entity
+@Table(name = "photo_to_category")
 public class PhotoToCategory extends ResourceSupport {
 
     @Id

@@ -1,5 +1,6 @@
 package com.photos.api.controllers;
 
+import com.photos.api.enums.Role;
 import com.photos.api.models.User;
 import com.photos.api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,11 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/all")
+    @GetMapping("/")
     public List<User> getAll() {
         List<User> users = userRepository.findAll();
+      //  User user = new User("m","a","sd","sd","sd",Role.USER);
+       // userRepository.save(user);
         return users;
     }
 

@@ -22,27 +22,27 @@ public class User extends ResourceSupport {
     @Column(name = "id")
     private Long userID;
 
-    @NotBlank
+
     @Column(name = "first_name")
     private String firstName;
 
-    @NotBlank
+
     @Column(name = "last_name")
     private String lastName;
 
-    @NotBlank
+
     @Column(name = "email")
     private String email;
 
-    @NotBlank
+
     @Column(name = "login")
     private String login;
 
-    @NotBlank
+
     @Column(name = "password_hash")
     private String password;
 
-    @NotBlank
+
     @Column(name = "role")
     private Role role;
 
@@ -103,9 +103,10 @@ public class User extends ResourceSupport {
         this.role = role;
     }
 
-    public User(){}
+    public User() {
+    }
 
-    public User(@NotBlank String firstName, @NotBlank String lastName, @NotBlank String email, @NotBlank String login, @NotBlank String password, @NotBlank Role role) {
+    public User(String firstName, String lastName, String email, String login, String password, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
