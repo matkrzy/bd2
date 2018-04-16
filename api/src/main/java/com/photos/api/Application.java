@@ -2,13 +2,14 @@ package com.photos.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.stereotype.Controller;
 
 /**
  * @author Micha Królewski on 2018-04-07.
  * @version 1.0
  */
 
-
+@Controller
 @SpringBootApplication
 public class Application {
 

@@ -1,4 +1,4 @@
-package com.photos.api.config;
+package com.photos.api.configs;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

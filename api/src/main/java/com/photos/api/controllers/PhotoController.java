@@ -6,6 +6,7 @@ import com.photos.api.models.Photo;
 import com.photos.api.models.User;
 import com.photos.api.repositories.PhotoRepository;
 import com.photos.api.repositories.UserRepository;
+import com.photos.api.services.PhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.web.bind.annotation.*;
@@ -23,33 +24,20 @@ import java.util.List;
 public class PhotoController {
 
     @Autowired
-    private PhotoRepository photoRepository;
-    @Autowired
-    private UserRepository userRepository;
+    private PhotoService photoService;
 
     @GetMapping("/")
     public List<Photo> getAll() {
-        User user = userRepository.findUserByUserID(1l);
-
-        ////Photo photo = new Photo("",user,"",new Timestamp(System.currentTimeMillis()),"",ShareState.PUBLIC,PhotoState.ACTIVE);
-       // photoRepository.save(photo);
-
-//        User user = userRepository.findUserByUserID(1l);
-        List<Photo> photoList = photoRepository.findAll();
-//        photoList.get(1).add(ControllerLinkBuilder.linkTo(UserController.class).slash(user.getUserID()).withSelfRel());
-        return photoList;
+        return photoService.getAll();
     }
 
     @GetMapping("/{id}")
     public Photo getOne(@PathVariable(value = "id") final Long id) {
-        return photoRepository.findPhotoByPhotoID(id);
+        return photoService.getOne(id);
     }
 
     @PostMapping("/add")
     public List<Photo> addPhoto(@RequestBody final Photo photo) {
-        photoRepository.save(photo);
-        return photoRepository.findAll();
+        return photoService.addPhoto(photo);
     }
-
-
 }

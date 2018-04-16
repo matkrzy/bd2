@@ -3,13 +3,14 @@ package com.photos.api.controllers;
 import com.photos.api.enums.Role;
 import com.photos.api.models.User;
 import com.photos.api.repositories.UserRepository;
+import com.photos.api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -22,20 +23,21 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @GetMapping("/")
     public List<User> getAll() {
-        List<User> users = userRepository.findAll();
-      //  User user = new User("m","a","sd","sd","sd",Role.USER);
-       // userRepository.save(user);
-        return users;
+        return userService.getAll();
     }
 
     @GetMapping("/{id}")
     public User getOne(@PathVariable(value = "id") final Long id) {
-        User user = userRepository.findUserByUserID(id);
-        user.add(ControllerLinkBuilder.linkTo(UserController.class).slash(user.getUserID()).withSelfRel());
-        return user;
+        return userService.getOne(id);
+    }
+
+    @PostMapping("users/Check")
+    @ResponseBody
+    private ModelAndView checkUser(@ModelAttribute(value = "user") @Valid final User user, BindingResult bindingResult){
+        return userService.logInUserAndAdmin(user);
     }
 }
