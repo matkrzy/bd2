@@ -23,18 +23,12 @@ public class PhotoService {
 
     @Autowired
     private PhotoRepository photoRepository;
+
     @Autowired
     private UserRepository userRepository;
 
     public List<Photo> getAll() {
-        User user = userRepository.findUserByUserID(1l);
-
-        ////Photo photo = new Photo("",user,"",new Timestamp(System.currentTimeMillis()),"",ShareState.PUBLIC,PhotoState.ACTIVE);
-        // photoRepository.save(photo);
-
-//        User user = userRepository.findUserByUserID(1l);
         List<Photo> photoList = photoRepository.findAll();
-//        photoList.get(1).add(ControllerLinkBuilder.linkTo(UserController.class).slash(user.getUserID()).withSelfRel());
         return photoList;
     }
 
@@ -44,6 +38,7 @@ public class PhotoService {
 
 
     public List<Photo> addPhoto(final Photo photo) {
+        // TODO: 2018-04-16 add exif here
         photoRepository.save(photo);
         return photoRepository.findAll();
     }

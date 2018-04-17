@@ -16,7 +16,6 @@ public class ViewService {
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("index");
-        modelAndView.addObject("user", new User());
         return modelAndView;
     }
 

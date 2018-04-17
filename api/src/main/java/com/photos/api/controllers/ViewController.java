@@ -17,7 +17,7 @@ public class ViewController {
     @Autowired
     private ViewService viewService;
 
-    @GetMapping("/")
+    @GetMapping("/login")
     public ModelAndView index() {
         return viewService.index();
     }

@@ -1,5 +1,6 @@
 package com.photos.api.controllers;
 
+import com.photos.api.configs.Version;
 import com.photos.api.enums.PhotoState;
 import com.photos.api.enums.ShareState;
 import com.photos.api.models.Photo;
@@ -20,13 +21,13 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("/api/v1/photos")
+@RequestMapping(Version.version + "/photos")
 public class PhotoController {
 
     @Autowired
     private PhotoService photoService;
 
-    @GetMapping("/")
+    @GetMapping
     public List<Photo> getAll() {
         return photoService.getAll();
     }
@@ -36,7 +37,7 @@ public class PhotoController {
         return photoService.getOne(id);
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public List<Photo> addPhoto(@RequestBody final Photo photo) {
         return photoService.addPhoto(photo);
     }

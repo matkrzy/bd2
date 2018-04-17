@@ -1,5 +1,6 @@
 package com.photos.api.controllers;
 
+import com.photos.api.configs.Version;
 import com.photos.api.enums.Role;
 import com.photos.api.models.User;
 import com.photos.api.repositories.UserRepository;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping(Version.version + "/users")
 public class UserController {
 
     @Autowired
@@ -35,9 +36,4 @@ public class UserController {
         return userService.getOne(id);
     }
 
-    @PostMapping("users/Check")
-    @ResponseBody
-    private ModelAndView checkUser(@ModelAttribute(value = "user") @Valid final User user, BindingResult bindingResult){
-        return userService.logInUserAndAdmin(user);
-    }
 }
