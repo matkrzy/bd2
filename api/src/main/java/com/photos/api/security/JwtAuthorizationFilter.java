@@ -1,4 +1,4 @@
-package com.photos.api.configs;
+package com.photos.api.security;
 
 import com.photos.api.services.CustomUserDetailsService;
 import io.jsonwebtoken.Jwts;
@@ -7,7 +7,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import sun.plugin.liveconnect.SecurityContextHelper;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -15,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.photos.api.configs.SecurityConstants.*;
+import static com.photos.api.security.SecurityConstants.*;
 
 /**
  * @author Micha Królewski on 2018-04-21.
@@ -40,9 +39,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             chain.doFilter(request, response);
             return;
         }
+
         UsernamePasswordAuthenticationToken userAuth = getAuthenticationToken(request);
         SecurityContextHolder.getContext().setAuthentication(userAuth);
-        chain.doFilter(request,response);
+        // generating new token
+        response.addHeader(HEADER_STRING, TOKEN_PREFIX + generateToken(userAuth));
+        chain.doFilter(request, response);
 
     }
 

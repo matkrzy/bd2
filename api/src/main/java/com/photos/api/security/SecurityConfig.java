@@ -1,4 +1,4 @@
-package com.photos.api.configs;
+package com.photos.api.security;
 
 import com.photos.api.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -12,9 +12,10 @@ public enum Role {
 
     private String text;
 
-    Role(String text){
+    Role(String text) {
         this.text = text;
     }
+
     public String getText() {
         return this.text;
     }
