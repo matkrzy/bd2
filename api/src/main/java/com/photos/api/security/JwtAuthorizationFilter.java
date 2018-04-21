@@ -1,7 +1,5 @@
 package com.photos.api.security;
 
-import com.photos.api.services.CustomUserDetailsService;
-import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -50,10 +48,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private UsernamePasswordAuthenticationToken getAuthenticationToken(HttpServletRequest request) {
 
-        String token = request.getHeader(HEADER_STRING);
-        if (token == null) return null;
-        String email = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
-                .getBody().getSubject();
+        String email = getLoggedUserEmail(request);
 
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
         return email != null ? new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()) : null;

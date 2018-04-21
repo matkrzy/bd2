@@ -22,26 +22,17 @@ public class User extends ResourceSupport {
     @Column(name = "id")
     private Long userID;
 
-
     @Column(name = "first_name")
     private String firstName;
-
 
     @Column(name = "last_name")
     private String lastName;
 
-
     @Column(name = "email")
     private String email;
 
-
-    @Column(name = "login")
-    private String login;
-
-
     @Column(name = "password")
     private String password;
-
 
     @Column(name = "role")
     private String role;
@@ -78,21 +69,12 @@ public class User extends ResourceSupport {
         return email;
     }
 
-    public String getLogin() {
-        return login;
-    }
-
     public String getPassword() {
         return password;
     }
 
     public String getRole() {
         return role;
-    }
-
-    public void setLogin(String login) {
-
-        this.login = login;
     }
 
     public void setPassword(String password) {
@@ -106,11 +88,10 @@ public class User extends ResourceSupport {
     public User() {
     }
 
-    public User(String firstName, String lastName, String email, String login, String password, String role) {
+    public User(String firstName, String lastName, String email, String password, String role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.login = login;
         this.password = password;
         this.role = role;
     }

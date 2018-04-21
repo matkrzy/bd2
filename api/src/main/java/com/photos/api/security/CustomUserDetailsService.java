@@ -1,9 +1,7 @@
-package com.photos.api.services;
+package com.photos.api.security;
 
-import com.photos.api.enums.Role;
 import com.photos.api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,10 +22,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        com.photos.api.models.User user = userRepository.findFirstByEmail(s);
-
+        com.photos.api.models.User user = userRepository.findFirstByEmail(email);
+        // TODO: 2018-04-21 passwordEncoder
         return new User(user.getEmail(), "{noop}" + user.getPassword(),
                 AuthorityUtils.createAuthorityList(user.getRole()));
     }

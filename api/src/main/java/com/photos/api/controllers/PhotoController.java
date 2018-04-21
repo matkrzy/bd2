@@ -5,6 +5,7 @@ import com.photos.api.services.PhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -22,6 +23,11 @@ public class PhotoController {
     @GetMapping
     public List<Photo> getAll() {
         return photoService.getAll();
+    }
+
+    @GetMapping("/public")
+    public List<Photo> getPublic() {
+        return photoService.getPublic();
     }
 
     @GetMapping("/{id}")

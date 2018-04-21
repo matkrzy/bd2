@@ -1,15 +1,12 @@
 package com.photos.api.services;
 
+import com.photos.api.enums.ShareState;
 import com.photos.api.models.Photo;
-import com.photos.api.models.User;
 import com.photos.api.repositories.PhotoRepository;
 import com.photos.api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -27,19 +24,44 @@ public class PhotoService {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * returning all photos for logged user
+     *
+     * @return
+     */
     public List<Photo> getAll() {
-        List<Photo> photoList = photoRepository.findAll();
-        return photoList;
+        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        return photoRepository.findAllByUserEmail(email);
     }
 
+    /**
+     * returning all public photos
+     * @return
+     */
+    public List<Photo> getPublic() {
+        return photoRepository.findAllByShareState(ShareState.PUBLIC);
+    }
+
+    /**
+     *
+     * @param id
+     * @return
+     */
     public Photo getOne(final Long id) {
         return photoRepository.findPhotoByPhotoID(id);
     }
 
-
+    /**
+     * adding photo
+     * todo change this
+     * @param photo
+     * @return
+     */
     public List<Photo> addPhoto(final Photo photo) {
         // TODO: 2018-04-16 add exif here
         photoRepository.save(photo);
         return photoRepository.findAll();
     }
+
+
 }
