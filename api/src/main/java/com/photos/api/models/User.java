@@ -39,12 +39,12 @@ public class User extends ResourceSupport {
     private String login;
 
 
-    @Column(name = "password_hash")
+    @Column(name = "password")
     private String password;
 
 
     @Column(name = "role")
-    private Role role;
+    private String role;
 
     public void setUserID(Long id) {
         this.userID = id;
@@ -86,7 +86,7 @@ public class User extends ResourceSupport {
         return password;
     }
 
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
@@ -99,14 +99,14 @@ public class User extends ResourceSupport {
         this.password = password;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
     public User() {
     }
 
-    public User(String firstName, String lastName, String email, String login, String password, Role role) {
+    public User(String firstName, String lastName, String email, String login, String password, String role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

@@ -7,6 +7,15 @@ package com.photos.api.enums;
 
 
 public enum Role {
-    USER,
-    ADMIN;
+    USER("USER"),
+    ADMIN("ADMIN");
+
+    private String text;
+
+    Role(String text){
+        this.text = text;
+    }
+    public String getText() {
+        return this.text;
+    }
 }

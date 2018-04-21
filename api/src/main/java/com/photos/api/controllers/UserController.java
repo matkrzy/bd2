@@ -1,17 +1,10 @@
 package com.photos.api.controllers;
 
-import com.photos.api.configs.Version;
-import com.photos.api.enums.Role;
 import com.photos.api.models.User;
-import com.photos.api.repositories.UserRepository;
 import com.photos.api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -20,7 +13,7 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping(Version.version + "/users")
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired

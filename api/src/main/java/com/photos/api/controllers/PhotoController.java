@@ -1,18 +1,10 @@
 package com.photos.api.controllers;
 
-import com.photos.api.configs.Version;
-import com.photos.api.enums.PhotoState;
-import com.photos.api.enums.ShareState;
 import com.photos.api.models.Photo;
-import com.photos.api.models.User;
-import com.photos.api.repositories.PhotoRepository;
-import com.photos.api.repositories.UserRepository;
 import com.photos.api.services.PhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -21,7 +13,7 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping(Version.version + "/photos")
+@RequestMapping("/photos")
 public class PhotoController {
 
     @Autowired
