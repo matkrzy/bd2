@@ -11,12 +11,12 @@ INSERT INTO user (id,first_name,last_name,email,password,role) VALUES (6,'Mateus
 /*
     INSERT PHOTO
 */
-INSERT INTO photo (id,description,name,path,photo_state,share_state,upload_time,user_id) VALUES (1,'photo1_description','photo1','C:\photos\path',0,1,'18-04-21 10:34:09',1);
+INSERT INTO photo (id,description,name,path,photo_state,share_state,upload_time,user_id) VALUES (1,'photo1_description','tlo.jpg','C:\photos\path',0,0,'18-04-21 10:34:09',1);
 INSERT INTO photo (id,description,name,path,photo_state,share_state,upload_time,user_id) VALUES (2,'photo2_description','photo2','C:\photos\path',1,1,'18-02-27 10:34:09',1);
 INSERT INTO photo (id,description,name,path,photo_state,share_state,upload_time,user_id) VALUES (3,'photo3_description','photo3','C:\photos\path',1,1,'18-03-21 10:34:09',2);
 INSERT INTO photo (id,description,name,path,photo_state,share_state,upload_time,user_id) VALUES (4,'photo4_description','photo4','C:\photos\path',1,0,'18-04-21 10:34:09',3);
 INSERT INTO photo (id,description,name,path,photo_state,share_state,upload_time,user_id) VALUES (5,'photo5_description','photo5','C:\photos\path',0,1,'18-01-12 10:34:09',3);
-INSERT INTO photo (id,description,name,path,photo_state,share_state,upload_time,user_id) VALUES (6,'photo6_description','photo6','C:\photos\path',1,1,'18-02-23 10:34:09',4);
+INSERT INTO photo (id,description,name,path,photo_state,share_state,upload_time,user_id) VALUES (6,'photo6_description','photo6','C:\photos\path',1,0,'18-02-23 10:34:09',4);
 INSERT INTO photo (id,description,name,path,photo_state,share_state,upload_time,user_id) VALUES (7,'photo7_description','photo7','C:\photos\path',1,1,'18-04-16 10:34:09',5);
 INSERT INTO photo (id,description,name,path,photo_state,share_state,upload_time,user_id) VALUES (8,'photo8_description','photo8','C:\photos\path',1,0,'18-03-05 10:34:09',5);
 INSERT INTO photo (id,description,name,path,photo_state,share_state,upload_time,user_id) VALUES (9,'photo9_description','photo9','C:\photos\path',1,1,'18-04-11 10:34:09',6);

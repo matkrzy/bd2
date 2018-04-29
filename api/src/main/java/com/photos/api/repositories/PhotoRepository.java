@@ -5,6 +5,7 @@ import com.photos.api.models.Photo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -17,4 +18,5 @@ public interface PhotoRepository extends JpaRepository<Photo,Long> {
     Photo findPhotoByPhotoID(Long id);
     List<Photo> findAllByUserEmail(String email);
     List<Photo> findAllByShareState(ShareState ss);
+    Photo findByName(String filename);
 }

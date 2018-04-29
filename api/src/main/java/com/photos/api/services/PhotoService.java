@@ -36,6 +36,7 @@ public class PhotoService {
 
     /**
      * returning all public photos
+     *
      * @return
      */
     public List<Photo> getPublic() {
@@ -43,17 +44,28 @@ public class PhotoService {
     }
 
     /**
-     *
      * @param id
      * @return
      */
     public Photo getOne(final Long id) {
-        return photoRepository.findPhotoByPhotoID(id);
+        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        Photo photo = photoRepository.findPhotoByPhotoID(id);
+
+        return photo.getUser().getEmail().equals(email) ? photo : null;
+    }
+
+    /**
+     * @param filename
+     * @return
+     */
+    public Photo getOne(final String filename) {
+        return photoRepository.findByName(filename);
     }
 
     /**
      * adding photo
      * todo change this
+     *
      * @param photo
      * @return
      */

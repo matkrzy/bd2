@@ -4,6 +4,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.Authentication;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -21,6 +22,7 @@ public class SecurityConstants {
     public static final String SECRET = "secret";
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING = "Authorization";
+    public static final String JWT = "JWT";
 
     /**
      * Session time - ~15min
@@ -49,8 +51,9 @@ public class SecurityConstants {
         return token;
     }
 
-    public static String getLoggedUserEmail(HttpServletRequest request) {
-        String token = request.getHeader(HEADER_STRING);
+    public static String getLoggedUserEmail(Cookie cookie) {
+
+        String token = cookie.getValue();
         if (token == null)
             return null;
 

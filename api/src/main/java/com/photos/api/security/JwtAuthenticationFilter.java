@@ -10,11 +10,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.photos.api.security.SecurityConstants.*;
+import static com.photos.api.security.SecurityConstants.JWT;
+import static com.photos.api.security.SecurityConstants.generateToken;
 
 /**
  * @author Micha Królewski on 2018-04-21.
@@ -44,6 +46,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        response.addHeader(HEADER_STRING, TOKEN_PREFIX + generateToken(authResult));
+
+        Cookie cookie = new Cookie(JWT, generateToken(authResult));
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+
     }
 }
