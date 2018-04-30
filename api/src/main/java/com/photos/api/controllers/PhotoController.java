@@ -1,8 +1,12 @@
 package com.photos.api.controllers;
 
 import com.photos.api.models.Photo;
+import com.photos.api.models.Tag;
+import com.photos.api.projections.PPhoto;
+import com.photos.api.projections.PTag;
 import com.photos.api.services.PhotoService;
 import com.photos.api.services.RateService;
+import com.photos.api.services.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,33 +30,35 @@ public class PhotoController {
     @Autowired
     private RateService rateService;
 
+    @Autowired
+    private TagService tagService;
+
     /**
-     *
      * @return
      */
     @GetMapping
-    public List<Photo> getAll() {
+    public List<PPhoto> getAll() {
         return photoService.getAll();
     }
 
     /**
-     *
      * @return
      */
     @GetMapping("/public")
     public ResponseEntity getPublic() {
 
         List<Photo> photos = photoService.getPublic();
-        List<RatedPhoto> ratedPhotos = new ArrayList<>();
+        List<ResponsePhoto> responsePhotos = new ArrayList<>();
+
         for (Photo photo : photos) {
-            ratedPhotos.add(new RatedPhoto(photo, rateService.getPhotoRate(photo)));
+            List<PTag> list = tagService.getAllForPhoto(photo);
+            responsePhotos.add(new ResponsePhoto(photo, rateService.getPhotoRate(photo), tagService.getAllForPhoto(photo)));
         }
-        ratedPhotos.sort((o1, o2) -> o2.getRate() - o1.getRate());
-        return ResponseEntity.ok().body(ratedPhotos);
+        responsePhotos.sort((o1, o2) -> o2.getRate() - o1.getRate());
+        return ResponseEntity.ok().body(responsePhotos);
     }
 
     /**
-     *
      * @param id
      * @return
      */
@@ -64,13 +70,12 @@ public class PhotoController {
     }
 
     /**
-     *
      * @param photo
      * @return
      */
     @PostMapping
-    public List<Photo> addPhoto(@RequestBody final Photo photo) {
-        return photoService.addPhoto(photo);
+    public void addPhoto(@RequestBody final Photo photo) {
+        photoService.addPhoto(photo);
     }
 
     // TODO: 2018-04-29 delete this!
@@ -85,14 +90,24 @@ public class PhotoController {
      * private class RaterPhoto
      * contain photo and its average rate
      */
-    private class RatedPhoto {
+    private class ResponsePhoto {
 
         private Photo photo;
         private byte rate;
+        private List<PTag> tags;
 
-        public RatedPhoto(Photo photo, byte rate) {
+        public ResponsePhoto(Photo photo, byte rate, List<PTag> tags) {
             this.photo = photo;
             this.rate = rate;
+            this.tags = tags;
+        }
+
+        public List<PTag> getTags() {
+            return tags;
+        }
+
+        public void setTags(List<PTag> tags) {
+            this.tags = tags;
         }
 
         public Photo getPhoto() {

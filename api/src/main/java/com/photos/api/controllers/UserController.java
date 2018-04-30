@@ -25,8 +25,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getOne(@PathVariable(value = "id") final Long id) {
+    public User getOne(@PathVariable final Long id) {
         return userService.getOne(id);
     }
+
 
 }

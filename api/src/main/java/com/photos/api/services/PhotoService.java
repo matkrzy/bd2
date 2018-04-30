@@ -2,12 +2,15 @@ package com.photos.api.services;
 
 import com.photos.api.enums.ShareState;
 import com.photos.api.models.Photo;
+import com.photos.api.projections.PPhoto;
+import com.photos.api.projections.PTag;
 import com.photos.api.repositories.PhotoRepository;
 import com.photos.api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,14 +27,20 @@ public class PhotoService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private TagService tagService;
+
     /**
      * returning all photos for logged user
      *
      * @return
      */
-    public List<Photo> getAll() {
+    public List<PPhoto> getAll() {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-        return photoRepository.findAllByUserEmail(email);
+
+        List<Photo> photos = photoRepository.findAllByUserEmail(email);
+
+        return createList(photoRepository.findAllByUserEmail(email));
     }
 
     /**
@@ -69,11 +78,20 @@ public class PhotoService {
      * @param photo
      * @return
      */
-    public List<Photo> addPhoto(final Photo photo) {
+    public void addPhoto(final Photo photo) {
         // TODO: 2018-04-16 add exif here
         photoRepository.save(photo);
-        return photoRepository.findAll();
     }
 
+    private List<PPhoto> createList(List<Photo> list) {
+
+        List<PPhoto> photos = new ArrayList<>();
+        for (Photo p : list) {
+            List<PTag> tagList = tagService.getAllForPhoto(p);
+            photos.add(new PPhoto(p, tagList));
+        }
+
+        return photos;
+    }
 
 }
