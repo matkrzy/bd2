@@ -58,8 +58,11 @@ INSERT INTO tag (id,name,photo_id) VALUES (3,'sunrise',1);
     INSERT SHARE
 */
 INSERT INTO share (id,photo_id,user_id) VALUES (1,1,2);
-INSERT INTO share (id,photo_id,user_id) VALUES (2,6,1);
 INSERT INTO share (id,photo_id,user_id) VALUES (3,5,6);
+INSERT INTO share (id,photo_id,user_id) VALUES (2,6,1);
+INSERT INTO share (id,photo_id,user_id) VALUES (4,7,1);
+INSERT INTO share (id,photo_id,user_id) VALUES (5,8,1);
+INSERT INTO share (id,photo_id,user_id) VALUES (6,9,1);
 
 /*
     INSERT RATE

@@ -1,7 +1,6 @@
 package com.photos.api.controllers;
 
 import com.photos.api.models.Photo;
-import com.photos.api.models.Tag;
 import com.photos.api.projections.PPhoto;
 import com.photos.api.projections.PTag;
 import com.photos.api.services.PhotoService;
@@ -33,6 +32,7 @@ public class PhotoController {
     @Autowired
     private TagService tagService;
 
+
     /**
      * @return
      */
@@ -47,15 +47,20 @@ public class PhotoController {
     @GetMapping("/public")
     public ResponseEntity getPublic() {
 
-        List<Photo> photos = photoService.getPublic();
-        List<ResponsePhoto> responsePhotos = new ArrayList<>();
-
-        for (Photo photo : photos) {
-            List<PTag> list = tagService.getAllForPhoto(photo);
-            responsePhotos.add(new ResponsePhoto(photo, rateService.getPhotoRate(photo), tagService.getAllForPhoto(photo)));
-        }
-        responsePhotos.sort((o1, o2) -> o2.getRate() - o1.getRate());
+        List<ResponsePhoto> responsePhotos = convert(photoService.getPublic());
         return ResponseEntity.ok().body(responsePhotos);
+    }
+
+    /**
+     *
+     * @return
+     */
+    @GetMapping("/shared")
+    public ResponseEntity getShared() {
+
+        List<ResponsePhoto> responsePhotos = convert(photoService.getShared());
+        return ResponseEntity.ok().body(responsePhotos);
+
     }
 
     /**
@@ -63,11 +68,12 @@ public class PhotoController {
      * @return
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Photo> getOne(@PathVariable(value = "id") final Long id) {
+    public ResponseEntity getOne(@PathVariable(value = "id") final Long id) {
         Photo photo = photoService.getOne(id);
         byte rate = rateService.getPhotoRate(photo);
         return ResponseEntity.ok().body(photo);
     }
+
 
     /**
      * @param photo
@@ -77,6 +83,10 @@ public class PhotoController {
     public void addPhoto(@RequestBody final Photo photo) {
         photoService.addPhoto(photo);
     }
+
+
+
+
 
     // TODO: 2018-04-29 delete this!
     @GetMapping("/index")
@@ -90,7 +100,7 @@ public class PhotoController {
      * private class RaterPhoto
      * contain photo and its average rate
      */
-    private class ResponsePhoto {
+    class ResponsePhoto {
 
         private Photo photo;
         private byte rate;
@@ -125,5 +135,24 @@ public class PhotoController {
         public void setRate(byte rate) {
             this.rate = rate;
         }
+    }
+
+    /**
+     *
+     * @param photos
+     * @return
+     */
+    public List<ResponsePhoto> convert(List<Photo> photos) {
+
+        List<ResponsePhoto> responsePhotos = new ArrayList<>();
+
+        for (Photo photo : photos) {
+            List<PTag> list = tagService.getAllForPhoto(photo);
+            responsePhotos.add(new ResponsePhoto(photo, rateService.getPhotoRate(photo), tagService.getAllForPhoto(photo)));
+        }
+
+        responsePhotos.sort((o1, o2) -> o2.getRate() - o1.getRate());
+
+        return responsePhotos;
     }
 }

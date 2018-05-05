@@ -2,6 +2,7 @@ package com.photos.api.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.photos.api.models.User;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -40,7 +41,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw  new AuthenticationCredentialsNotFoundException("");
         }
     }
 

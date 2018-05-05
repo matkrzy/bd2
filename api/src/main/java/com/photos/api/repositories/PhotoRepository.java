@@ -15,8 +15,8 @@ import java.util.List;
 
 @Component
 public interface PhotoRepository extends JpaRepository<Photo,Long> {
-    Photo findPhotoByPhotoID(Long id);
     List<Photo> findAllByUserEmail(String email);
     List<Photo> findAllByShareState(ShareState ss);
     Photo findByName(String filename);
+    Photo findByPhotoID(Long id);
 }
