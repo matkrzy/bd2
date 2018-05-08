@@ -30,4 +30,8 @@ public class UserService {
         user.add(ControllerLinkBuilder.linkTo(UserController.class).slash(user.getUserID()).withSelfRel());
         return user;
     }
+
+    public void addUser(final User user){
+        userRepository.save(user);
+    }
 }

@@ -29,5 +29,10 @@ public class UserController {
         return userService.getOne(id);
     }
 
+    @PostMapping
+    public void addUser(@RequestBody final User user) {
+        userService.addUser(user);
+    }
+
 
 }
