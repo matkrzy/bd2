@@ -34,5 +34,8 @@ public class UserController {
         userService.addUser(user);
     }
 
-
+    @PutMapping
+    public void updateUser(@RequestBody final User user){
+        userService.updateUser(user);
+    }
 }

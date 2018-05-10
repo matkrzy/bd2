@@ -5,6 +5,7 @@ import com.photos.api.models.User;
 import com.photos.api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,7 +32,22 @@ public class UserService {
         return user;
     }
 
-    public void addUser(final User user){
+    public void addUser(final User user) {
         userRepository.save(user);
+    }
+
+    public void updateUser(final User user) {
+        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        User userToUpdate = userRepository.findFirstByEmail(email);
+        if(user.getFirstName() != null)
+             userToUpdate.setFirstName(user.getFirstName());
+
+        if(user.getLastName() != null)
+            userToUpdate.setLastName(user.getLastName());
+
+        if(user.getPassword() != null)
+            userToUpdate.setPassword(user.getPassword());
+
+        userRepository.save(userToUpdate);
     }
 }
