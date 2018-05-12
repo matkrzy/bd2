@@ -24,9 +24,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers("/photos")
-                .hasAnyAuthority("USER","ADMIN")
                 .antMatchers("/users").permitAll()
+                .antMatchers("/users/edit").authenticated()
+                .antMatchers("/photos").authenticated()
+
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), customUserDetailsService));

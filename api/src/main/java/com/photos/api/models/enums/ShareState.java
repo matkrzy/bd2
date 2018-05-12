@@ -1,4 +1,4 @@
-package com.photos.api.enums;
+package com.photos.api.models.enums;
 
 /**
  * @author Micha Królewski on 2018-04-07.

@@ -1,4 +1,4 @@
-package com.photos.api.repositories;
+package com.photos.api.models.repositories;
 
 import com.photos.api.models.Photo;
 import com.photos.api.models.Tag;

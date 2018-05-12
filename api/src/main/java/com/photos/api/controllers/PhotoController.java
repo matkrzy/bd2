@@ -1,8 +1,7 @@
 package com.photos.api.controllers;
 
 import com.photos.api.models.Photo;
-import com.photos.api.projections.PPhoto;
-import com.photos.api.projections.PTag;
+import com.photos.api.models.projections.PPhoto;
 import com.photos.api.services.PhotoService;
 import com.photos.api.services.RateService;
 import com.photos.api.services.TagService;
@@ -104,19 +103,19 @@ public class PhotoController {
 
         private Photo photo;
         private byte rate;
-        private List<PTag> tags;
+        private String[] tags;
 
-        public ResponsePhoto(Photo photo, byte rate, List<PTag> tags) {
+        public ResponsePhoto(Photo photo, byte rate, String[] tags) {
             this.photo = photo;
             this.rate = rate;
             this.tags = tags;
         }
 
-        public List<PTag> getTags() {
+        public String[] getTags() {
             return tags;
         }
 
-        public void setTags(List<PTag> tags) {
+        public void setTags(String[] tags) {
             this.tags = tags;
         }
 
@@ -147,7 +146,7 @@ public class PhotoController {
         List<ResponsePhoto> responsePhotos = new ArrayList<>();
 
         for (Photo photo : photos) {
-            List<PTag> list = tagService.getAllForPhoto(photo);
+            String[] list = tagService.getAllForPhoto(photo);
             responsePhotos.add(new ResponsePhoto(photo, rateService.getPhotoRate(photo), tagService.getAllForPhoto(photo)));
         }
 

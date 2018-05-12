@@ -2,7 +2,7 @@ package com.photos.api.services;
 
 import com.photos.api.controllers.UserController;
 import com.photos.api.models.User;
-import com.photos.api.repositories.UserRepository;
+import com.photos.api.models.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.security.core.context.SecurityContextHolder;

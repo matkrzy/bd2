@@ -1,8 +1,6 @@
 package com.photos.api.controllers;
 
-import com.photos.api.models.Photo;
 import com.photos.api.models.Share;
-import com.photos.api.repositories.ShareRepository;
 import com.photos.api.services.ShareService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

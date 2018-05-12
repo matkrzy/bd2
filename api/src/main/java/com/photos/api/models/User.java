@@ -1,10 +1,8 @@
 package com.photos.api.models;
 
-import com.photos.api.enums.Role;
 import org.springframework.hateoas.ResourceSupport;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -95,4 +93,5 @@ public class User extends ResourceSupport {
         this.password = password;
         this.role = role;
     }
+
 }

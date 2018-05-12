@@ -1,15 +1,11 @@
-package com.photos.api.projections;
+package com.photos.api.models.projections;
 
-import com.photos.api.enums.PhotoState;
-import com.photos.api.enums.ShareState;
+import com.photos.api.models.enums.PhotoState;
+import com.photos.api.models.enums.ShareState;
 import com.photos.api.models.Photo;
-import com.photos.api.services.TagService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ResourceSupport;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Micha Królewski on 2018-04-29.
@@ -17,7 +13,7 @@ import java.util.List;
  */
 
 
-public class PPhoto extends ResourceSupport {
+public class PPhoto {
 
     private String name, path, description;
 
@@ -27,12 +23,12 @@ public class PPhoto extends ResourceSupport {
 
     private PhotoState photoState;
 
-    private List<PTag> tags;
+    private String[] tags;
 
     public PPhoto() {
     }
 
-    public PPhoto(Photo photo, List<PTag> tags) {
+    public PPhoto(Photo photo, String[] tags) {
         this.name = photo.getName();
         this.path = photo.getPath();
         this.description = photo.getDescription();
@@ -43,11 +39,11 @@ public class PPhoto extends ResourceSupport {
     }
 
 
-    public List<PTag> getTags() {
+    public String[] getTags() {
         return tags;
     }
 
-    public void setTags(List<PTag> tags) {
+    public void setTags(String[] tags) {
         this.tags = tags;
     }
 

@@ -1,4 +1,4 @@
-package com.photos.api.repositories;
+package com.photos.api.models.repositories;
 
 import com.photos.api.models.Share;
 import com.photos.api.models.User;

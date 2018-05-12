@@ -19,7 +19,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/")
+    @GetMapping
     public List<User> getAll() {
         return userService.getAll();
     }
@@ -34,7 +34,7 @@ public class UserController {
         userService.addUser(user);
     }
 
-    @PutMapping
+    @PostMapping("/edit")
     public void updateUser(@RequestBody final User user){
         userService.updateUser(user);
     }

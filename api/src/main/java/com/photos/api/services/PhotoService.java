@@ -1,14 +1,13 @@
 package com.photos.api.services;
 
-import com.photos.api.enums.ShareState;
+import com.photos.api.models.enums.ShareState;
 import com.photos.api.models.Photo;
 import com.photos.api.models.Share;
 import com.photos.api.models.User;
-import com.photos.api.projections.PPhoto;
-import com.photos.api.projections.PTag;
-import com.photos.api.repositories.PhotoRepository;
-import com.photos.api.repositories.ShareRepository;
-import com.photos.api.repositories.UserRepository;
+import com.photos.api.models.projections.PPhoto;
+import com.photos.api.models.repositories.PhotoRepository;
+import com.photos.api.models.repositories.ShareRepository;
+import com.photos.api.models.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -43,10 +42,8 @@ public class PhotoService {
      */
     public List<PPhoto> getAll() {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-
         List<Photo> photos = photoRepository.findAllByUserEmail(email);
-
-        return createList(photoRepository.findAllByUserEmail(email));
+        return createList(photos);
     }
 
     /**
@@ -59,6 +56,10 @@ public class PhotoService {
     }
 
 
+    /**
+     *
+     * @return
+     */
     public List<Photo> getShared() {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         User user = userRepository.findFirstByEmail(email);
@@ -82,18 +83,7 @@ public class PhotoService {
 
         return photo.getUser().getEmail().equals(email) ? photo : null;
     }
-
     /**
-     * @param filename
-     * @return
-     */
-    public Photo getOne(final String filename) {
-        return photoRepository.findByName(filename);
-    }
-
-
-    /**
-     * adding photo\     *
      *
      * @param photo
      * @return
@@ -107,8 +97,8 @@ public class PhotoService {
 
         List<PPhoto> photos = new ArrayList<>();
         for (Photo p : list) {
-            List<PTag> tagList = tagService.getAllForPhoto(p);
-            photos.add(new PPhoto(p, tagList));
+            String[] tags = tagService.getAllForPhoto(p);
+            photos.add(new PPhoto(p, tags));
         }
 
         return photos;

@@ -1,10 +1,8 @@
-package com.photos.api.repositories;
+package com.photos.api.models.repositories;
 
 import com.photos.api.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 
 /**

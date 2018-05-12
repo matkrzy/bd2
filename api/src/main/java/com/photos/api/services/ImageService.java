@@ -1,7 +1,7 @@
 package com.photos.api.services;
 
 import com.photos.api.models.Photo;
-import com.photos.api.repositories.PhotoRepository;
+import com.photos.api.models.repositories.PhotoRepository;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.context.SecurityContextHolder;

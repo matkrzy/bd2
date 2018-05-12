@@ -1,7 +1,7 @@
 package com.photos.api.models;
 
-import com.photos.api.enums.PhotoState;
-import com.photos.api.enums.ShareState;
+import com.photos.api.models.enums.PhotoState;
+import com.photos.api.models.enums.ShareState;
 import org.springframework.hateoas.ResourceSupport;
 
 import javax.persistence.*;

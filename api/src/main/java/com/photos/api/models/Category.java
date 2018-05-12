@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "category")
-public class Category extends ResourceSupport {
+public class Category {
 
     @Id
     @GeneratedValue
