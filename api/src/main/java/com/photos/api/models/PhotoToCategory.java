@@ -1,7 +1,5 @@
 package com.photos.api.models;
 
-import org.springframework.hateoas.ResourceSupport;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -12,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "photo_to_category")
-public class PhotoToCategory extends ResourceSupport {
+public class PhotoToCategory {
 
     @Id
     @GeneratedValue
@@ -21,14 +19,20 @@ public class PhotoToCategory extends ResourceSupport {
     private Long ptcID;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "photo_id")
-    private Photo photo;
+    @Column(name = "photo_id")
+    private Long photo;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @Column(name = "category_name")
+    private String category;
+
+    public PhotoToCategory() {
+    }
+
+    public PhotoToCategory(@NotNull Long photo, @NotNull String category) {
+        this.photo = photo;
+        this.category = category;
+    }
 
     public Long getPtcID() {
         return ptcID;
@@ -38,19 +42,21 @@ public class PhotoToCategory extends ResourceSupport {
         this.ptcID = ptcID;
     }
 
-    public Photo getPhoto() {
+    public Long getPhoto() {
         return photo;
     }
 
-    public void setPhoto(Photo photo) {
+    public void setPhoto(Long photo) {
         this.photo = photo;
     }
 
-    public Category getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(String category) {
         this.category = category;
     }
+
+
 }

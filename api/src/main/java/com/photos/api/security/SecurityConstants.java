@@ -29,7 +29,8 @@ public class SecurityConstants {
     /**
      * Session time - ~15min
      */
-    public static final Long EXPIRATION_TIME = 003_100_000L;
+    // TODO: 2018-05-13 ZMIANA CZASU TOKENU
+    public static final Long EXPIRATION_TIME = 903_100_000L;
 
     /**
      * @param auth

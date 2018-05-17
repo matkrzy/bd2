@@ -1,7 +1,5 @@
 package com.photos.api.models;
 
-import org.springframework.hateoas.ResourceSupport;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -12,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "photo_exif")
-public class PhotoExif extends ResourceSupport {
+public class PhotoExif {
 
     @Id
     @GeneratedValue

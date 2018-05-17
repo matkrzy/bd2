@@ -25,9 +25,9 @@ public class RateService {
      * @param photo
      * @return {srednia ocena zdjecia}
      */
-    public byte getPhotoRate(final Photo photo) {
+    public byte getPhotoRate(final Long photoid) {
         byte rate = 0;
-        List<Rate> rates = rateRepository.findAllByPhoto(photo);
+        List<Rate> rates = rateRepository.findAllByPhoto(photoid);
 
         if (rates.size() != 0) {
             for (Rate r : rates) {

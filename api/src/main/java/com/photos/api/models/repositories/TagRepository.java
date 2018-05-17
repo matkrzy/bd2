@@ -1,6 +1,5 @@
 package com.photos.api.models.repositories;
 
-import com.photos.api.models.Photo;
 import com.photos.api.models.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -15,6 +14,8 @@ import java.util.List;
 @Component
 public interface TagRepository extends JpaRepository<Tag, Long> {
 
-    List<Tag> getAllByPhoto(final Photo photo);
+    List<Tag> getAllByPhoto(final Long photo);
+
+    List<Tag> getAllByNameLike(String name);
 
 }

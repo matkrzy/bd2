@@ -23,24 +23,25 @@ public class CategoryController {
 
     @GetMapping("/{name}")
     public ResponseEntity getOne(@PathVariable String name) {
-        return ResponseEntity.ok().body(categoryService.getOne(name));
+        return ResponseEntity.status(HttpStatus.OK).body(categoryService.getOne(name));
+    }
+
+    @GetMapping("/{parentName}/{name}")
+    public ResponseEntity getOne(@PathVariable String parentName, @PathVariable String name) {
+        return ResponseEntity.status(HttpStatus.OK).body(categoryService.getOne(parentName,name));
     }
 
     @GetMapping
     public ResponseEntity getAll() {
         List<Category> categories = categoryService.getAll();
-        return ResponseEntity.ok().body(categories);
+        return ResponseEntity.status(HttpStatus.OK).body(categories);
     }
 
     @PostMapping
     public ResponseEntity addCategory(@RequestBody final Category category) {
-        boolean ok = categoryService.addCategory(category);
-        if(ok){
-            return ResponseEntity.status(HttpStatus.OK).build();
-        }else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-
+        return categoryService.addCategory(category) ?
+                ResponseEntity.status(HttpStatus.OK).build() :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
 

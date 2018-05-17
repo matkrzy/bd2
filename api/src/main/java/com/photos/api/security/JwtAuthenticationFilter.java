@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
         } catch (IOException e) {
-            throw  new AuthenticationCredentialsNotFoundException("");
+            throw new AuthenticationCredentialsNotFoundException("");
         }
     }
 

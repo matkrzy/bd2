@@ -1,8 +1,6 @@
 package com.photos.api.models;
 
 
-import org.springframework.hateoas.ResourceSupport;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -17,18 +15,28 @@ import javax.validation.constraints.NotNull;
 @Table(name = "tag")
 public class Tag {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @NotNull
     @Column(name = "id")
     private Long tagID;
 
-    @OneToOne
-    @JoinColumn(name = "photo_id")
-    private Photo photo;
+    @NotNull
+    @Column(name = "photo_id")
+    private Long photo;
 
     @NotBlank
     @Column(name = "name")
     private String name;
+
+    public Tag() {
+    }
+
+    public Tag(Long photo, @NotBlank String name) {
+
+        this.photo = photo;
+        this.name = name;
+    }
 
     public Long getTagID() {
         return tagID;
@@ -38,11 +46,11 @@ public class Tag {
         this.tagID = tagID;
     }
 
-    public Photo getPhoto() {
+    public Long getPhoto() {
         return photo;
     }
 
-    public void setPhoto(Photo photo) {
+    public void setPhoto(Long photo) {
         this.photo = photo;
     }
 

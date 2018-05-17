@@ -14,5 +14,6 @@ import java.util.List;
 
 @Component
 public interface RateRepository extends JpaRepository<Rate,Long> {
-    List<Rate> findAllByPhoto(final Photo photo);
+
+    List<Rate> findAllByPhoto(final Long photo);
 }

@@ -1,11 +1,13 @@
 package com.photos.api.controllers;
 
 import com.photos.api.models.Photo;
-import com.photos.api.models.projections.PPhoto;
+import com.photos.api.models.ResponsePhoto;
 import com.photos.api.services.PhotoService;
+import com.photos.api.services.PhotoToCategoryService;
 import com.photos.api.services.RateService;
 import com.photos.api.services.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,6 +28,9 @@ public class PhotoController {
     private PhotoService photoService;
 
     @Autowired
+    private PhotoToCategoryService PTCService;
+
+    @Autowired
     private RateService rateService;
 
     @Autowired
@@ -36,8 +41,10 @@ public class PhotoController {
      * @return
      */
     @GetMapping
-    public List<PPhoto> getAll() {
-        return photoService.getAll();
+    public ResponseEntity getAll() {
+        List<ResponsePhoto> responsePhotos = convert(photoService.getAll());
+        responsePhotos.sort((o1, o2) -> o2.getUploadTime().compareTo(o1.getUploadTime()));
+        return ResponseEntity.status(HttpStatus.OK).body(responsePhotos);
     }
 
     /**
@@ -47,17 +54,18 @@ public class PhotoController {
     public ResponseEntity getPublic() {
 
         List<ResponsePhoto> responsePhotos = convert(photoService.getPublic());
+        responsePhotos.sort((o1, o2) -> o2.getRate() - o1.getRate());
         return ResponseEntity.ok().body(responsePhotos);
     }
 
     /**
-     *
      * @return
      */
     @GetMapping("/shared")
     public ResponseEntity getShared() {
 
         List<ResponsePhoto> responsePhotos = convert(photoService.getShared());
+        responsePhotos.sort((o1, o2) -> o2.getUploadTime().compareTo(o1.getUploadTime()));
         return ResponseEntity.ok().body(responsePhotos);
 
     }
@@ -69,8 +77,15 @@ public class PhotoController {
     @GetMapping("/{id}")
     public ResponseEntity getOne(@PathVariable(value = "id") final Long id) {
         Photo photo = photoService.getOne(id);
-        byte rate = rateService.getPhotoRate(photo);
-        return ResponseEntity.ok().body(photo);
+        if (photo != null) {
+            ResponsePhoto p = new ResponsePhoto(photo,
+                    rateService.getPhotoRate(photo.getPhotoID()),
+                    tagService.getPhotoTags(photo.getPhotoID()),
+                    PTCService.getPhotoCategory(photo.getPhotoID()));
+            return ResponseEntity.status(HttpStatus.OK).body(p);
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
 
@@ -79,12 +94,11 @@ public class PhotoController {
      * @return
      */
     @PostMapping
-    public void addPhoto(@RequestBody final Photo photo) {
-        photoService.addPhoto(photo);
+    public ResponseEntity addPhoto(@RequestBody final Photo photo) {
+        return photoService.addPhoto(photo) ?
+                ResponseEntity.status(HttpStatus.OK).build() :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body("photo exists");
     }
-
-
-
 
 
     // TODO: 2018-04-29 delete this!
@@ -99,59 +113,19 @@ public class PhotoController {
      * private class RaterPhoto
      * contain photo and its average rate
      */
-    class ResponsePhoto {
 
-        private Photo photo;
-        private byte rate;
-        private String[] tags;
-
-        public ResponsePhoto(Photo photo, byte rate, String[] tags) {
-            this.photo = photo;
-            this.rate = rate;
-            this.tags = tags;
-        }
-
-        public String[] getTags() {
-            return tags;
-        }
-
-        public void setTags(String[] tags) {
-            this.tags = tags;
-        }
-
-        public Photo getPhoto() {
-            return photo;
-        }
-
-        public void setPhoto(Photo photo) {
-            this.photo = photo;
-        }
-
-        public byte getRate() {
-            return rate;
-        }
-
-        public void setRate(byte rate) {
-            this.rate = rate;
-        }
-    }
-
-    /**
-     *
-     * @param photos
-     * @return
-     */
     public List<ResponsePhoto> convert(List<Photo> photos) {
 
         List<ResponsePhoto> responsePhotos = new ArrayList<>();
 
         for (Photo photo : photos) {
-            String[] list = tagService.getAllForPhoto(photo);
-            responsePhotos.add(new ResponsePhoto(photo, rateService.getPhotoRate(photo), tagService.getAllForPhoto(photo)));
+            responsePhotos.add(new ResponsePhoto(
+                    photo,
+                    rateService.getPhotoRate(photo.getPhotoID()),
+                    tagService.getPhotoTags(photo.getPhotoID()),
+                    PTCService.getPhotoCategory(photo.getPhotoID())));
         }
-
-        responsePhotos.sort((o1, o2) -> o2.getRate() - o1.getRate());
-
         return responsePhotos;
     }
+
 }

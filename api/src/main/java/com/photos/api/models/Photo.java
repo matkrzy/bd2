@@ -2,7 +2,6 @@ package com.photos.api.models;
 
 import com.photos.api.models.enums.PhotoState;
 import com.photos.api.models.enums.ShareState;
-import org.springframework.hateoas.ResourceSupport;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,7 +14,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "photo")
-public class Photo extends ResourceSupport {
+public class Photo {
 
     @Id
     @GeneratedValue
@@ -23,15 +22,14 @@ public class Photo extends ResourceSupport {
     @Column(name = "id")
     private Long photoID;
 
+    @NotNull
     @Column(name = "name")
     private String name;
 
-    @ManyToOne
     @NotNull
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "user_email")
+    private String user;
 
-    @NotNull
     @Column(name = "path")
     private String path;
 
@@ -49,23 +47,11 @@ public class Photo extends ResourceSupport {
     @NotNull
     @Column(name = "photo_state")
     private PhotoState photoState;
+    @OneToOne
+    @JoinColumn(name = "exif_id")
+    private PhotoExif exif;
 
-//    @OneToOne
-//    @JoinColumn(name = "exif_id")
-//    private PhotoExif exif;
-//
-//    public PhotoExif getExif() {
-//        return exif;
-//    }
-//
-//    public void setExif(PhotoExif exif) {
-//        this.exif = exif;
-//    }
-
-    public Photo() {
-    }
-
-    public Photo(String name, @NotNull User user, @NotNull String path, @NotNull Timestamp uploadTime, String description, @NotNull ShareState shareState, @NotNull PhotoState photoState) {
+    public Photo(@NotNull String name, @NotNull String user, @NotNull String path, @NotNull Timestamp uploadTime, String description, @NotNull ShareState shareState, @NotNull PhotoState photoState, PhotoExif exif) {
         this.name = name;
         this.user = user;
         this.path = path;
@@ -73,6 +59,19 @@ public class Photo extends ResourceSupport {
         this.description = description;
         this.shareState = shareState;
         this.photoState = photoState;
+        this.exif = exif;
+    }
+
+    public Photo() {
+    }
+
+
+    public PhotoExif getExif() {
+        return exif;
+    }
+
+    public void setExif(PhotoExif exif) {
+        this.exif = exif;
     }
 
     public Long getPhotoID() {
@@ -91,11 +90,11 @@ public class Photo extends ResourceSupport {
         this.name = name;
     }
 
-    public User getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(String user) {
         this.user = user;
     }
 

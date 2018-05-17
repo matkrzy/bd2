@@ -1,10 +1,8 @@
 package com.photos.api.services;
 
-import com.photos.api.controllers.UserController;
 import com.photos.api.models.User;
 import com.photos.api.models.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -26,28 +24,47 @@ public class UserService {
         return users;
     }
 
-    public User getOne(final Long id) {
-        User user = userRepository.findUserByUserID(id);
-        user.add(ControllerLinkBuilder.linkTo(UserController.class).slash(user.getUserID()).withSelfRel());
+    public User getOne(final String email) {
+        String sessionEmail = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+
+        if (!email.equals(sessionEmail)) {
+            return null;
+        }
+
+        User user = userRepository.findByEmail(email);
         return user;
     }
 
-    public void addUser(final User user) {
-        userRepository.save(user);
+    public boolean addUser(final User user) {
+        User user1 = userRepository.findByEmail(user.getEmail());
+        if (user1 == null) {
+            userRepository.save(user);
+            // Files.createDirectory(UPLOAD_ROOT)
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public void updateUser(final User user) {
+    public boolean updateUser(final User user) {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-        User userToUpdate = userRepository.findFirstByEmail(email);
-        if(user.getFirstName() != null)
-             userToUpdate.setFirstName(user.getFirstName());
+        User userToUpdate = userRepository.findByEmail(email);
 
-        if(user.getLastName() != null)
+        if (user.getFirstName() != null)
+            userToUpdate.setFirstName(user.getFirstName());
+
+        if (user.getLastName() != null)
             userToUpdate.setLastName(user.getLastName());
 
-        if(user.getPassword() != null)
+        if (user.getPassword() != null)
             userToUpdate.setPassword(user.getPassword());
 
-        userRepository.save(userToUpdate);
+        try {
+
+            userRepository.save(userToUpdate);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 }

@@ -1,7 +1,5 @@
 package com.photos.api.models;
 
-import org.springframework.hateoas.ResourceSupport;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -24,13 +22,22 @@ public class Category {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @NotNull
+    @Column(name = "user_email")
+    private String user;
 
-    @ManyToOne
-    @JoinColumn(name = "parent_id")
-    private Category parentCategory;
+    @Column(name = "parent")
+    private String parentCategory;
+
+    public Category() {
+    }
+
+    public Category(@NotNull String name, @NotNull String user, @NotNull String parentCategory) {
+
+        this.name = name;
+        this.user = user;
+        this.parentCategory = parentCategory;
+    }
 
     public Long getCategoryID() {
 
@@ -49,19 +56,19 @@ public class Category {
         this.name = name;
     }
 
-    public User getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(String user) {
         this.user = user;
     }
 
-    public Category getParentCategory() {
+    public String getParentCategory() {
         return parentCategory;
     }
 
-    public void setParentCategory(Category parentCategory) {
+    public void setParentCategory(String parentCategory) {
         this.parentCategory = parentCategory;
     }
 }

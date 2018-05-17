@@ -1,6 +1,7 @@
 package com.photos.api.services;
 
 import com.photos.api.models.Photo;
+import com.photos.api.models.enums.PhotoState;
 import com.photos.api.models.repositories.PhotoRepository;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -20,7 +21,7 @@ import java.nio.file.Paths;
 @Service
 public class ImageService {
 
-    private static String UPLOAD_ROOT = "C:\\Users\\MICHAL\\Desktop\\photosAPI";
+    public static String UPLOAD_ROOT = "C:\\Users\\MICHAL\\Desktop\\photosAPI";
     private final ResourceLoader resourceLoader;
     private final PhotoRepository photoRepository;
 
@@ -32,13 +33,19 @@ public class ImageService {
 
     public Resource findImage(String filename) {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-        Photo photo = photoRepository.findByName(filename);
-        if (photo == null) return null;
-        return photo.getUser().getEmail().equals(email) ? resourceLoader.getResource("file:" + UPLOAD_ROOT + "/" + filename) : null;
+        Photo photo = photoRepository.findByNameAndPhotoState(filename,PhotoState.ACTIVE);
+
+        // return photo != null ? resourceLoader.getResource("file:" + UPLOAD_ROOT + " " + filename) : null;
+        return resourceLoader.getResource("file:" + UPLOAD_ROOT + "\\" + filename);
     }
 
     public void createImage(MultipartFile file) throws IOException {
         if (!file.isEmpty()) {
+            String name = file.getOriginalFilename();
+            Photo photo = photoRepository.findByNameAndPhotoState(name,PhotoState.ACTIVE);
+            photo.setPath(UPLOAD_ROOT + "\\" + file.getOriginalFilename());
+            photoRepository.save(photo);
+
             Files.copy(file.getInputStream(), Paths.get(UPLOAD_ROOT, file.getOriginalFilename()));
         }
     }

@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "rate")
-public class Rate extends ResourceSupport {
+public class Rate {
 
     @Id
     @GeneratedValue
@@ -22,14 +22,12 @@ public class Rate extends ResourceSupport {
     private Long rateID;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "user_email")
+    private String user;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "photo_id")
-    private Photo photo;
+    @Column(name = "photo_id")
+    private Long photo;
 
     @NotNull
     @Column(name = "datetime")
@@ -47,19 +45,19 @@ public class Rate extends ResourceSupport {
         this.rateID = rateID;
     }
 
-    public User getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(String user) {
         this.user = user;
     }
 
-    public Photo getPhoto() {
+    public Long getPhoto() {
         return photo;
     }
 
-    public void setPhoto(Photo photo) {
+    public void setPhoto(Long photo) {
         this.photo = photo;
     }
 

@@ -1,8 +1,5 @@
 package com.photos.api.models;
 
-import org.hibernate.validator.constraints.CodePointLength;
-import org.springframework.hateoas.ResourceSupport;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -13,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "share")
-public class Share extends ResourceSupport {
+public class Share {
 
     @Id
     @GeneratedValue
@@ -22,14 +19,12 @@ public class Share extends ResourceSupport {
     private Long shareID;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "user_email")
+    private String user;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "photo_id")
-    private Photo photo;
+    @Column(name = "photo_id")
+    private Long photo;
 
     public Long getShareID() {
         return shareID;
@@ -39,19 +34,21 @@ public class Share extends ResourceSupport {
         this.shareID = shareID;
     }
 
-    public User getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(String user) {
         this.user = user;
     }
 
-    public Photo getPhoto() {
+    public Long getPhoto() {
         return photo;
     }
 
-    public void setPhoto(Photo photo) {
+    public void setPhoto(Long photo) {
         this.photo = photo;
     }
 }
+
+

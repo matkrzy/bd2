@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        com.photos.api.models.User user = userRepository.findFirstByEmail(email);
+        com.photos.api.models.User user = userRepository.findByEmail(email);
         // TODO: 2018-04-21 passwordEncoder
         return new User(user.getEmail(), "{noop}" + user.getPassword(),
                 AuthorityUtils.createAuthorityList(user.getRole()));
