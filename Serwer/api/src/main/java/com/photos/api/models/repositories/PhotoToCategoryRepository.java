@@ -16,4 +16,5 @@ public interface PhotoToCategoryRepository extends JpaRepository<PhotoToCategory
 
     void deleteAllByCategory(Long category);
 
+    void deleteAllByPhoto(Long photoID);
 }

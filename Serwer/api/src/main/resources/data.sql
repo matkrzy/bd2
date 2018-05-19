@@ -61,7 +61,7 @@ INSERT INTO tag (id,name,photo_id,user_id) VALUES (1003,'sunrise',1005,1002);
 /*
     INSERT SHARE
 */
-INSERT INTO share (id,photo_id,user_id,owner_id) VALUES (1001,1001,1001,1000);
+INSERT INTO share (id,photo_id,user_id,owner_id) VALUES (1001,1002,1001,1000);
 INSERT INTO share (id,photo_id,user_id,owner_id) VALUES (1003,1005,1005,1002);
 INSERT INTO share (id,photo_id,user_id,owner_id) VALUES (1002,1006,1000,1003);
 INSERT INTO share (id,photo_id,user_id,owner_id) VALUES (1004,1007,1000,1004);

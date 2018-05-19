@@ -5,24 +5,31 @@ import com.photos.api.models.Share;
 import com.photos.api.models.User;
 import com.photos.api.models.enums.PhotoState;
 import com.photos.api.models.enums.ShareState;
-import com.photos.api.models.repositories.PhotoRepository;
-import com.photos.api.models.repositories.ShareRepository;
-import com.photos.api.models.repositories.UserRepository;
+import com.photos.api.models.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.photos.api.services.ImageService.UPLOAD_ROOT;
 
 /**
  * @author Micha Królewski on 2018-04-14.
  * @version 1.0
  */
 
+@Transactional
 @Service
 public class PhotoService {
+
+    @Autowired
+    private RateRepository rateRepository;
 
     @Autowired
     private PhotoRepository photoRepository;
@@ -31,10 +38,13 @@ public class PhotoService {
     private UserRepository userRepository;
 
     @Autowired
-    private TagService tagService;
+    private TagRepository tagRepository;
 
     @Autowired
     private ShareRepository shareRepository;
+
+    @Autowired
+    private PhotoToCategoryRepository ptcRepository;
 
     /**
      * returning all photos for logged user
@@ -134,7 +144,11 @@ public class PhotoService {
         }
 
         try {
-            // TODO: 2018-05-19 delete image
+            ptcRepository.deleteAllByPhoto(check.getPhotoID());
+            shareRepository.deleteAllByPhoto(check.getPhotoID());
+            rateRepository.deleteAllByPhoto(check.getPhotoID());
+            tagRepository.deleteAllByPhoto(check.getPhotoID());
+            Files.deleteIfExists(Paths.get(UPLOAD_ROOT + "\\" + email + "\\", check.getName()));
             photoRepository.delete(check);
         } catch (Exception e) {
             return false;

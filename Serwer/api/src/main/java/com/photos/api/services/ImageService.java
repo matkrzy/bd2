@@ -55,8 +55,8 @@ public class ImageService {
 
 
     public void deleteImage(String filename) throws IOException {
-        //final Photo img = photoRepository.findByName(filename);
-        //photoRepository.delete(img);
-        Files.deleteIfExists(Paths.get(UPLOAD_ROOT, filename));
+
+        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        Files.deleteIfExists(Paths.get(UPLOAD_ROOT + "\\" + email + "\\", filename));
     }
 }

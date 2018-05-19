@@ -19,4 +19,6 @@ public interface RateRepository extends JpaRepository<Rate, Long> {
     List<Rate> findAllByUser(Long user);
 
     Rate findByPhotoAndUser(Long photo, Long user);
+
+    void deleteAllByPhoto(Long photo);
 }
