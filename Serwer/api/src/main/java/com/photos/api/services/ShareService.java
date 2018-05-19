@@ -53,7 +53,7 @@ public class ShareService {
             }
 
             // sprawdzenie czy istnieje uzytkownik ktoremu udostepniane jest zdjecie
-            if (userRepository.findByEmail(share.getUser()) == null) {
+            if (userRepository.getOne(share.getUser()) == null) {
                 return false;
             }
 

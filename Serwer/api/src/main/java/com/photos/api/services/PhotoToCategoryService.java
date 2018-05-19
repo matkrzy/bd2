@@ -1,6 +1,8 @@
 package com.photos.api.services;
 
+import com.photos.api.models.Category;
 import com.photos.api.models.PhotoToCategory;
+import com.photos.api.models.repositories.CategoryRepository;
 import com.photos.api.models.repositories.PhotoToCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,9 +18,13 @@ public class PhotoToCategoryService {
     @Autowired
     private PhotoToCategoryRepository PTCRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
 
     public String getPhotoCategory(Long photo) {
-        PhotoToCategory category = PTCRepository.findByPhoto(photo);
-        return category != null ? category.getCategory() : null;
+        PhotoToCategory ptc = PTCRepository.findByPhoto(photo);
+        Category category = categoryRepository.findByCategoryID(ptc.getCategory());
+        return category != null ? category.getName() : null;
     }
 }

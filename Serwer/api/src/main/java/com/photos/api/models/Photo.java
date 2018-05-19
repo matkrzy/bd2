@@ -30,6 +30,10 @@ public class Photo {
     @Column(name = "user_email")
     private String user;
 
+    @NotNull
+    @Column(name = "user_id")
+    private Long userid;
+
     @Column(name = "path")
     private String path;
 
@@ -47,13 +51,16 @@ public class Photo {
     @NotNull
     @Column(name = "photo_state")
     private PhotoState photoState;
+
     @OneToOne
     @JoinColumn(name = "exif_id")
     private PhotoExif exif;
 
-    public Photo(@NotNull String name, @NotNull String user, @NotNull String path, @NotNull Timestamp uploadTime, String description, @NotNull ShareState shareState, @NotNull PhotoState photoState, PhotoExif exif) {
+    public Photo(@NotNull String name, @NotNull String user, @NotNull Long userid, String path, @NotNull Timestamp uploadTime, String description, @NotNull ShareState shareState, @NotNull PhotoState photoState, PhotoExif exif) {
+
         this.name = name;
         this.user = user;
+        this.userid = userid;
         this.path = path;
         this.uploadTime = uploadTime;
         this.description = description;
@@ -65,6 +72,13 @@ public class Photo {
     public Photo() {
     }
 
+    public Long getUserid() {
+        return userid;
+    }
+
+    public void setUserid(Long userid) {
+        this.userid = userid;
+    }
 
     public PhotoExif getExif() {
         return exif;

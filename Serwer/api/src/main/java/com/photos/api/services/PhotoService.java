@@ -44,7 +44,7 @@ public class PhotoService {
     public List<Photo> getAll() {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         User user = userRepository.findByEmail(email);
-        List<Photo> photos = photoRepository.findAllByUserAndAndPhotoState(user.getEmail(),PhotoState.ACTIVE);
+        List<Photo> photos = photoRepository.findAllByUserAndAndPhotoState(user.getEmail(), PhotoState.ACTIVE);
         return photos;
     }
 
@@ -54,7 +54,7 @@ public class PhotoService {
      * @return
      */
     public List<Photo> getPublic() {
-        return photoRepository.findAllByShareStateAndPhotoState(ShareState.PUBLIC,PhotoState.ACTIVE);
+        return photoRepository.findAllByShareStateAndPhotoState(ShareState.PUBLIC, PhotoState.ACTIVE);
     }
 
 
@@ -62,12 +62,12 @@ public class PhotoService {
      * @return
      */
     public List<Photo> getShared() {
-        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        User user = userRepository.findByEmail(((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
         List<Photo> photos = new ArrayList<>();
-        List<Share> shares = shareRepository.findAllByUser(email);
+        List<Share> shares = shareRepository.findAllByUser(user.getUserID());
 
         for (Share share : shares) {
-            photos.add(photoRepository.findByPhotoIDAndPhotoState(share.getPhoto(),PhotoState.ACTIVE));
+            photos.add(photoRepository.findByPhotoIDAndPhotoState(share.getPhoto(), PhotoState.ACTIVE));
         }
         return photos;
     }
@@ -78,7 +78,7 @@ public class PhotoService {
      */
     public Photo getOne(final Long id) {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-        Photo photo = photoRepository.findByPhotoIDAndPhotoState(id,PhotoState.ACTIVE);
+        Photo photo = photoRepository.findByPhotoIDAndPhotoState(id, PhotoState.ACTIVE);
 
         return photo != null && photo.getUser().equals(email) ? photo : null;
     }
@@ -93,7 +93,7 @@ public class PhotoService {
 
         try {
 
-            Photo check = photoRepository.findByNameAndPhotoState(photo.getName(),PhotoState.ACTIVE);
+            Photo check = photoRepository.findByNameAndPhotoState(photo.getName(), PhotoState.ACTIVE);
             if (check != null) {
                 return false;
             }

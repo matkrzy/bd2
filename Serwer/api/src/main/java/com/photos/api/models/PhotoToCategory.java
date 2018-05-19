@@ -23,13 +23,13 @@ public class PhotoToCategory {
     private Long photo;
 
     @NotNull
-    @Column(name = "category_name")
-    private String category;
+    @Column(name = "category_id")
+    private Long category;
 
     public PhotoToCategory() {
     }
 
-    public PhotoToCategory(@NotNull Long photo, @NotNull String category) {
+    public PhotoToCategory(@NotNull Long photo, @NotNull Long category) {
         this.photo = photo;
         this.category = category;
     }
@@ -50,11 +50,11 @@ public class PhotoToCategory {
         this.photo = photo;
     }
 
-    public String getCategory() {
+    public Long getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Long category) {
         this.category = category;
     }
 

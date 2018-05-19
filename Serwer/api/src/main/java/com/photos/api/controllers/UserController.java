@@ -47,4 +47,11 @@ public class UserController {
                 ResponseEntity.status(HttpStatus.OK).build() :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
+
+    @DeleteMapping("/{email}")
+    public ResponseEntity deleteUser(@PathVariable final String email) {
+        return userService.deleteUser(email) ?
+                ResponseEntity.status(HttpStatus.OK).build() :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
 }

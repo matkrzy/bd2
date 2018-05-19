@@ -13,4 +13,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface PhotoToCategoryRepository extends JpaRepository<PhotoToCategory, Long> {
 
     PhotoToCategory findByPhoto(final Long photo);
+
+    void deleteAllByCategory(Long category);
+
 }

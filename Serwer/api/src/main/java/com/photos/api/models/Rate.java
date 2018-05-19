@@ -22,8 +22,8 @@ public class Rate {
     private Long rateID;
 
     @NotNull
-    @Column(name = "user_email")
-    private String user;
+    @Column(name = "user_id")
+    private Long user;
 
     @NotNull
     @Column(name = "photo_id")
@@ -45,11 +45,11 @@ public class Rate {
         this.rateID = rateID;
     }
 
-    public String getUser() {
+    public Long getUser() {
         return user;
     }
 
-    public void setUser(String user) {
+    public void setUser(Long user) {
         this.user = user;
     }
 
