@@ -28,8 +28,8 @@ public class Rate {
     private Long photo;
 
     @NotNull
-    @Column(name = "datetime")
-    private Timestamp datetime;
+    @Column(name = "date")
+    private Timestamp date;
 
     @NotNull
     @Column(name = "rate")
@@ -59,12 +59,12 @@ public class Rate {
         this.photo = photo;
     }
 
-    public Timestamp getDatetime() {
-        return datetime;
+    public Timestamp getDate() {
+        return date;
     }
 
-    public void setDatetime(Timestamp datetime) {
-        this.datetime = datetime;
+    public void setDate(Timestamp date) {
+        this.date = date;
     }
 
     public Byte getRate() {

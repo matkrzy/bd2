@@ -71,11 +71,11 @@ INSERT INTO share (id,photo_id,user_id,owner_id) VALUES (1006,1009,1000,1005);
 /*
     INSERT RATE
 */
-INSERT INTO rate (id,datetime,rate,photo_id,user_id) VALUES (1001,'18-04-21 10:34:09',9,1001,1001);
-INSERT INTO rate (id,datetime,rate,photo_id,user_id) VALUES (1002,'18-03-12 10:34:09',4,1001,1005);
-INSERT INTO rate (id,datetime,rate,photo_id,user_id) VALUES (1003,'18-03-12 10:34:09',7,1002,1005);
-INSERT INTO rate (id,datetime,rate,photo_id,user_id) VALUES (1004,'18-03-12 10:34:09',8,1002,1001);
-INSERT INTO rate (id,datetime,rate,photo_id,user_id) VALUES (1005,'18-03-12 10:34:09',4,1004,1003);
-INSERT INTO rate (id,datetime,rate,photo_id,user_id) VALUES (1006,'18-03-12 10:34:09',2,1006,1005);
+INSERT INTO rate (id,date,rate,photo_id,user_id) VALUES (1001,'18-04-21 10:34:09',9,1001,1001);
+INSERT INTO rate (id,date,rate,photo_id,user_id) VALUES (1002,'18-03-12 10:34:09',4,1001,1005);
+INSERT INTO rate (id,date,rate,photo_id,user_id) VALUES (1003,'18-03-12 10:34:09',7,1002,1005);
+INSERT INTO rate (id,date,rate,photo_id,user_id) VALUES (1004,'18-03-12 10:34:09',8,1002,1001);
+INSERT INTO rate (id,date,rate,photo_id,user_id) VALUES (1005,'18-03-12 10:34:09',4,1004,1003);
+INSERT INTO rate (id,date,rate,photo_id,user_id) VALUES (1006,'18-03-12 10:34:09',2,1006,1005);
 
 

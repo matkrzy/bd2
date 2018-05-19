@@ -2,10 +2,16 @@ package com.photos.api.services;
 
 import com.photos.api.models.Photo;
 import com.photos.api.models.Rate;
+import com.photos.api.models.User;
+import com.photos.api.models.enums.PhotoState;
+import com.photos.api.models.repositories.PhotoRepository;
 import com.photos.api.models.repositories.RateRepository;
+import com.photos.api.models.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -15,6 +21,12 @@ import java.util.List;
 
 @Service
 public class RateService {
+
+    @Autowired
+    private PhotoRepository photoRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private RateRepository rateRepository;
@@ -38,4 +50,69 @@ public class RateService {
         return rate;
     }
 
+    public boolean addRate(Rate rate) {
+        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        User user = userRepository.findByEmail(email);
+
+        Rate check = rateRepository.findByPhotoAndUser(rate.getPhoto(), user.getUserID());
+        if (check != null) {
+            return false;
+        }
+
+        Photo photo = photoRepository.findByPhotoIDAndPhotoState(rate.getPhoto(), PhotoState.ACTIVE);
+        if (photo == null) {
+            return false;
+        }
+
+        try {
+            rate.setUser(user.getUserID());
+            rate.setDate(new Timestamp(System.currentTimeMillis()));
+            rateRepository.save(rate);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean deleteRate(Long photoId) {
+        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        User user = userRepository.findByEmail(email);
+
+        Rate rate = rateRepository.findByPhotoAndUser(photoId, user.getUserID());
+        if (rate == null) {
+            return false;
+        }
+        try {
+            rateRepository.delete(rate);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean editRate(Long photoId, byte rate) {
+        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        User user = userRepository.findByEmail(email);
+
+        Rate check = rateRepository.findByPhotoAndUser(photoId, user.getUserID());
+        if (check == null) {
+            return false;
+        }
+        try {
+            check.setRate(rate);
+            check.setDate(new Timestamp(System.currentTimeMillis()));
+            rateRepository.save(check);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public List<Rate> getAll() {
+        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        User user = userRepository.findByEmail(email);
+
+        return rateRepository.findAllByUser(user.getUserID());
+    }
 }
+

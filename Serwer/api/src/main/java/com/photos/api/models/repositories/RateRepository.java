@@ -1,6 +1,5 @@
 package com.photos.api.models.repositories;
 
-import com.photos.api.models.Photo;
 import com.photos.api.models.Rate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
@@ -13,7 +12,11 @@ import java.util.List;
  */
 
 @Component
-public interface RateRepository extends JpaRepository<Rate,Long> {
+public interface RateRepository extends JpaRepository<Rate, Long> {
 
-    List<Rate> findAllByPhoto(final Long photo);
+    List<Rate> findAllByPhoto(Long photo);
+
+    List<Rate> findAllByUser(Long user);
+
+    Rate findByPhotoAndUser(Long photo, Long user);
 }

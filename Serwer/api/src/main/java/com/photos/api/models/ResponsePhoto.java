@@ -12,10 +12,10 @@ public class ResponsePhoto extends Photo {
 
     private byte rate;
     private List<Tag> tags;
-    private String category;
+    private Category category;
 
-    public ResponsePhoto(Photo photo, byte rate, List<Tag> tags, String category) {
-        super(photo.getName(), photo.getUser(),photo.getUserID(), photo.getPath(), photo.getUploadTime(), photo.getDescription(), photo.getShareState(), photo.getPhotoState());
+    public ResponsePhoto(Photo photo, byte rate, List<Tag> tags, Category category) {
+        super(photo.getName(), photo.getUser(), photo.getUserID(), photo.getPath(), photo.getUploadTime(), photo.getDescription(), photo.getShareState(), photo.getPhotoState());
         this.setPhotoID(photo.getPhotoID());
         this.rate = rate;
         this.tags = tags;
@@ -42,11 +42,11 @@ public class ResponsePhoto extends Photo {
         this.tags = tags;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 }

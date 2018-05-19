@@ -22,9 +22,9 @@ public class PhotoToCategoryService {
     private CategoryRepository categoryRepository;
 
 
-    public String getPhotoCategory(Long photo) {
+    public Category getPhotoCategory(Long photo) {
         PhotoToCategory ptc = PTCRepository.findByPhoto(photo);
         Category category = categoryRepository.findByCategoryID(ptc.getCategory());
-        return category != null ? category.getName() : null;
+        return category;
     }
 }
