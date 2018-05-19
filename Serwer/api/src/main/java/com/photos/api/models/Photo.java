@@ -50,11 +50,7 @@ public class Photo {
     @Column(name = "photo_state")
     private PhotoState photoState;
 
-    @OneToOne
-    @JoinColumn(name = "exif_id")
-    private PhotoExif exif;
-
-    public Photo(@NotNull String name, @NotNull String user, @NotNull Long userid, String path, @NotNull Timestamp uploadTime, String description, ShareState shareState, PhotoState photoState, PhotoExif exif) {
+    public Photo(@NotNull String name, @NotNull String user, @NotNull Long userid, String path, @NotNull Timestamp uploadTime, String description, ShareState shareState, PhotoState photoState) {
 
         this.name = name;
         this.user = user;
@@ -64,8 +60,7 @@ public class Photo {
         this.description = description;
         this.shareState = shareState;
         this.photoState = photoState;
-        this.exif = exif;
-    }
+}
 
     public Photo() {
     }
@@ -78,13 +73,6 @@ public class Photo {
         this.userid = userid;
     }
 
-    public PhotoExif getExif() {
-        return exif;
-    }
-
-    public void setExif(PhotoExif exif) {
-        this.exif = exif;
-    }
 
     public Long getPhotoID() {
         return photoID;

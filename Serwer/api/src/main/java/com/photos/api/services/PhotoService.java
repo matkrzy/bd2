@@ -98,10 +98,17 @@ public class PhotoService {
                 return false;
             }
 
+            User user = userRepository.findByEmail(email);
             photo.setUser(email);
+            photo.setUserid(user.getUserID());
             photo.setUploadTime(new Timestamp(System.currentTimeMillis()));
-            // TODO: 2018-05-15 add exif
-            photo.setExif(null);
+            if (photo.getPhotoState() == null) {
+                photo.setPhotoState(PhotoState.ACTIVE);
+            }
+            if (photo.getShareState() == null) {
+                photo.setShareState(ShareState.PRIVATE);
+            }
+
             photoRepository.save(photo);
         } catch (Exception e) {
             return false;
