@@ -14,13 +14,8 @@ import java.util.List;
 @Component
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    Category findByNameAndUser(final String name, final String user);
 
-    Category findFirstByNameAndUser(final String name, final String user);
+    Category findByCategoryIDAndUser(final Long categoryID, final Long user);
 
-    Category findByParentCategoryAndNameAndUser(final String parentCategory, final String name, final String user);
-
-    Category findByCategoryIDAndUser(final Long categoryID, final String user);
-
-    List<Category> findAllByUser(final String user);
+    List<Category> findAllByParentCategoryAndUser(Long parent, Long user);
 }

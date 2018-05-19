@@ -23,24 +23,24 @@ public class Category {
     private String name;
 
     @NotNull
-    @Column(name = "user_email")
-    private String user;
+    @Column(name = "user_id")
+    private Long user;
 
-    @Column(name = "parent")
-    private String parentCategory;
 
-    public Category() {
-    }
+    @Column(name = "parent_id")
+    private Long parentCategory;
 
-    public Category(@NotNull String name, @NotNull String user, @NotNull String parentCategory) {
+    public Category(@NotNull String name, @NotNull Long user, Long parentCategory) {
 
         this.name = name;
         this.user = user;
         this.parentCategory = parentCategory;
     }
 
-    public Long getCategoryID() {
+    public Category() {
+    }
 
+    public Long getCategoryID() {
         return categoryID;
     }
 
@@ -56,19 +56,21 @@ public class Category {
         this.name = name;
     }
 
-    public String getUser() {
+    public Long getUser() {
         return user;
     }
 
-    public void setUser(String user) {
+    public void setUser(Long user) {
         this.user = user;
     }
 
-    public String getParentCategory() {
+    public Long getParentCategory() {
         return parentCategory;
     }
 
-    public void setParentCategory(String parentCategory) {
+    public void setParentCategory(Long parentCategory) {
         this.parentCategory = parentCategory;
     }
 }
+
+

@@ -39,7 +39,7 @@ public class ImageService {
         return resourceLoader.getResource("file:" + UPLOAD_ROOT + "\\" + filename);
     }
 
-    public void createImage(MultipartFile file) throws IOException {
+    public boolean createImage(MultipartFile file) throws IOException {
         if (!file.isEmpty()) {
             String name = file.getOriginalFilename();
             Photo photo = photoRepository.findByNameAndPhotoState(name,PhotoState.ACTIVE);
@@ -48,6 +48,7 @@ public class ImageService {
 
             Files.copy(file.getInputStream(), Paths.get(UPLOAD_ROOT, file.getOriginalFilename()));
         }
+        return true;
     }
 
 

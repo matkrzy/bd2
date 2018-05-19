@@ -2,7 +2,6 @@ package com.photos.api.models;
 
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -25,16 +24,21 @@ public class Tag {
     @Column(name = "photo_id")
     private Long photo;
 
-    @NotBlank
+    @NotNull
+    @Column(name = "user_id")
+    private Long user;
+
+    @NotNull
     @Column(name = "name")
     private String name;
 
     public Tag() {
     }
 
-    public Tag(Long photo, @NotBlank String name) {
+    public Tag(@NotNull Long photo, @NotNull Long user, @NotNull String name) {
 
         this.photo = photo;
+        this.user = user;
         this.name = name;
     }
 
@@ -52,6 +56,14 @@ public class Tag {
 
     public void setPhoto(Long photo) {
         this.photo = photo;
+    }
+
+    public Long getUser() {
+        return user;
+    }
+
+    public void setUser(Long user) {
+        this.user = user;
     }
 
     public String getName() {

@@ -31,15 +31,17 @@ public class ImageController {
             Resource file = imageService.findImage(filename);
             return file != null ?
                     ResponseEntity.status(HttpStatus.OK).contentLength(file.contentLength()).contentType(MediaType.IMAGE_JPEG).body(new InputStreamResource(file.getInputStream())) :
-                    ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+                    ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            return ResponseEntity.status(HttpStatus.NO_CONTENT)
                     .body("Couldn't find " + filename);
         }
     }
 
     @PostMapping
-    public void addImage(@RequestParam("file") MultipartFile file) throws IOException {
-        imageService.createImage(file);
+    public ResponseEntity addImage(@RequestParam("file") MultipartFile file) throws IOException {
+        return imageService.createImage(file) ?
+                ResponseEntity.status(HttpStatus.OK).build() :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 }

@@ -21,20 +21,27 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping("/{name}")
-    public ResponseEntity getOne(@PathVariable String name) {
-        return ResponseEntity.status(HttpStatus.OK).body(categoryService.getOne(name));
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteCategory(@PathVariable final Long id) {
+        return categoryService.deleteCategory(id) ?
+                ResponseEntity.status(HttpStatus.OK).build() :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    @GetMapping("/{parentName}/{name}")
-    public ResponseEntity getOne(@PathVariable String parentName, @PathVariable String name) {
-        return ResponseEntity.status(HttpStatus.OK).body(categoryService.getOne(parentName,name));
+    @GetMapping("/{parentId}")
+    public ResponseEntity getCategories(@PathVariable final Long parentId) {
+        List<Category> categories = categoryService.getAll(parentId);
+        return categories != null ?
+                ResponseEntity.status(HttpStatus.OK).body(categories) :
+                ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping
-    public ResponseEntity getAll() {
-        List<Category> categories = categoryService.getAll();
-        return ResponseEntity.status(HttpStatus.OK).body(categories);
+    public ResponseEntity getCategories() {
+        List<Category> categories = categoryService.getAll(null);
+        return categories != null ?
+                ResponseEntity.status(HttpStatus.OK).body(categories) :
+                ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PostMapping
@@ -44,5 +51,10 @@ public class CategoryController {
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-
+    @PutMapping("/{id}")
+    public ResponseEntity editCategory(@PathVariable final Long id, @RequestBody final Category category) {
+        return categoryService.editCategory(id, category) ?
+                ResponseEntity.status(HttpStatus.OK).build() :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
 }

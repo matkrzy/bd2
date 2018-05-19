@@ -41,7 +41,7 @@ public class UserController {
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    @PostMapping("/edit")
+    @PutMapping
     public ResponseEntity updateUser(@RequestBody final User user) {
         return userService.updateUser(user) ?
                 ResponseEntity.status(HttpStatus.OK).build() :

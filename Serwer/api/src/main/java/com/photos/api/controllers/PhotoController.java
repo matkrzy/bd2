@@ -36,44 +36,42 @@ public class PhotoController {
     @Autowired
     private TagService tagService;
 
-
-    /**
-     * @return
-     */
     @GetMapping
     public ResponseEntity getAll() {
         List<ResponsePhoto> responsePhotos = convert(photoService.getAll());
+
+        if (responsePhotos == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+
         responsePhotos.sort((o1, o2) -> o2.getUploadTime().compareTo(o1.getUploadTime()));
         return ResponseEntity.status(HttpStatus.OK).body(responsePhotos);
     }
 
-    /**
-     * @return
-     */
     @GetMapping("/public")
     public ResponseEntity getPublic() {
 
         List<ResponsePhoto> responsePhotos = convert(photoService.getPublic());
+        if (responsePhotos == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+
         responsePhotos.sort((o1, o2) -> o2.getRate() - o1.getRate());
-        return ResponseEntity.ok().body(responsePhotos);
+        return ResponseEntity.status(HttpStatus.OK).body(responsePhotos);
     }
 
-    /**
-     * @return
-     */
     @GetMapping("/shared")
     public ResponseEntity getShared() {
 
         List<ResponsePhoto> responsePhotos = convert(photoService.getShared());
-        responsePhotos.sort((o1, o2) -> o2.getUploadTime().compareTo(o1.getUploadTime()));
-        return ResponseEntity.ok().body(responsePhotos);
+        if (responsePhotos == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
 
+        responsePhotos.sort((o1, o2) -> o2.getUploadTime().compareTo(o1.getUploadTime()));
+        return ResponseEntity.status(HttpStatus.OK).body(responsePhotos);
     }
 
-    /**
-     * @param id
-     * @return
-     */
     @GetMapping("/{id}")
     public ResponseEntity getOne(@PathVariable(value = "id") final Long id) {
         Photo photo = photoService.getOne(id);
@@ -89,15 +87,11 @@ public class PhotoController {
     }
 
 
-    /**
-     * @param photo
-     * @return
-     */
     @PostMapping
     public ResponseEntity addPhoto(@RequestBody final Photo photo) {
         return photoService.addPhoto(photo) ?
                 ResponseEntity.status(HttpStatus.OK).build() :
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).body("photo exists");
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
 
@@ -114,7 +108,7 @@ public class PhotoController {
      * contain photo and its average rate
      */
 
-    public List<ResponsePhoto> convert(List<Photo> photos) {
+    private List<ResponsePhoto> convert(List<Photo> photos) {
 
         List<ResponsePhoto> responsePhotos = new ArrayList<>();
 
@@ -125,7 +119,7 @@ public class PhotoController {
                     tagService.getPhotoTags(photo.getPhotoID()),
                     PTCService.getPhotoCategory(photo.getPhotoID())));
         }
-        return responsePhotos;
+        return responsePhotos.size() == 0 ? null : responsePhotos;
     }
 
 }

@@ -14,8 +14,13 @@ import java.util.List;
 @Component
 public interface TagRepository extends JpaRepository<Tag, Long> {
 
-    List<Tag> getAllByPhoto(final Long photo);
+    List<Tag> findAllByPhoto(Long photo);
 
-    List<Tag> getAllByNameLike(String name);
+    List<Tag> findAllByNameLike(String name);
 
+    List<Tag> findAllByUser(Long user);
+
+    List<Tag> findAllByNameLikeAndUser(String name, Long user);
+
+    Tag findByTagIDAndUser(Long id, Long user);
 }

@@ -1,5 +1,7 @@
 package com.photos.api.models;
 
+import java.util.List;
+
 /**
  * @author Micha Królewski on 2018-05-13.
  * @version x
@@ -9,10 +11,10 @@ package com.photos.api.models;
 public class ResponsePhoto extends Photo {
 
     private byte rate;
-    private String[] tags;
+    private List<Tag> tags;
     private String category;
 
-    public ResponsePhoto(Photo photo, byte rate, String[] tags, String category) {
+    public ResponsePhoto(Photo photo, byte rate, List<Tag> tags, String category) {
         super(photo.getName(), photo.getUser(), photo.getPath(), photo.getUploadTime(), photo.getDescription(), photo.getShareState(), photo.getPhotoState(), photo.getExif());
         this.setPhotoID(photo.getPhotoID());
         this.rate = rate;
@@ -32,11 +34,11 @@ public class ResponsePhoto extends Photo {
         this.rate = rate;
     }
 
-    public String[] getTags() {
+    public List<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(String[] tags) {
+    public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
 
