@@ -37,7 +37,7 @@ public class UserService {
 
     @Autowired
     private TagRepository tagRepository;
-    
+
     public List<User> getAll() {
         List<User> users = userRepository.findAll();
         return users;

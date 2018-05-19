@@ -1,5 +1,6 @@
 package com.photos.api.security;
 
+import com.photos.api.models.enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,8 +25,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers("/users").permitAll()
-                .antMatchers("/photos").authenticated()
+                .antMatchers("**/**").authenticated()
+                .antMatchers("**/users/new").permitAll()
+                .antMatchers("**/users/all").hasAuthority(Role.ADMIN.getText())
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), customUserDetailsService));

@@ -111,4 +111,48 @@ public class PhotoService {
     }
 
 
+    public boolean deletePhoto(Long id) {
+        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        Photo check = photoRepository.findByPhotoIDAndUser(id, email);
+
+        if (check == null) {
+            return false;
+        }
+
+        try {
+            // TODO: 2018-05-19 delete image
+            photoRepository.delete(check);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean editPhoto(Long id, Photo photo) {
+
+        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        Photo photoToUpdate = photoRepository.findByPhotoIDAndUser(id, email);
+
+        if (photoToUpdate == null) {
+            return false;
+        }
+
+        try {
+
+            if (!photoToUpdate.getDescription().equals(photo.getDescription()) && photo.getDescription() != null) {
+                photoToUpdate.setDescription(photo.getDescription());
+            }
+            if (!photoToUpdate.getPhotoState().equals(photo.getPhotoState()) && photo.getPhotoState() != null) {
+                photoToUpdate.setPhotoState(photo.getPhotoState());
+            }
+            if (!photoToUpdate.getShareState().equals(photo.getShareState()) && photo.getShareState() != null) {
+                photoToUpdate.setShareState(photo.getShareState());
+            }
+
+            photoRepository.save(photoToUpdate);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 }

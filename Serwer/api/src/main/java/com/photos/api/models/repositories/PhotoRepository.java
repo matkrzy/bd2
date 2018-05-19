@@ -29,4 +29,6 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     Photo findByNameAndUserAndPhotoState(String name, String user, PhotoState photoState);
 
     void deleteAllByUserid(Long userID);
+
+    Photo findByPhotoIDAndUser(Long id, String user);
 }

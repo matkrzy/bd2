@@ -44,11 +44,9 @@ public class Photo {
     @Column(name = "description")
     private String description;
 
-    @NotNull
     @Column(name = "share_state")
     private ShareState shareState;
 
-    @NotNull
     @Column(name = "photo_state")
     private PhotoState photoState;
 
@@ -56,7 +54,7 @@ public class Photo {
     @JoinColumn(name = "exif_id")
     private PhotoExif exif;
 
-    public Photo(@NotNull String name, @NotNull String user, @NotNull Long userid, String path, @NotNull Timestamp uploadTime, String description, @NotNull ShareState shareState, @NotNull PhotoState photoState, PhotoExif exif) {
+    public Photo(@NotNull String name, @NotNull String user, @NotNull Long userid, String path, @NotNull Timestamp uploadTime, String description, ShareState shareState, PhotoState photoState, PhotoExif exif) {
 
         this.name = name;
         this.user = user;

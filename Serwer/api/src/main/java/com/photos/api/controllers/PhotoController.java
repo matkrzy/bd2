@@ -94,6 +94,24 @@ public class PhotoController {
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity deletePhoto(@PathVariable final Long id) {
+        return photoService.deletePhoto(id) ?
+                ResponseEntity.status(HttpStatus.OK).build() :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity editPhoto(@PathVariable final Long id, @RequestBody final Photo photo) {
+        return photoService.editPhoto(id,photo) ?
+                ResponseEntity.status(HttpStatus.OK).build() :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+
+
+
 
     // TODO: 2018-04-29 delete this!
     @GetMapping("/index")
