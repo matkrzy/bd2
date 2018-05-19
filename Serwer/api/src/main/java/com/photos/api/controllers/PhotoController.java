@@ -37,7 +37,7 @@ public class PhotoController {
     private TagService tagService;
 
     @GetMapping
-    public ResponseEntity getAll() {
+    public ResponseEntity getPhotos() {
         List<ResponsePhoto> responsePhotos = convert(photoService.getAll());
 
         if (responsePhotos == null) {
@@ -49,7 +49,7 @@ public class PhotoController {
     }
 
     @GetMapping("/public")
-    public ResponseEntity getPublic() {
+    public ResponseEntity getPublicPhotos() {
 
         List<ResponsePhoto> responsePhotos = convert(photoService.getPublic());
         if (responsePhotos == null) {
@@ -61,7 +61,7 @@ public class PhotoController {
     }
 
     @GetMapping("/shared")
-    public ResponseEntity getShared() {
+    public ResponseEntity getSharedPhotos() {
 
         List<ResponsePhoto> responsePhotos = convert(photoService.getShared());
         if (responsePhotos == null) {
@@ -73,8 +73,8 @@ public class PhotoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getOne(@PathVariable(value = "id") final Long id) {
-        Photo photo = photoService.getOne(id);
+    public ResponseEntity getPhoto(@PathVariable final Long id) {
+        Photo photo = photoService.getPhoto(id);
         if (photo != null) {
             ResponsePhoto p = new ResponsePhoto(photo,
                     rateService.getPhotoRate(photo.getPhotoID()),
@@ -83,9 +83,22 @@ public class PhotoController {
             return ResponseEntity.status(HttpStatus.OK).body(p);
         }
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @GetMapping("/x/{name}")
+    public ResponseEntity getPhoto(@PathVariable final String name) {
+        Photo photo = photoService.getPhoto(name);
+        if (photo != null) {
+            ResponsePhoto p = new ResponsePhoto(photo,
+                    rateService.getPhotoRate(photo.getPhotoID()),
+                    tagService.getPhotoTags(photo.getPhotoID()),
+                    PTCService.getPhotoCategory(photo.getPhotoID()));
+            return ResponseEntity.status(HttpStatus.OK).body(p);
+        }
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
     @PostMapping
     public ResponseEntity addPhoto(@RequestBody final Photo photo) {
@@ -101,16 +114,12 @@ public class PhotoController {
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-
     @PutMapping("/{id}")
     public ResponseEntity editPhoto(@PathVariable final Long id, @RequestBody final Photo photo) {
-        return photoService.editPhoto(id,photo) ?
+        return photoService.editPhoto(id, photo) ?
                 ResponseEntity.status(HttpStatus.OK).build() :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
-
-
-
 
 
     // TODO: 2018-04-29 delete this!

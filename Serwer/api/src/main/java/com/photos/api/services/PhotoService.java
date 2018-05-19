@@ -76,9 +76,16 @@ public class PhotoService {
      * @param id
      * @return
      */
-    public Photo getOne(final Long id) {
+    public Photo getPhoto(final Long id) {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         Photo photo = photoRepository.findByPhotoIDAndPhotoState(id, PhotoState.ACTIVE);
+
+        return photo != null && photo.getUser().equals(email) ? photo : null;
+    }
+
+    public Photo getPhoto(final String name) {
+        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        Photo photo = photoRepository.findByNameAndPhotoState(name, PhotoState.ACTIVE);
 
         return photo != null && photo.getUser().equals(email) ? photo : null;
     }
