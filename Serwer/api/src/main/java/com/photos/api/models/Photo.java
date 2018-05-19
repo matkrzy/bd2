@@ -32,7 +32,7 @@ public class Photo {
 
     @NotNull
     @Column(name = "user_id")
-    private Long userid;
+    private Long userID;
 
     @Column(name = "path")
     private String path;
@@ -54,25 +54,24 @@ public class Photo {
 
         this.name = name;
         this.user = user;
-        this.userid = userid;
+        this.userID = userid;
         this.path = path;
         this.uploadTime = uploadTime;
         this.description = description;
         this.shareState = shareState;
         this.photoState = photoState;
-}
+    }
 
     public Photo() {
     }
 
-    public Long getUserid() {
-        return userid;
+    public Long getUserID() {
+        return userID;
     }
 
-    public void setUserid(Long userid) {
-        this.userid = userid;
+    public void setUserID(Long userid) {
+        this.userID = userid;
     }
-
 
     public Long getPhotoID() {
         return photoID;

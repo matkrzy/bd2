@@ -44,7 +44,7 @@ public class PhotoService {
     public List<Photo> getAll() {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         User user = userRepository.findByEmail(email);
-        List<Photo> photos = photoRepository.findAllByUserAndAndPhotoState(user.getEmail(), PhotoState.ACTIVE);
+        List<Photo> photos = photoRepository.findAllByUserAndPhotoState(user.getEmail(), PhotoState.ACTIVE);
         return photos;
     }
 
@@ -107,7 +107,7 @@ public class PhotoService {
 
             User user = userRepository.findByEmail(email);
             photo.setUser(email);
-            photo.setUserid(user.getUserID());
+            photo.setUserID(user.getUserID());
             photo.setUploadTime(new Timestamp(System.currentTimeMillis()));
             if (photo.getPhotoState() == null) {
                 photo.setPhotoState(PhotoState.ACTIVE);

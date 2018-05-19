@@ -1,7 +1,5 @@
 package com.photos.api.models;
 
-import org.springframework.hateoas.ResourceSupport;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;

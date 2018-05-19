@@ -26,7 +26,6 @@ public class Category {
     @Column(name = "user_id")
     private Long user;
 
-
     @Column(name = "parent_id")
     private Long parentCategory;
 

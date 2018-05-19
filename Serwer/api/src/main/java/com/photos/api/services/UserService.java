@@ -1,8 +1,8 @@
 package com.photos.api.services;
 
 import com.photos.api.models.Category;
-import com.photos.api.models.Photo;
 import com.photos.api.models.User;
+import com.photos.api.models.enums.Role;
 import com.photos.api.models.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -62,6 +62,7 @@ public class UserService {
     public boolean addUser(final User user) throws IOException {
         User user1 = userRepository.findByEmail(user.getEmail());
         if (user1 == null) {
+            user.setRole(Role.USER);
             userRepository.save(user);
             Files.createDirectory(Paths.get(UPLOAD_ROOT + "/" + user.getEmail()));
             return true;
@@ -102,15 +103,14 @@ public class UserService {
         try {
 
             List<Category> categories = categoryRepository.findAllByUser(user.getUserID());
-            for(Category category : categories){
+            for (Category category : categories) {
                 PTCRepository.deleteAllByCategory(category.getCategoryID());
             }
             categoryRepository.deleteAllByUser(user.getUserID());
 
             shareRepository.deleteAllByUser(user.getUserID());
             tagRepository.deleteAllByUser(user.getUserID());
-
-            photoRepository.deleteAllByUserid(user.getUserID());
+            photoRepository.deleteAllByUserID(user.getUserID());
 
             // TODO: 2018-05-19 delete folder with images
             userRepository.delete(user);

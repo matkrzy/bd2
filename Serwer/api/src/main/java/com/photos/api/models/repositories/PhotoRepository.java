@@ -16,7 +16,7 @@ import java.util.List;
 @Component
 public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
-    List<Photo> findAllByUserAndAndPhotoState(String email, PhotoState photoState);
+    List<Photo> findAllByUserAndPhotoState(String email, PhotoState photoState);
 
     List<Photo> findAllByShareStateAndPhotoState(ShareState ss, PhotoState photoState);
 
@@ -28,7 +28,7 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
     Photo findByNameAndUserAndPhotoState(String name, String user, PhotoState photoState);
 
-    void deleteAllByUserid(Long userID);
+    void deleteAllByUserID(Long userID);
 
     Photo findByPhotoIDAndUser(Long id, String user);
 }

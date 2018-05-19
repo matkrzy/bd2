@@ -22,7 +22,7 @@ public class RateService {
     /**
      * Pobiera wszystkie oceny danego zdjecia z bazy oraz wylicza srednia
      *
-     * @param photo
+     * @param
      * @return {srednia ocena zdjecia}
      */
     public byte getPhotoRate(final Long photoid) {

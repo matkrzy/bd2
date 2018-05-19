@@ -47,7 +47,8 @@ public class ImageService {
             photo.setPath(UPLOAD_ROOT + "\\" + email + "\\" + file.getOriginalFilename());
             photoRepository.save(photo);
 
-            Files.copy(file.getInputStream(), Paths.get(UPLOAD_ROOT, file.getOriginalFilename()));
+            Files.copy(file.getInputStream(), Paths.get(UPLOAD_ROOT + "\\" + email + "\\", file.getOriginalFilename()));
+
         }
         return true;
     }

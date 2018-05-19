@@ -1,5 +1,7 @@
 package com.photos.api.models;
 
+import com.photos.api.models.enums.Role;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -34,14 +36,13 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @NotNull
     @Column(name = "role")
-    private String role;
+    private Role role;
 
     public User() {
     }
 
-    public User(@NotNull String email, @NotNull String firstName, @NotNull String lastName, @NotNull String password, @NotNull String role) {
+    public User(@NotNull String email, @NotNull String firstName, @NotNull String lastName, @NotNull String password, Role role) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -89,11 +90,11 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

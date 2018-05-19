@@ -1,17 +1,17 @@
 /*
     INSERT USER
 */
-INSERT INTO user (id,first_name,last_name,email,password,role) VALUES (1000,'Michal','Krolewski','michal.krolewski@mail.com','password','ADMIN');
-INSERT INTO user (id,first_name,last_name,email,password,role) VALUES (1001,'Piotr','Gorczyca','piotr.gorczyca@mail.com','password','ADMIN');
-INSERT INTO user (id,first_name,last_name,email,password,role) VALUES (1002,'Marta','Miler','marta.miler@mail.com','password','USER');
-INSERT INTO user (id,first_name,last_name,email,password,role) VALUES (1003,'Piotr','Gazda','piotr.gazda@mail.com','password','USER');
-INSERT INTO user (id,first_name,last_name,email,password,role) VALUES (1004,'Olaf','Kris','olaf.kris@mail.com','password','USER');
-INSERT INTO user (id,first_name,last_name,email,password,role) VALUES (1005,'Mateusz','Krzyzanowski','mateusz.krzyzanowski@mail.com','password','USER');
+INSERT INTO user (id,first_name,last_name,email,password,role) VALUES (1000,'Michal','Krolewski','michal.krolewski@mail.com','password',1);
+INSERT INTO user (id,first_name,last_name,email,password,role) VALUES (1001,'Piotr','Gorczyca','piotr.gorczyca@mail.com','password',0);
+INSERT INTO user (id,first_name,last_name,email,password,role) VALUES (1002,'Marta','Miler','marta.miler@mail.com','password',0);
+INSERT INTO user (id,first_name,last_name,email,password,role) VALUES (1003,'Piotr','Gazda','piotr.gazda@mail.com','password',0);
+INSERT INTO user (id,first_name,last_name,email,password,role) VALUES (1004,'Olaf','Kris','olaf.kris@mail.com','password',0);
+INSERT INTO user (id,first_name,last_name,email,password,role) VALUES (1005,'Mateusz','Krzyzanowski','mateusz.krzyzanowski@mail.com','password',0);
 
 /*
     INSERT PHOTO
 */
-INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id) VALUES (1001,'photo1_description','tlo.jpg',0,0,'18-04-21 10:34:09','michal.krolewski@mail.com',1000);
+INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id) VALUES (1001,'photo1_description','tlo.jpg',1,0,'18-04-21 10:34:09','michal.krolewski@mail.com',1000);
 INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id) VALUES (1002,'photo2_description','photo2',1,1,'18-02-27 10:34:09','michal.krolewski@mail.com',1000);
 INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id) VALUES (1003,'photo3_description','photo3',1,1,'18-03-21 10:34:09','piotr.gorczyca@mail.com',1001);
 INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id) VALUES (1004,'photo4_description','photo4',1,0,'18-04-21 10:34:09','marta.miler@mail.com',1002);
