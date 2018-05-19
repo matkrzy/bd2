@@ -9,7 +9,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
+
+import static com.photos.api.services.ImageService.UPLOAD_ROOT;
 
 /**
  * @author Micha Królewski on 2018-04-14.
@@ -54,11 +59,11 @@ public class UserService {
         return user;
     }
 
-    public boolean addUser(final User user) {
+    public boolean addUser(final User user) throws IOException {
         User user1 = userRepository.findByEmail(user.getEmail());
         if (user1 == null) {
             userRepository.save(user);
-            // Files.createDirectory(UPLOAD_ROOT)
+            Files.createDirectory(Paths.get(UPLOAD_ROOT + "/" + user.getEmail()));
             return true;
         } else {
             return false;

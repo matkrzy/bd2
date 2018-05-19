@@ -33,7 +33,7 @@ public class ImageService {
 
     public Resource findImage(String filename) {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-        Photo photo = photoRepository.findByNameAndPhotoState(filename,PhotoState.ACTIVE);
+        Photo photo = photoRepository.findByNameAndPhotoState(filename, PhotoState.ACTIVE);
 
         // return photo != null ? resourceLoader.getResource("file:" + UPLOAD_ROOT + " " + filename) : null;
         return resourceLoader.getResource("file:" + UPLOAD_ROOT + "\\" + filename);
@@ -41,9 +41,10 @@ public class ImageService {
 
     public boolean createImage(MultipartFile file) throws IOException {
         if (!file.isEmpty()) {
+            String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
             String name = file.getOriginalFilename();
-            Photo photo = photoRepository.findByNameAndPhotoState(name,PhotoState.ACTIVE);
-            photo.setPath(UPLOAD_ROOT + "\\" + file.getOriginalFilename());
+            Photo photo = photoRepository.findByNameAndPhotoState(name, PhotoState.ACTIVE);
+            photo.setPath(UPLOAD_ROOT + "\\" + email + "\\" + file.getOriginalFilename());
             photoRepository.save(photo);
 
             Files.copy(file.getInputStream(), Paths.get(UPLOAD_ROOT, file.getOriginalFilename()));
