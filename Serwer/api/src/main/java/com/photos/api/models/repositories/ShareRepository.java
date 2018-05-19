@@ -13,9 +13,11 @@ import java.util.List;
 
 @Component
 public interface ShareRepository extends JpaRepository<Share, Long> {
-    List<Share> findAllByUser(final Long user);
+    List<Share> findAllByUser(Long user);
 
-    Share findByPhotoAndUser(final Long photo, final Long user);
+    Share findByPhotoAndUser(Long photo, Long user);
+
+    Share findByShareIDAndOwner(Long id, Long owner);
 
     void deleteAllByUser(Long userID);
 }

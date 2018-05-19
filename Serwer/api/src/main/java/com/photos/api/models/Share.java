@@ -26,6 +26,18 @@ public class Share {
     @Column(name = "photo_id")
     private Long photo;
 
+    @NotNull
+    @Column(name = "owner_id")
+    private Long owner;
+
+    public Long getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Long owner) {
+        this.owner = owner;
+    }
+
     public Long getShareID() {
         return shareID;
     }

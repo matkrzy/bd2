@@ -95,11 +95,15 @@ public class TagService {
      */
     public boolean addTag(Tag tag) {
 
+        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        User user = userRepository.findByEmail(email);
+
         if (photoRepository.findByPhotoIDAndPhotoState(tag.getPhoto(), PhotoState.ACTIVE) == null) {
             return false;
         }
 
         try {
+            tag.setUser(user.getUserID());
             tagRepository.save(tag);
         } catch (Exception e) {
             return false;
@@ -119,6 +123,23 @@ public class TagService {
 
         try {
             tagRepository.delete(tag);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean editTag(Long id, String name) {
+        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        User user = userRepository.findByEmail(email);
+
+        Tag tag = tagRepository.findByTagIDAndUser(id, user.getUserID());
+        if (tag == null) {
+            return false;
+        }
+        try {
+            tag.setName(name);
+            tagRepository.save(tag);
         } catch (Exception e) {
             return false;
         }

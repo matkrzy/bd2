@@ -1,6 +1,7 @@
 package com.photos.api.services;
 
 import com.photos.api.models.Share;
+import com.photos.api.models.User;
 import com.photos.api.models.enums.PhotoState;
 import com.photos.api.models.repositories.PhotoRepository;
 import com.photos.api.models.repositories.ShareRepository;
@@ -39,7 +40,7 @@ public class ShareService {
     public boolean addShare(final Share share) {
 
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-
+        User owner = userRepository.findByEmail(email);
         try {
 
             // sprawdzenie czy nie istnieje juz takie udostepnienie w bazie
@@ -48,15 +49,16 @@ public class ShareService {
             }
 
             // sprawdzenie czy zdjecie nalezy do zalogowanego uzytkownika
-            if (photoRepository.findByPhotoIDAndUserAndPhotoState(share.getPhoto(), email,PhotoState.ACTIVE) == null) {
+            if (photoRepository.findByPhotoIDAndUserAndPhotoState(share.getPhoto(), email, PhotoState.ACTIVE) == null) {
                 return false;
             }
 
             // sprawdzenie czy istnieje uzytkownik ktoremu udostepniane jest zdjecie
-            if (userRepository.getOne(share.getUser()) == null) {
+            if (userRepository.findByUserID(share.getUser()) == null) {
                 return false;
             }
 
+            share.setOwner(owner.getUserID());
             shareRepository.save(share);
 
         } catch (Exception e) {
@@ -64,5 +66,22 @@ public class ShareService {
         }
         return true;
 
+    }
+
+    public boolean deleteShare(Long id) {
+        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        User owner = userRepository.findByEmail(email);
+
+        Share share = shareRepository.findByShareIDAndOwner(id, owner.getUserID());
+        if (share == null) {
+            return false;
+        }
+
+        try {
+            shareRepository.delete(share);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 }

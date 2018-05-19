@@ -68,4 +68,12 @@ public class TagController {
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
+    @PutMapping("/{id}/{name}")
+    public ResponseEntity editTag(@PathVariable final Long id,@PathVariable final String name){
+        return tagService.editTag(id,name) ?
+                ResponseEntity.status(HttpStatus.OK).build() :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+
 }

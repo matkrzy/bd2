@@ -37,4 +37,11 @@ public class ShareController {
     public List<Share> getall(){
         return shareRepository.findAll();
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteShare(@PathVariable final Long id){
+        return shareService.deleteShare(id) ?
+                ResponseEntity.status(HttpStatus.OK).build() :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
 }
