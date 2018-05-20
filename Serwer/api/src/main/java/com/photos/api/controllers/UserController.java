@@ -23,8 +23,11 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public List<User> getAll() {
-        return userService.getAll();
+    public ResponseEntity getAll() {
+        List<User> users = userService.getAll();
+        return users != null ?
+                ResponseEntity.status(HttpStatus.OK).body(users) :
+                ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @GetMapping("/{email}")
@@ -49,10 +52,10 @@ public class UserController {
                 ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @DeleteMapping("/{email}")
-    public ResponseEntity deleteUser(@PathVariable final String email) {
-        return userService.deleteUser(email) ?
+    @DeleteMapping
+    public ResponseEntity deleteUser() {
+        return userService.deleteUser() ?
                 ResponseEntity.status(HttpStatus.OK).build() :
-                ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 }

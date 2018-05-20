@@ -98,6 +98,9 @@ public class TagService {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         User user = userRepository.findByEmail(email);
 
+        if(tagRepository.findByPhotoAndName(tag.getPhoto(),tag.getName()) != null){
+            return false;
+        }
         if (photoRepository.findByPhotoIDAndPhotoState(tag.getPhoto(), PhotoState.ACTIVE) == null) {
             return false;
         }

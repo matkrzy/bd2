@@ -14,10 +14,11 @@ import java.util.List;
 @Component
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-
-    Category findByCategoryIDAndUser(final Long categoryID, final Long user);
+    Category findByCategoryIDAndUser(Long categoryID, Long user);
 
     List<Category> findAllByParentCategoryAndUser(Long parent, Long user);
+
+    Category findByNameAndParentCategoryAndUser(String name, Long parent, Long user);
 
     void deleteAllByUser(Long user);
 

@@ -36,7 +36,7 @@ public class ShareController {
     public ResponseEntity getall() {
         List<Share> shares = shareRepository.findAll();
 
-        return shares.size() == 0 ?
+        return shares.size() != 0 ?
                 ResponseEntity.status(HttpStatus.OK).body(shares) :
                 ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

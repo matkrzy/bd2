@@ -15,7 +15,7 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("/rate")
+@RequestMapping("/rates")
 public class RateController {
 
     @Autowired

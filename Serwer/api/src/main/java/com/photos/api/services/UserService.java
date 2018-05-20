@@ -62,17 +62,23 @@ public class UserService {
     public boolean addUser(final User user) throws IOException {
         User user1 = userRepository.findByEmail(user.getEmail());
         if (user1 == null) {
+            if (user.getEmail() == null || user.getPassword() == null || user.getLastName() == null || user.getFirstName() == null) {
+                return false;
+            }
+
             user.setRole(Role.USER);
             userRepository.save(user);
             Files.createDirectory(Paths.get(UPLOAD_ROOT + "/" + user.getEmail()));
-            return true;
+
         } else {
             return false;
         }
+        return true;
     }
 
     public boolean updateUser(final User user) {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+
         User userToUpdate = userRepository.findByEmail(email);
 
         if (user.getFirstName() != null)
@@ -93,12 +99,8 @@ public class UserService {
         return true;
     }
 
-    public boolean deleteUser(String email) {
+    public boolean deleteUser() {
         User user = userRepository.findByEmail(((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
-
-        if (!user.getEmail().equals(email)) {
-            return false;
-        }
 
         try {
 

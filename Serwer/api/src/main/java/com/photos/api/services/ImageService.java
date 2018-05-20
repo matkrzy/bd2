@@ -36,7 +36,7 @@ public class ImageService {
         Photo photo = photoRepository.findByNameAndPhotoState(filename, PhotoState.ACTIVE);
 
         // return photo != null ? resourceLoader.getResource("file:" + UPLOAD_ROOT + " " + filename) : null;
-        return resourceLoader.getResource("file:" + UPLOAD_ROOT + "\\" + filename);
+        return resourceLoader.getResource("file:" + UPLOAD_ROOT + "\\" + email + "\\" + filename);
     }
 
     public boolean createImage(MultipartFile file) throws IOException {

@@ -47,6 +47,10 @@ public class CategoryService {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         User user = userRepository.findByEmail(email);
 
+        if (categoryRepository.findByNameAndParentCategoryAndUser(category.getName(), category.getParentCategory(), user.getUserID()) != null) {
+            return false;
+        }
+
         if (category.getParentCategory() != null) {
             Category parentCat = categoryRepository.findByCategoryIDAndUser(category.getParentCategory(), user.getUserID());
             if (parentCat == null) {

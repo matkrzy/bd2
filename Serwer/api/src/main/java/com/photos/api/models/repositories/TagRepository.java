@@ -27,4 +27,6 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
     void deleteAllByUser(Long userID);
 
     void deleteAllByPhoto(Long photo);
+
+    Tag findByPhotoAndName(Long photo, String name);
 }

@@ -106,6 +106,9 @@ public class PhotoService {
      */
     public boolean addPhoto(final Photo photo) {
 
+        if(photo.getName() == null){
+            return false;
+        }
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
 
         try {
