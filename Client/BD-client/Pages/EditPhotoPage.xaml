@@ -1,0 +1,43 @@
+﻿<Page x:Class="BD_client.Pages.EditPhotoPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+      xmlns:local="clr-namespace:BD_client.Pages"
+      mc:Ignorable="d" 
+     Height="500" Width="700"
+      Title="EditPhotoPage"
+      xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+      Dialog:DialogParticipation.Register="{Binding}">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+
+        <Controls:SplitButton 
+            Icon="{DynamicResource appbar_folder}"
+            HorizontalContentAlignment="Left"
+            HorizontalAlignment="Center"
+            VerticalContentAlignment="Center"
+            Width="226"
+            SelectedIndex="0"
+            ItemsSource="{Binding Categories}"
+            DisplayMemberPath="Name"
+            VerticalAlignment="Center" Margin="126,52,348,366" />
+        <TextBox x:Name="description" Controls:TextBoxHelper.Watermark="Enter description" HorizontalAlignment="Left" Height="82" Margin="448,52,30,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="204"/>
+        <TextBox x:Name="tags" Controls:TextBoxHelper.Watermark="Enter tags" HorizontalAlignment="Left" Height="82" Margin="448,169,30,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="204"/>
+        <Button x:Name="editBtn" Content="Edit" Height="50" Width="150" Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding EditCmd}" Margin="294,298,215,152"/>
+        <Button x:Name="cancelBtn" Content="Cancel" Height="50" Width="150" Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding CancelCmd}" Margin="502,298,30,152"/>
+
+    </Grid>
+</Page>
