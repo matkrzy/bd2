@@ -11,15 +11,16 @@ INSERT INTO user (id,first_name,last_name,email,password,role) VALUES (1005,'Mat
 /*
     INSERT PHOTO
 */
-INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id) VALUES (1001,'photo1_description','tlo.jpg',1,0,'18-04-21 10:34:09','michal.krolewski@mail.com',1000);
-INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id) VALUES (1002,'photo2_description','photo2',1,1,'18-02-27 10:34:09','michal.krolewski@mail.com',1000);
-INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id) VALUES (1003,'photo3_description','photo3',1,1,'18-03-21 10:34:09','piotr.gorczyca@mail.com',1001);
-INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id) VALUES (1004,'photo4_description','photo4',1,0,'18-04-21 10:34:09','marta.miler@mail.com',1002);
-INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id) VALUES (1005,'photo5_description','photo5',0,1,'18-01-12 10:34:09','marta.miler@mail.com',1002);
-INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id) VALUES (1006,'photo6_description','photo6',1,0,'18-02-23 10:34:09','piotr.gazda@mail.com',1003);
-INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id) VALUES (1007,'photo7_description','photo7',1,1,'18-04-16 10:34:09','olaf.kris@mail.com',1004);
-INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id) VALUES (1008,'photo8_description','photo8',1,0,'18-03-05 10:34:09','olaf.kris@mail.com',1004);
-INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id) VALUES (1009,'photo9_description','photo9',1,1,'18-04-11 10:34:09','mateusz.krzyzanowski@mail.com',1005);
+INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id,path) VALUES (1001,'photo1_description','tlo.jpg',1,0,'18-04-21 10:34:09','michal.krolewski@mail.com',1000,'michal.krolewski@mail.com\\tlo.jpg');
+INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id,path) VALUES (1002,'photo2_description','USC50FOC051B021001.jpg',1,0,'18-02-27 10:34:09','michal.krolewski@mail.com',1000,'michal.krolewski@mail.com\\USC50FOC051B021001.jpg');
+INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id,path) VALUES (1003,'photo3_description','20171120_103445.jpg',1,0,'18-03-21 10:34:09','piotr.gorczyca@mail.com',1001,'piotr.gorczyca@mail.com\\20171120_103445.jpg');
+INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id,path) VALUES (1004,'photo4_description','images.jpg',1,0,'18-04-21 10:34:09','marta.miler@mail.com',1002,'marta.miler@mail.com\\images.jpg');
+INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id,path) VALUES (1005,'photo5_description','pexels-photo-247932.jpg',1,0,'18-01-12 10:34:09','marta.miler@mail.com',1002,'marta.miler@mail.com\\pexels-photo-247932.jpg');
+INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id,path) VALUES (1006,'photo6_description','maxresdefault.jpg',1,0,'18-02-23 10:34:09','piotr.gazda@mail.com',1003,'piotr.gazda@mail.com\\maxresdefault.jpg');
+INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id,path )VALUES (1007,'photo7_description','img_63351521.jpg',0,0,'18-04-16 10:34:09','olaf.kris@mail.com',1004,'olaf.kris@mail.com\\img_63351521.jpg');
+INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id,path) VALUES (1008,'photo8_description','pexels-photo-46710.jpeg',1,1,'18-03-05 10:34:09','olaf.kris@mail.com',1004,'olaf.kris@mail.com\\pexels-photo-46710.jpeg');
+INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,user_email,user_id,path) VALUES (1009,'photo9_description','ocean.jpg',1,1,'18-04-11 10:34:09','mateusz.krzyzanowski@mail.com',1005,'mateusz.krzyzanowski@mail.com\\ocean.jpg');
+
 
 /*
     INSERT CATEGORY
@@ -35,17 +36,15 @@ INSERT INTO category (id,name,parent_id,user_id) VALUES (1003,'sport',null,1002)
 INSERT INTO category (id,name,parent_id,user_id) VALUES (1004,'flowers',null,1003);
 INSERT INTO category (id,name,parent_id,user_id) VALUES (1005,'anime',null,1004);
 INSERT INTO category (id,name,parent_id,user_id) VALUES (1006,'animals',null,1005);
-INSERT INTO category (id,name,parent_id,user_id) VALUES (1007,'cars',null,1006);
+INSERT INTO category (id,name,parent_id,user_id) VALUES (1007,'cars',null,1005);
 
 /*
     INSERT PHOTO TO CATEGORY
 */
-INSERT INTO photo_to_category (id,category_id,photo_id) VALUES (1001,1001,1001);
-INSERT INTO photo_to_category (id,category_id,photo_id) VALUES (1002,1002,1002);
+INSERT INTO photo_to_category (id,category_id,photo_id) VALUES (1001,1002,1001);
 INSERT INTO photo_to_category (id,category_id,photo_id) VALUES (1003,1003,1003);
 INSERT INTO photo_to_category (id,category_id,photo_id) VALUES (1004,1004,1004);
 INSERT INTO photo_to_category (id,category_id,photo_id) VALUES (1005,1004,1005);
-INSERT INTO photo_to_category (id,category_id,photo_id) VALUES (1006,1005,1006);
 INSERT INTO photo_to_category (id,category_id,photo_id) VALUES (1007,1006,1007);
 INSERT INTO photo_to_category (id,category_id,photo_id) VALUES (1008,1006,1008);
 INSERT INTO photo_to_category (id,category_id,photo_id) VALUES (1009,1007,1009);
@@ -77,5 +76,4 @@ INSERT INTO rate (id,date,rate,photo_id,user_id) VALUES (1003,'18-03-12 10:34:09
 INSERT INTO rate (id,date,rate,photo_id,user_id) VALUES (1004,'18-03-12 10:34:09',8,1002,1001);
 INSERT INTO rate (id,date,rate,photo_id,user_id) VALUES (1005,'18-03-12 10:34:09',4,1004,1003);
 INSERT INTO rate (id,date,rate,photo_id,user_id) VALUES (1006,'18-03-12 10:34:09',2,1006,1005);
-
 

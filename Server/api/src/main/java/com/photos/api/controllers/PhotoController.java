@@ -72,7 +72,7 @@ public class PhotoController {
         return ResponseEntity.status(HttpStatus.OK).body(responsePhotos);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity getPhoto(@PathVariable final Long id) {
         Photo photo = photoService.getPhoto(id);
         if (photo != null) {
@@ -86,7 +86,7 @@ public class PhotoController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @GetMapping("/x/{name}")
+    @GetMapping("/name/{name}")
     public ResponseEntity getPhoto(@PathVariable final String name) {
         Photo photo = photoService.getPhoto(name);
         if (photo != null) {

@@ -2,6 +2,7 @@ package com.photos.api.services;
 
 import com.photos.api.models.Photo;
 import com.photos.api.models.enums.PhotoState;
+import com.photos.api.models.enums.ShareState;
 import com.photos.api.models.repositories.PhotoRepository;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -21,7 +22,7 @@ import java.nio.file.Paths;
 @Service
 public class ImageService {
 
-    public static String UPLOAD_ROOT = "C:\\Users\\MICHAL\\Desktop\\photosAPI";
+    public static String UPLOAD_ROOT = "C:\\Users\\MICHAL\\Documents\\bd2\\Server\\imageStore";
     private final ResourceLoader resourceLoader;
     private final PhotoRepository photoRepository;
 
@@ -31,24 +32,30 @@ public class ImageService {
     }
 
 
-    public Resource findImage(String filename) {
-        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-        Photo photo = photoRepository.findByNameAndPhotoState(filename, PhotoState.ACTIVE);
+    public Resource findImage(Long id) {
+        Photo photo = photoRepository.findByPhotoIDAndPhotoStateAndShareState(id, PhotoState.ACTIVE, ShareState.PUBLIC);
 
-        // return photo != null ? resourceLoader.getResource("file:" + UPLOAD_ROOT + " " + filename) : null;
-        return resourceLoader.getResource("file:" + UPLOAD_ROOT + "\\" + email + "\\" + filename);
+        if (photo == null) {
+            return null;
+        }
+        return resourceLoader.getResource("file:" + UPLOAD_ROOT + "\\" + photo.getPath());
     }
 
-    public boolean createImage(MultipartFile file) throws IOException {
+    public boolean createImage(MultipartFile file) {
+
         if (!file.isEmpty()) {
-            String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-            String name = file.getOriginalFilename();
-            Photo photo = photoRepository.findByNameAndPhotoState(name, PhotoState.ACTIVE);
-            photo.setPath(UPLOAD_ROOT + "\\" + email + "\\" + file.getOriginalFilename());
-            photoRepository.save(photo);
+            try {
 
-            Files.copy(file.getInputStream(), Paths.get(UPLOAD_ROOT + "\\" + email + "\\", file.getOriginalFilename()));
+                String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+                String name = file.getOriginalFilename();
+                Photo photo = photoRepository.findByNameAndUserAndPhotoState(name, email, PhotoState.ACTIVE);
+                photo.setPath(/*UPLOAD_ROOT + "\\" +*/ email + "\\" + file.getOriginalFilename());
+                photoRepository.save(photo);
 
+                Files.copy(file.getInputStream(), Paths.get(UPLOAD_ROOT + "\\" + email + "\\", file.getOriginalFilename()));
+            } catch (Exception e) {
+                return false;
+            }
         }
         return true;
     }

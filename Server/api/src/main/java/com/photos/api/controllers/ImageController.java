@@ -24,17 +24,17 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
 
-    @GetMapping("/{filename}")
-    public ResponseEntity getImage(@PathVariable String filename) {
+    @GetMapping("/{photoId}")
+    public ResponseEntity getImage(@PathVariable Long photoId) {
 
         try {
-            Resource file = imageService.findImage(filename);
+            Resource file = imageService.findImage(photoId);
             return file != null ?
                     ResponseEntity.status(HttpStatus.OK).contentLength(file.contentLength()).contentType(MediaType.IMAGE_JPEG).body(new InputStreamResource(file.getInputStream())) :
                     ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                    .body("Couldn't find " + filename);
+                    .body("Couldn't find " + photoId);
         }
     }
 
