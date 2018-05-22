@@ -90,26 +90,29 @@ public class TagService {
      * Sprawdza czy istnieje zdjecie, do ktorego ma zostac dodany tag
      * Jezeli tak zapisuje tag do bazy
      *
-     * @param tag
+     * @param tags
      * @return
      */
-    public boolean addTag(Tag tag) {
+    public boolean addTag(List<Tag> tags) {
 
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         User user = userRepository.findByEmail(email);
 
-        if(tagRepository.findByPhotoAndName(tag.getPhoto(),tag.getName()) != null){
-            return false;
-        }
-        if (photoRepository.findByPhotoIDAndPhotoState(tag.getPhoto(), PhotoState.ACTIVE) == null) {
-            return false;
-        }
 
-        try {
-            tag.setUser(user.getUserID());
-            tagRepository.save(tag);
-        } catch (Exception e) {
-            return false;
+        for (Tag tag : tags) {
+            if (tagRepository.findByPhotoAndName(tag.getPhoto(), tag.getName()) != null) {
+                return false;
+            }
+            if (photoRepository.findByPhotoIDAndPhotoState(tag.getPhoto(), PhotoState.ACTIVE) == null) {
+                return false;
+            }
+
+            try {
+                tag.setUser(user.getUserID());
+                tagRepository.save(tag);
+            } catch (Exception e) {
+                return false;
+            }
         }
         return true;
     }

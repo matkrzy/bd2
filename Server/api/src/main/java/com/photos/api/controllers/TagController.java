@@ -54,8 +54,8 @@ public class TagController {
     }
 
     @PostMapping
-    public ResponseEntity addTag(@RequestBody final Tag tag) {
-        return tagService.addTag(tag) ?
+    public ResponseEntity addTag(@RequestBody final List<Tag> tags) {
+        return tagService.addTag(tags) ?
                 ResponseEntity.status(HttpStatus.OK).build() :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
