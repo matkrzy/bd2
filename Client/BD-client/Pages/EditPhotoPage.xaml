@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:common="clr-namespace:BD_client.Common"
       xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
       xmlns:local="clr-namespace:BD_client.Pages"
       mc:Ignorable="d" 
@@ -29,15 +30,28 @@
             HorizontalContentAlignment="Left"
             HorizontalAlignment="Center"
             VerticalContentAlignment="Center"
-            Width="226"
-            SelectedIndex="0"
+            Width="201"
+            SelectedIndex="{Binding SelectedCategory}"
             ItemsSource="{Binding Categories}"
             DisplayMemberPath="Name"
-            VerticalAlignment="Center" Margin="126,52,348,366" />
-        <TextBox x:Name="description" Controls:TextBoxHelper.Watermark="Enter description" HorizontalAlignment="Left" Height="82" Margin="448,52,30,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="204"/>
-        <TextBox x:Name="tags" Controls:TextBoxHelper.Watermark="Enter tags" HorizontalAlignment="Left" Height="82" Margin="448,169,30,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="204"/>
-        <Button x:Name="editBtn" Content="Edit" Height="50" Width="150" Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding EditCmd}" Margin="294,298,215,152"/>
-        <Button x:Name="cancelBtn" Content="Cancel" Height="50" Width="150" Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding CancelCmd}" Margin="502,298,30,152"/>
+            VerticalAlignment="Center" Margin="85,251,414,172" Height="77" />
+        <TextBox x:Name="description" Controls:TextBoxHelper.Watermark="Enter description" HorizontalAlignment="Left" Height="77" Margin="516,251,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="145"/>
+        <TextBox x:Name="tags" Controls:TextBoxHelper.Watermark="Enter tags" HorizontalAlignment="Left" Height="77" Margin="322,251,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="145"/>
+        <Button x:Name="editBtn" Content="Edit" Height="50" Width="150" Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding EditCmd}" Margin="317,377,233,73"/>
+        <Button x:Name="cancelBtn" Content="Cancel" Height="50" Width="150" Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding CancelCmd}" Margin="511,377,39,73"/>
 
+        <DataGrid ItemsSource="{Binding Photos}" Margin="85,40,39,275"
+                  AutoGenerateColumns="True"
+                  Style="{StaticResource AzureDataGrid}"
+                  SelectionMode="Single"
+                  SelectedIndex="{Binding SelectedIndex}"
+                  common:DataGridBehavior.UseBrowsableAttributeOnColumn="True">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Remove" Command="{Binding RemovePhotoCmd}"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+
+        </DataGrid>
     </Grid>
 </Page>

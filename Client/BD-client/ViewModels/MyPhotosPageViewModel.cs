@@ -22,6 +22,7 @@ namespace BD_client.ViewModels
         public PhotoCollection Photos { get; set; }
 
         private IDialogCoordinator dialogCoordinator;
+        private List<int> _selectedPhotos;
 
         public string Page
         {
@@ -36,12 +37,26 @@ namespace BD_client.ViewModels
             }
         }
 
+        public List<int> SelectedPhotos
+        {
+            get
+            {
+                return _selectedPhotos;
+            }
+            set
+            {
+                _selectedPhotos = value;
+                OnPropertyChanged("SelectedPhotos");
+            }
+        }
+
 
         public MyPhotosPageViewModel(IDialogCoordinator instance)
         {
             dialogCoordinator = instance;
             var path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + "//Img//photos";
             Photos = new PhotoCollection(path);
+            MainWindow.MainVM.Photos = Photos;
         }
 
 

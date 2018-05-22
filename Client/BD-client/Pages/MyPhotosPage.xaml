@@ -62,6 +62,7 @@
                     Name="MyPhotosListBox" 
                     ItemsSource="{Binding Photos}"
                     SelectionMode="Extended"
+                    SelectedItem="{Binding SelectedPhotos}"
                     MouseDoubleClick="OnPhotoDbClick">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>

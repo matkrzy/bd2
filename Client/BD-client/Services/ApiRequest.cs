@@ -113,6 +113,28 @@ namespace BD_client.Domain
                 throw new Exception();
         }
 
+        public static void PutInParams(String url)
+        {
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            var cookieContainer = new CookieContainer();
+            request.CookieContainer = cookieContainer;
+            if (JWT != null)
+            {
+                Cookie cookie = new Cookie();
+                cookie.Name = "JWT";
+                cookie.Value = JWT;
+                cookie.Domain = request.RequestUri.Host;
+                request.CookieContainer.Add(cookie);
+            }
+            request.Method = "PUT";
+
+            var response = (HttpWebResponse)request.GetResponse();
+            if (response.StatusCode != HttpStatusCode.OK)
+                throw new Exception();
+        }
+
+
 
         public static String Get(String url)
         {
