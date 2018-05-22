@@ -57,13 +57,8 @@ namespace BD_client.ViewModels
         {
             dialogCoordinator = instance;
             var path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + "//Img//photos";
-<<<<<<< HEAD
             Photos = new NotifyTaskCompletion<PhotoCollection>(PhotoService.GetUserPhotos());
             
-=======
-            Photos = new PhotoCollection(path);
-            MainWindow.MainVM.Photos = Photos;
->>>>>>> Edit photo
         }
 
 
