@@ -132,7 +132,7 @@ namespace BD_client.ViewModels
 
         private void GetUserInfo()
         {
-            string url = MainWindow.MainVM.url + "api/v1/users";
+            string url = MainWindow.MainVM.BaseUrl + "api/v1/users";
             String responseContent = ApiRequest.Get(url);
             JsonTextReader reader = new JsonTextReader(new StringReader(responseContent));
             reader.SupportMultipleContent = true;
@@ -177,7 +177,7 @@ namespace BD_client.ViewModels
 
             string json = JsonConvert.SerializeObject(values, Formatting.Indented);
 
-            String url = MainWindow.MainVM.url + "api/v1/users";
+            String url = MainWindow.MainVM.BaseUrl + "api/v1/users";
             ApiRequest.Put(url, json);
         }
 
