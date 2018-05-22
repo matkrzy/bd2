@@ -4,6 +4,7 @@ import com.photos.api.models.Photo;
 import com.photos.api.models.enums.PhotoState;
 import com.photos.api.models.enums.ShareState;
 import com.photos.api.models.repositories.PhotoRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,7 +23,8 @@ import java.nio.file.Paths;
 @Service
 public class ImageService {
 
-    public static String UPLOAD_ROOT = "C:\\Users\\MICHAL\\Documents\\bd2\\Server\\imageStore";
+
+    public static String UPLOAD_ROOT = System.getProperty("user.dir") +  "\\..\\imageStore";
     private final ResourceLoader resourceLoader;
     private final PhotoRepository photoRepository;
 
@@ -36,7 +38,11 @@ public class ImageService {
         Photo photo = photoRepository.findByPhotoIDAndPhotoStateAndShareState(id, PhotoState.ACTIVE, ShareState.PUBLIC);
 
         if (photo == null) {
-            return null;
+            String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+            photo = photoRepository.findByPhotoIDAndPhotoStateAndShareStateAndUser(id, PhotoState.ACTIVE, ShareState.PRIVATE, email);
+            if (photo == null) {
+                return null;
+            }
         }
         return resourceLoader.getResource("file:" + UPLOAD_ROOT + "\\" + photo.getPath());
     }
