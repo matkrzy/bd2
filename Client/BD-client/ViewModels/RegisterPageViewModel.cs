@@ -128,7 +128,7 @@ namespace BD_client.ViewModels
             };
 
             string json = JsonConvert.SerializeObject(values, Formatting.Indented);
-            String url = MainWindow.MainVM.url + "api/v1/users";
+            String url = MainWindow.MainVM.BaseUrl + "api/v1/users";
             ApiRequest.Post(url, json);
         }
 

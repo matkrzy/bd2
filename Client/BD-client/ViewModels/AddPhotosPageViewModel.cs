@@ -46,7 +46,7 @@ namespace BD_client.ViewModels
             openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Image files (*.jpg, *.jpeg, *.png) | *.jpg; *.jpeg; *.png";
             openFileDialog.Multiselect = true;
-            Photos = new ObservableCollection<Photo>();     
+            Photos = new ObservableCollection<Photo>();
 
         }
 
@@ -65,59 +65,39 @@ namespace BD_client.ViewModels
 
                 for (int i = 0; i < openFileDialog.FileNames.Length; i++)
                 {
-                    Photos.Add(new Domain.Photo() { Index = i + 1, Path = openFileDialog.FileNames[i], Name=openFileDialog.SafeFileNames[i], UploadTime= DateTime.Now });
+                    Photos.Add(new Domain.Photo() { Index = i + 1, Path = openFileDialog.FileNames[i], Name = openFileDialog.SafeFileNames[i], UploadTime = DateTime.Now });
                 }
             }
         }
 
-        private List<int> AddPhotos()
+        private async Task<List<int>> AddPhotos()
         {
-            List<int> photoIndex = new List<int>();
+            var photoIndex = new List<int>();
             for (int i = 0; i < Photos.Count; i++)
             {
-
-                Dictionary<string, string> values;
-                if (Photos[i].Description != null)
+                var values = new
                 {
-                    values = new Dictionary<string, string>
-                    {
-                        {"userid", 1002.ToString() },
-                        { "name", Photos[i].Name },
-                        { "description", Photos[i].Description },
-                        { "photoState", Photos[i].PhotoState.ToString() },
-                        { "shareState", Photos[i].ShareState.ToString() },
+                    name = Photos[i].Name,
+                    photoState = Photos[i].PhotoState.ToString(),                    
+                    shareState= Photos[i].ShareState.ToString()
+                };
 
-                    };
-                }
-                else
-                {
-                    values = new Dictionary<string, string>
-                    {
-                        {"userid", 1002.ToString() },
-                        { "name", Photos[i].Name },
-                        { "description",String.Empty },
-                        { "photoState", Photos[i].PhotoState.ToString() },
-                        { "shareState", Photos[i].ShareState.ToString() },
-
-                    };
-                }
-
-                string json = JsonConvert.SerializeObject(values, Formatting.Indented);
-                String url = MainWindow.MainVM.url + "api/v1/photos";
-
-                String file = Photos[i].Path;
+                var json = JsonConvert.SerializeObject(values, Formatting.Indented);
+                var photosUrl = MainWindow.MainVM.BaseUrl + "api/v1/photos";
+                var file = Photos[i].Path;
                 var reader = File.Open(file, FileMode.Open);
-                String url2 = MainWindow.MainVM.url + "api/v1/images";
+                var imagesUrl = MainWindow.MainVM.BaseUrl + "api/v1/images";
                 try
                 {
-                    ApiRequest.Post(url, json);
-                    ApiRequest.PostImage(url2, reader);
+                    ApiRequest.Post(photosUrl, json);
+                    await ApiRequest.PostImage(imagesUrl, Photos[i].Name, reader);
                     //TO DO: 
                     //Remove Photo from database if PostImage will end with error
                     photoIndex.Add(i);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+
                 }
             }
             return photoIndex;
@@ -125,7 +105,7 @@ namespace BD_client.ViewModels
         private async void Add()
         {
 
-            List<int> photoIndex = AddPhotos();
+            List<int> photoIndex = await AddPhotos();
             await dialogCoordinator.ShowMessageAsync(this, "Result", photoIndex.Count + " of " + Photos.Count + " photos was added");
             for (int i = photoIndex.Count - 1; i >= 0; i--)
             {

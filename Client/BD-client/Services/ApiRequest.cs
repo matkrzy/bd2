@@ -67,7 +67,7 @@ namespace BD_client.Domain
             }
         }
 
-        public static void PostImage(String url, Stream value)
+        public static async Task PostImage(string url, string fileName, Stream value)
         {
             HttpContent fileStreamContent = new StreamContent(value);
             var baseAddress = new Uri(url);
@@ -77,14 +77,14 @@ namespace BD_client.Domain
             using (var client = new HttpClient(handler) { BaseAddress = baseAddress })
             {
                 cookieContainer.Add(baseAddress, new Cookie("JWT", JWT));
-                formData.Add(fileStreamContent,"file");
-                var response = client.PostAsync(url, formData).Result; //404 BAD REQUEST
+                formData.Add(fileStreamContent, "file", fileName);
+                var response = await client.PostAsync(url, formData);
                 if (!response.IsSuccessStatusCode)
-                    throw new Exception();
-                
+                {
+                    throw new Exception("Photo not added");
+                }
             }
         }
-
 
         public static void Put(String url, String value)
         {

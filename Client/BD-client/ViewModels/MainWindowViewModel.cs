@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Configuration;
 
 namespace BD_client.ViewModels
 {
@@ -24,7 +25,7 @@ namespace BD_client.ViewModels
 
         private int _selectedIndex;
         private String _user;
-        public String url = "http://localhost:9000/";
+        public readonly string BaseUrl;
 
         public int SelectedIndex
         {
@@ -84,16 +85,33 @@ namespace BD_client.ViewModels
 
         public MainWindowViewModel()
         {
+
+            BaseUrl = ConfigurationManager.AppSettings["BaseApiUrl"];
             MyPhotosCmd = new RelayCommand(x => ShowMyPhotos());
             HomeCmd = new RelayCommand(x => ShowHome());
             ProfileCmd = new RelayCommand(x => Profile());
             LogoutCmd = new RelayCommand(x => Logout());
             PublicPhotosCmd = new RelayCommand(x => ShowPublicPhotos());
             CategoriesCmd = new RelayCommand(x => ShowCategories());
-            Page = "Pages/LogInPage.xaml";
-            Enabled = false;
-            SelectedIndex = -1;
-            User = "";
+
+            var mode = ConfigurationManager.AppSettings["Mode"];
+
+            // tryb developmentu
+            if (mode.Equals("development"))
+            {
+                Page = "Pages/HomePage.xaml";
+                LogInPageViewModel.TemporaryLogin();
+                _enabled = true;
+                _selectedIndex = -1;
+                _user = "DEVELOPMENT";
+            }
+            else
+            {
+                Page = "Pages/LogInPage.xaml";
+                Enabled = false;
+                SelectedIndex = -1;
+                User = "";
+            }
         }
 
         virtual protected void OnPropertyChanged(string propName)
