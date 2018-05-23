@@ -17,6 +17,7 @@ namespace BD_client.Domain
     {
         public static String JWT = null;
 
+        //TODO: zmienić te akcje
         public static void Post(String url, String value)
         {
             byte[] data = Encoding.ASCII.GetBytes(value);
@@ -64,6 +65,31 @@ namespace BD_client.Domain
                     JWT = responseCookies[0].Value;
                     String name = responseCookies[0].Name;
                 }
+            }
+        }
+
+        public static async Task<HttpResponseMessage> GetAsync(string url)
+        {
+            var baseUri = new Uri(MainWindow.MainVM.BaseUrl);
+            var cookieContainer = new CookieContainer();
+            using (var handler = new HttpClientHandler { CookieContainer = cookieContainer })
+            using (var client = new HttpClient(handler) { BaseAddress = baseUri })
+            {
+                cookieContainer.Add(baseUri, new Cookie("JWT", JWT));
+                return await client.GetAsync(url);
+            }
+        }
+
+        public static async Task<HttpResponseMessage> PostAsync(string url, object content)
+        {
+            var cookieContainer = new CookieContainer();
+            var baseUri = new Uri(MainWindow.MainVM.BaseUrl);
+            using (var handler = new HttpClientHandler { CookieContainer = cookieContainer }) 
+            using(var client = new HttpClient(handler) { BaseAddress = baseUri })
+            {
+                var stringContent = new StringContent(content.ToString(), Encoding.UTF8, "application/json");
+                cookieContainer.Add(baseUri, new Cookie("JWT", JWT));
+                return await client.PostAsync(url, stringContent);
             }
         }
 

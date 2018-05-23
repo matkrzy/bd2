@@ -91,7 +91,7 @@ namespace BD_client.ViewModels
                 {
                     ApiRequest.Post(photosUrl, json);
                     await ApiRequest.PostImage(imagesUrl, Photos[i].Name, reader);
-                    //TO DO: 
+                    ///TODO:
                     //Remove Photo from database if PostImage will end with error
                     photoIndex.Add(i);
                 }

@@ -268,3 +268,4 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 
+/Client/BD-client/tmp/own
