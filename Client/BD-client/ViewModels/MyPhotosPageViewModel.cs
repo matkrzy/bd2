@@ -1,5 +1,7 @@
-﻿using BD_client.Data.Photos;
+﻿using BD_client.Common;
+using BD_client.Data.Photos;
 using BD_client.Domain;
+using BD_client.Services;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using System;
@@ -19,7 +21,7 @@ namespace BD_client.ViewModels
         public event PropertyChangedEventHandler PropertyChanged = null;
 
         private string _page;
-        public PhotoCollection Photos { get; set; }
+        public NotifyTaskCompletion<PhotoCollection> Photos { get; set; }
 
         private IDialogCoordinator dialogCoordinator;
 
@@ -41,7 +43,8 @@ namespace BD_client.ViewModels
         {
             dialogCoordinator = instance;
             var path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + "//Img//photos";
-            Photos = new PhotoCollection(path);
+            Photos = new NotifyTaskCompletion<PhotoCollection>(PhotoService.GetUserPhotos());
+            
         }
 
 
