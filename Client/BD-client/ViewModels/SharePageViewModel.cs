@@ -76,8 +76,8 @@ namespace BD_client.ViewModels
             ShareCmd = new RelayCommand(x => Share());
             CancelCmd = new RelayCommand(x => Cancel());
             RemovePhotoCmd = new RelayCommand(x => RemovePhoto());
-            Photos.Add(new Domain.Photo() { Index = 1, Path = "C:\\Photo1.jpg" });
-            Photos.Add(new Domain.Photo() { Index = 2, Path = "C:\\Photo2.jpg" });
+            Photos.Add(new Domain.Photo() { Id = 1, Path = "C:\\Photo1.jpg" });
+            Photos.Add(new Domain.Photo() { Id = 2, Path = "C:\\Photo2.jpg" });
             Users = new ObservableCollection<User>();
             Users.Add(new Domain.User() { FirstName = "Marta" });
             Users.Add(new Domain.User() { FirstName = "Gazder" });

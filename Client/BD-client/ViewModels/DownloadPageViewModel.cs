@@ -62,8 +62,8 @@ namespace BD_client.ViewModels
             DownloadCmd = new RelayCommand(x => Download());
             CancelCmd = new RelayCommand(x => Cancel());
             RemovePhotoCmd = new RelayCommand(x => RemovePhoto());
-            Photos.Add(new Domain.Photo() { Index = 1, Path = "C:\\Photo1.jpg" });
-            Photos.Add(new Domain.Photo() { Index = 2, Path = "C:\\Photo2.jpg" });
+            Photos.Add(new Domain.Photo() { Id = 1, Path = "C:\\Photo1.jpg" });
+            Photos.Add(new Domain.Photo() { Id = 2, Path = "C:\\Photo2.jpg" });
         }
         private void RemovePhoto()
         {
