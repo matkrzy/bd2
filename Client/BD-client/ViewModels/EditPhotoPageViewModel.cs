@@ -62,7 +62,7 @@ namespace BD_client.ViewModels
 
         private void EditPhoto()
         {
-            string url = MainWindow.MainVM.BaseUrl + "api/v1/photos/" + Photos[SelectedIndex].Index;
+            string url = MainWindow.MainVM.BaseUrl + "api/v1/photos/" + Photos[SelectedIndex].Id;
             string[] jsonTags = Tags.Split(' ');
             string json;
 
@@ -87,20 +87,23 @@ namespace BD_client.ViewModels
             bool repeat = false;
             for (int i = 0; i < jsonTags.Length; i++)
             {
-                for (int j = 0; j < Photos[SelectedIndex].Tags.Count; j++)
+                if (Photos[SelectedIndex].Tags != null)
                 {
-                    if (jsonTags[i].Equals(Photos[SelectedIndex].Tags[j].Name))
+                    for (int j = 0; j < Photos[SelectedIndex].Tags.Count; j++)
                     {
-                        repeat = true;
-                        break;
+                        if (jsonTags[i].Equals(Photos[SelectedIndex].Tags[j].Name))
+                        {
+                            repeat = true;
+                            break;
+                        }
                     }
-                 }
+                }
                 if (!repeat)
                 {
                     var valuesTags = new Dictionary<string, string>
                 {
                    { "name", jsonTags[i] },
-                   { "photo", Photos[SelectedIndex].Index.ToString() }
+                   { "photo", Photos[SelectedIndex].Id.ToString() }
                 };
                     try
                     {
@@ -124,11 +127,11 @@ namespace BD_client.ViewModels
             {
                 var valuesCategory = new Dictionary<string, string>
             {
-               { "idphoto", Photos[SelectedIndex].Index.ToString() },
+               { "idphoto", Photos[SelectedIndex].Id.ToString() },
                { "idcategory",Categories[SelectedCategory].Id.ToString() }
             };
 
-                url = MainWindow.MainVM.BaseUrl + "not in server yet";
+                url = MainWindow.MainVM.BaseUrl + "/categories/"+Photos[SelectedIndex].Id+"/"+ Categories[SelectedCategory].Id;
                 try
                 {
                     json = JsonConvert.SerializeObject(valuesCategory, Formatting.Indented);

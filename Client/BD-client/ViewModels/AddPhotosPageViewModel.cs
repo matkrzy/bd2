@@ -65,7 +65,7 @@ namespace BD_client.ViewModels
 
                 for (int i = 0; i < openFileDialog.FileNames.Length; i++)
                 {
-                    Photos.Add(new Domain.Photo() { Index = i + 1, Path = openFileDialog.FileNames[i], Name = openFileDialog.SafeFileNames[i], UploadTime = DateTime.Now });
+                    Photos.Add(new Domain.Photo() { Id = i + 1, Path = openFileDialog.FileNames[i], Name = openFileDialog.SafeFileNames[i], UploadTime = DateTime.Now });
                 }
             }
         }
