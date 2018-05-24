@@ -88,7 +88,6 @@ namespace BD_client.ViewModels
 
         public MainWindowViewModel()
         {
-
             BaseUrl = ConfigurationManager.AppSettings["BaseApiUrl"];
             List = null;
             MyPhotosCmd = new RelayCommand(x => ShowMyPhotos());
