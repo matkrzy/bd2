@@ -19,7 +19,6 @@
                 <!-- Slider -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatSlider.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
             <!-- Headers for metadata properties -->
             <Style x:Key="MetadataHeader" TargetType="{x:Type Label}">
                 <Setter Property="Background">
@@ -38,10 +37,6 @@
         </ResourceDictionary>
 
     </Page.Resources>
-
-
-
-
     <Grid>
         <!-- Column definitions -->
         <Grid.ColumnDefinitions>
@@ -52,15 +47,14 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-
-        <GroupBox Grid.Column="0" Grid.RowSpan="2" Margin="51,40,149,0" Grid.ColumnSpan="2">
+        <GroupBox Grid.Column="0" Grid.RowSpan="2" Margin="51,40,149,0" Grid.ColumnSpan="2">            
             <ListBox
                     ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                     Width="500"
                     HorizontalAlignment="Left"
                     IsSynchronizedWithCurrentItem="True"
                     Name="MyPhotosListBox" 
-                    ItemsSource="{Binding Photos}"
+                    ItemsSource="{Binding Photos.Result}"
                     SelectionMode="Extended"
                     MouseDoubleClick="OnPhotoDbClick">
                 <ListBox.ItemsPanel>

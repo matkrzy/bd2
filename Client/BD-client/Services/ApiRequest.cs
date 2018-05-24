@@ -17,6 +17,7 @@ namespace BD_client.Domain
     {
         public static String JWT = null;
 
+        //TODO: zmienić te akcje
         public static void Post(String url, String value)
         {
             byte[] data = Encoding.ASCII.GetBytes(value);
@@ -67,7 +68,32 @@ namespace BD_client.Domain
             }
         }
 
-        public static void PostImage(String url, Stream value)
+        public static async Task<HttpResponseMessage> GetAsync(string url)
+        {
+            var baseUri = new Uri(MainWindow.MainVM.BaseUrl);
+            var cookieContainer = new CookieContainer();
+            using (var handler = new HttpClientHandler { CookieContainer = cookieContainer })
+            using (var client = new HttpClient(handler) { BaseAddress = baseUri })
+            {
+                cookieContainer.Add(baseUri, new Cookie("JWT", JWT));
+                return await client.GetAsync(url);
+            }
+        }
+
+        public static async Task<HttpResponseMessage> PostAsync(string url, object content)
+        {
+            var cookieContainer = new CookieContainer();
+            var baseUri = new Uri(MainWindow.MainVM.BaseUrl);
+            using (var handler = new HttpClientHandler { CookieContainer = cookieContainer }) 
+            using(var client = new HttpClient(handler) { BaseAddress = baseUri })
+            {
+                var stringContent = new StringContent(content.ToString(), Encoding.UTF8, "application/json");
+                cookieContainer.Add(baseUri, new Cookie("JWT", JWT));
+                return await client.PostAsync(url, stringContent);
+            }
+        }
+
+        public static async Task PostImage(string url, string fileName, Stream value)
         {
             HttpContent fileStreamContent = new StreamContent(value);
             var baseAddress = new Uri(url);
@@ -77,14 +103,14 @@ namespace BD_client.Domain
             using (var client = new HttpClient(handler) { BaseAddress = baseAddress })
             {
                 cookieContainer.Add(baseAddress, new Cookie("JWT", JWT));
-                formData.Add(fileStreamContent,"file");
-                var response = client.PostAsync(url, formData).Result; //404 BAD REQUEST
+                formData.Add(fileStreamContent, "file", fileName);
+                var response = await client.PostAsync(url, formData);
                 if (!response.IsSuccessStatusCode)
-                    throw new Exception();
-                
+                {
+                    throw new Exception("Photo not added");
+                }
             }
         }
-
 
         public static void Put(String url, String value)
         {

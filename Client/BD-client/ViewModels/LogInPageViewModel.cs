@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -57,6 +58,18 @@ namespace BD_client.ViewModels
             RegisterCmd = new RelayCommand(x => Register());
         }
 
+        public static void TemporaryLogin()
+        {
+            var url = ConfigurationManager.AppSettings["BaseApiUrl"] + "api/v1/login";
+            var email = ConfigurationManager.AppSettings["Email"];
+            var values = new
+            {
+                email = email,
+                password = ConfigurationManager.AppSettings["Password"]
+            };
+            string json = JsonConvert.SerializeObject(values, Formatting.Indented);
+            ApiRequest.Post(url, json);
+        }
 
         private void LoginUser()
         {
@@ -67,7 +80,7 @@ namespace BD_client.ViewModels
             };
 
             string json = JsonConvert.SerializeObject(values, Formatting.Indented);
-            String url = MainWindow.MainVM.url + "api/v1/login";
+            String url = MainWindow.MainVM.BaseUrl + "api/v1/login";
             ApiRequest.Post(url, json);
         }
         public async void Login()

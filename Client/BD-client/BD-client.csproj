@@ -52,6 +52,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
@@ -78,13 +79,18 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Common\DataGridBehavior.cs" />
+    <Compile Include="Common\NotifyTaskCompletion.cs" />
     <Compile Include="Common\PasswordBoxAssistant.cs" />
     <Compile Include="Data\Photos\ExifMetadata.cs" />
+    <Compile Include="Data\Photos\Photov2.cs" />
     <Compile Include="Data\Photos\PhotoCollection.cs" />
     <Compile Include="Data\Photos\PhotoState.cs" />
     <Compile Include="Data\Photos\PublicPhoto.cs" />
     <Compile Include="Data\Photos\ShareState.cs" />
     <Compile Include="Data\Photos\Tag.cs" />
+    <Compile Include="Pages\LoadingPage.xaml.cs">
+      <DependentUpon>LoadingPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\ApiRequest.cs" />
     <Compile Include="Data\Photos\Category.cs" />
     <Compile Include="Data\Photos\Photo.cs" />
@@ -127,6 +133,7 @@
     <Compile Include="Pages\SharePage.xaml.cs">
       <DependentUpon>SharePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\PhotoService.cs" />
     <Compile Include="ViewModels\AddPhotosPageViewModel.cs" />
     <Compile Include="ViewModels\CategoriesPageViewModel.cs" />
     <Compile Include="ViewModels\DownloadPageViewModel.cs" />
@@ -179,6 +186,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\MyPhotosPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\LoadingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

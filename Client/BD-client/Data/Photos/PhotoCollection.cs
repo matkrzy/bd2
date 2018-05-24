@@ -9,6 +9,12 @@ namespace BD_client.Domain
     public class PhotoCollection : ObservableCollection<Photo>
     {
         private DirectoryInfo Directory;
+        public PhotoCollection()
+        {
+            var path = System.IO.Directory.GetCurrentDirectory() + @"\..\..\tmp";
+            Directory = new DirectoryInfo(path);
+            Update();
+        }
         public PhotoCollection(string path)
         {
             Directory = new DirectoryInfo(path);
