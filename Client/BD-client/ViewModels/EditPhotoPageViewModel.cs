@@ -62,7 +62,7 @@ namespace BD_client.ViewModels
 
         private void EditPhoto()
         {
-            string url = MainWindow.MainVM.url + "api/v1/photos/" + Photos[SelectedIndex].Index;
+            string url = MainWindow.MainVM.BaseUrl + "api/v1/photos/" + Photos[SelectedIndex].Index;
             string[] jsonTags = Tags.Split(' ');
             string json;
 
@@ -83,7 +83,7 @@ namespace BD_client.ViewModels
             }
 
             //Post tags
-            url = MainWindow.MainVM.url + "api/v1/tags";
+            url = MainWindow.MainVM.BaseUrl + "api/v1/tags";
             bool repeat = false;
             for (int i = 0; i < jsonTags.Length; i++)
             {
@@ -128,7 +128,7 @@ namespace BD_client.ViewModels
                { "idcategory",Categories[SelectedCategory].Id.ToString() }
             };
 
-                url = MainWindow.MainVM.url + "not in server yet";
+                url = MainWindow.MainVM.BaseUrl + "not in server yet";
                 try
                 {
                     json = JsonConvert.SerializeObject(valuesCategory, Formatting.Indented);

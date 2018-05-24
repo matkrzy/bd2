@@ -56,7 +56,7 @@
                     Name="MyPhotosListBox" 
                     ItemsSource="{Binding Photos.Result}"
                     SelectionMode="Extended"
-                    SelectedItem="{Binding SelectedPhotos}"
+                    SelectedItem="{Binding SelectedPhoto}"
                     MouseDoubleClick="OnPhotoDbClick">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>

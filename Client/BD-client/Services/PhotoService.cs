@@ -31,7 +31,8 @@ namespace BD_client.Services
                     fileStream.Close();
                 }
             }
-            return new PhotoCollection(destination);
+            MainWindow.MainVM.Photos = new PhotoCollection(destination);
+            return MainWindow.MainVM.Photos;
 
 
         }
