@@ -69,6 +69,11 @@ public class UserService {
             user.setRole(Role.USER);
             userRepository.save(user);
             Files.createDirectory(Paths.get(UPLOAD_ROOT + "/" + user.getEmail()));
+            Category category = new Category();
+            category.setName("ARCHIVES");
+            category.setParentCategory(null);
+            category.setUser(user);
+            categoryRepository.save(category);
 
         } else {
             return false;
