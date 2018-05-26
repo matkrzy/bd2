@@ -1,8 +1,8 @@
 package com.photos.api.services;
 
+import com.photos.api.models.Photo;
 import com.photos.api.models.Tag;
 import com.photos.api.models.User;
-import com.photos.api.models.enums.PhotoState;
 import com.photos.api.models.repositories.PhotoRepository;
 import com.photos.api.models.repositories.TagRepository;
 import com.photos.api.models.repositories.UserRepository;
@@ -58,7 +58,7 @@ public class TagService {
     public List<Tag> getTags() {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         User user = userRepository.findByEmail(email);
-        List<Tag> tags = tagRepository.findAllByUser(user.getUserID());
+        List<Tag> tags = tagRepository.findAllByUser(user);
         return tags;
     }
 
@@ -71,7 +71,7 @@ public class TagService {
     public List<Tag> getTags(String name) {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         User user = userRepository.findByEmail(email);
-        List<Tag> tags = tagRepository.findAllByNameLikeAndUser(name + "%", user.getUserID());
+        List<Tag> tags = tagRepository.findAllByNameLikeAndUser(name + "%", user);
         return tags;
     }
 
@@ -81,7 +81,7 @@ public class TagService {
      * @param photo
      * @return {lista nazw tagow}
      */
-    public List<Tag> getPhotoTags(final Long photo) {
+    public List<Tag> getPhotoTags(final Photo photo) {
         List<Tag> tags = tagRepository.findAllByPhoto(photo);
         return tags;
     }
@@ -93,36 +93,37 @@ public class TagService {
      * @param tags
      * @return
      */
-    public boolean addTag(List<Tag> tags) {
-
-        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-        User user = userRepository.findByEmail(email);
-
-
+    public boolean addTags(List<Tag> tags) {
         for (Tag tag : tags) {
-            if (tagRepository.findByPhotoAndName(tag.getPhoto(), tag.getName()) != null) {
-                return false;
-            }
-            if (photoRepository.findByPhotoIDAndPhotoState(tag.getPhoto(), PhotoState.ACTIVE) == null) {
-                return false;
-            }
-
-            try {
-                tag.setUser(user.getUserID());
-                tagRepository.save(tag);
-            } catch (Exception e) {
-                return false;
-            }
+            addTag(tag);
         }
         return true;
     }
 
+    public boolean addTag(Tag tag) {
+        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        User user = userRepository.findByEmail(email);
+        if (tagRepository.findByPhotoAndName(tag.getPhoto(), tag.getName()) != null) {
+            return false;
+        }
+        if (photoRepository.findByPhotoID(tag.getPhoto().getPhotoID()) == null) {
+            return false;
+        }
+
+        try {
+            tag.setUser(user);
+            tagRepository.save(tag);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 
     public boolean deleteTag(Long id) {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         User user = userRepository.findByEmail(email);
 
-        Tag tag = tagRepository.findByTagIDAndUser(id, user.getUserID());
+        Tag tag = tagRepository.findByTagIDAndUser(id, user);
         if (tag == null) {
             return false;
         }
@@ -135,20 +136,4 @@ public class TagService {
         return true;
     }
 
-    public boolean editTag(Long id, String name) {
-        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-        User user = userRepository.findByEmail(email);
-
-        Tag tag = tagRepository.findByTagIDAndUser(id, user.getUserID());
-        if (tag == null) {
-            return false;
-        }
-        try {
-            tag.setName(name);
-            tagRepository.save(tag);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
-    }
 }

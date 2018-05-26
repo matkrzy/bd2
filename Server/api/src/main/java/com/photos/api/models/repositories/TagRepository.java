@@ -1,6 +1,8 @@
 package com.photos.api.models.repositories;
 
+import com.photos.api.models.Photo;
 import com.photos.api.models.Tag;
+import com.photos.api.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
@@ -14,19 +16,21 @@ import java.util.List;
 @Component
 public interface TagRepository extends JpaRepository<Tag, Long> {
 
-    List<Tag> findAllByPhoto(Long photo);
+    List<Tag> findAllByPhoto(Photo photo);
 
     List<Tag> findAllByNameLike(String name);
 
-    List<Tag> findAllByUser(Long user);
+    List<Tag> findAllByUser(User user);
 
-    List<Tag> findAllByNameLikeAndUser(String name, Long user);
+    List<Tag> findAllByNameLikeAndUser(String name, User user);
 
-    Tag findByTagIDAndUser(Long id, Long user);
+    List<Tag> findAllByName(String name);
 
-    void deleteAllByUser(Long userID);
+    Tag findByTagIDAndUser(Long id, User user);
 
-    void deleteAllByPhoto(Long photo);
+    void deleteAllByUser(User userID);
 
-    Tag findByPhotoAndName(Long photo, String name);
+    void deleteAllByPhoto(Photo photo);
+
+    Tag findByPhotoAndName(Photo photo, String name);
 }

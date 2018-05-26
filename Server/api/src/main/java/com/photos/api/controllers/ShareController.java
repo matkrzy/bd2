@@ -3,6 +3,7 @@ package com.photos.api.controllers;
 import com.photos.api.models.Share;
 import com.photos.api.models.repositories.ShareRepository;
 import com.photos.api.services.ShareService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,25 +26,18 @@ public class ShareController {
     @Autowired
     private ShareRepository shareRepository;
 
+    @ApiOperation(value = "Creates new share")
     @PostMapping
     public ResponseEntity addShare(@RequestBody final Share share) {
         return shareService.addShare(share) ?
-                ResponseEntity.status(HttpStatus.OK).build() :
+                ResponseEntity.status(HttpStatus.CREATED).build() :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    @GetMapping
-    public ResponseEntity getall() {
-        List<Share> shares = shareRepository.findAll();
-
-        return shares.size() != 0 ?
-                ResponseEntity.status(HttpStatus.OK).body(shares) :
-                ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteShare(@PathVariable final Long id) {
-        return shareService.deleteShare(id) ?
+    @ApiOperation(value = "Reomves share")
+    @DeleteMapping
+    public ResponseEntity deleteShare(@RequestBody final Share share) {
+        return shareService.deleteShare(share) ?
                 ResponseEntity.status(HttpStatus.OK).build() :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }

@@ -4,6 +4,7 @@ import com.photos.api.models.Photo;
 import com.photos.api.models.Rate;
 import com.photos.api.models.User;
 import com.photos.api.models.enums.PhotoState;
+import com.photos.api.models.enums.ShareState;
 import com.photos.api.models.repositories.PhotoRepository;
 import com.photos.api.models.repositories.RateRepository;
 import com.photos.api.models.repositories.UserRepository;
@@ -37,35 +38,27 @@ public class RateService {
      * @param
      * @return {srednia ocena zdjecia}
      */
-    public byte getPhotoRate(final Long photoid) {
-        byte rate = 0;
-        List<Rate> rates = rateRepository.findAllByPhoto(photoid);
-
-        if (rates.size() != 0) {
-            for (Rate r : rates) {
-                rate += r.getRate();
-            }
-            rate /= rates.size();
-        }
-        return rate;
+    public int getPhotoRate(final Photo photo) {
+        List<Rate> rates = rateRepository.findAllByPhoto(photo);
+        return rates.size();
     }
 
     public boolean addRate(Rate rate) {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         User user = userRepository.findByEmail(email);
 
-        Rate check = rateRepository.findByPhotoAndUser(rate.getPhoto(), user.getUserID());
+        Rate check = rateRepository.findByPhotoAndUser(rate.getPhoto(), user);
         if (check != null) {
             return false;
         }
 
-        Photo photo = photoRepository.findByPhotoIDAndPhotoState(rate.getPhoto(), PhotoState.ACTIVE);
+        Photo photo = photoRepository.findByPhotoIDAndPhotoStateAndShareState(rate.getPhoto().getPhotoID(), PhotoState.ACTIVE, ShareState.PUBLIC);
         if (photo == null) {
             return false;
         }
 
         try {
-            rate.setUser(user.getUserID());
+            rate.setUser(user);
             rate.setDate(new Timestamp(System.currentTimeMillis()));
             rateRepository.save(rate);
         } catch (Exception e) {
@@ -74,11 +67,11 @@ public class RateService {
         return true;
     }
 
-    public boolean deleteRate(Long photoId) {
+    public boolean deleteRate(Photo photo) {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         User user = userRepository.findByEmail(email);
 
-        Rate rate = rateRepository.findByPhotoAndUser(photoId, user.getUserID());
+        Rate rate = rateRepository.findByPhotoAndUser(photo, user);
         if (rate == null) {
             return false;
         }
@@ -90,29 +83,12 @@ public class RateService {
         return true;
     }
 
-    public boolean editRate(Long photoId, byte rate) {
-        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-        User user = userRepository.findByEmail(email);
-
-        Rate check = rateRepository.findByPhotoAndUser(photoId, user.getUserID());
-        if (check == null) {
-            return false;
-        }
-        try {
-            check.setRate(rate);
-            check.setDate(new Timestamp(System.currentTimeMillis()));
-            rateRepository.save(check);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
-    }
 
     public List<Rate> getAll() {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         User user = userRepository.findByEmail(email);
 
-        return rateRepository.findAllByUser(user.getUserID());
+        return rateRepository.findAllByUser(user);
     }
 }
 

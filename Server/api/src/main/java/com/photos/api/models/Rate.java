@@ -20,20 +20,18 @@ public class Rate {
     private Long rateID;
 
     @NotNull
-    @Column(name = "user_id")
-    private Long user;
+    @OneToOne
+    @JoinColumn(name = "user")
+    private User user;
 
     @NotNull
-    @Column(name = "photo_id")
-    private Long photo;
+    @OneToOne
+    @JoinColumn(name = "photo")
+    private Photo photo;
 
     @NotNull
     @Column(name = "date")
     private Timestamp date;
-
-    @NotNull
-    @Column(name = "rate")
-    private Byte rate;
 
     public Long getRateID() {
         return rateID;
@@ -43,19 +41,19 @@ public class Rate {
         this.rateID = rateID;
     }
 
-    public Long getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(Long user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
-    public Long getPhoto() {
+    public Photo getPhoto() {
         return photo;
     }
 
-    public void setPhoto(Long photo) {
+    public void setPhoto(Photo photo) {
         this.photo = photo;
     }
 
@@ -67,11 +65,4 @@ public class Rate {
         this.date = date;
     }
 
-    public Byte getRate() {
-        return rate;
-    }
-
-    public void setRate(Byte rate) {
-        this.rate = rate;
-    }
 }

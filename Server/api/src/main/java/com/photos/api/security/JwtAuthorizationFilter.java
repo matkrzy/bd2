@@ -61,7 +61,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         }
 
         if (email == "") return null;
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
+       UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
         return userDetails != null ? new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()) : null;
     }
 }

@@ -1,5 +1,8 @@
 package com.photos.api.models;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -10,6 +13,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "share")
+@ApiModel
 public class Share {
 
     @Id
@@ -19,25 +23,32 @@ public class Share {
     private Long shareID;
 
     @NotNull
-    @Column(name = "user_id")
-    private Long user;
+    @OneToOne
+    @JoinColumn(name = "photo")
+    private Photo photo;
 
     @NotNull
-    @Column(name = "photo_id")
-    private Long photo;
+    @OneToOne
+    @JoinColumn(name = "user")
+    private User user;
 
-    @NotNull
-    @Column(name = "owner_id")
-    private Long owner;
+    @OneToOne
+    @JoinColumn(name = "owner")
+    private User owner;
 
-    public Long getOwner() {
-        return owner;
+    public Share() {
     }
 
-    public void setOwner(Long owner) {
-        this.owner = owner;
+    public Share(Long id) {
+        this.shareID = id;
     }
 
+    public Share(@NotNull Photo photo, @NotNull User user) {
+        this.photo = photo;
+        this.user = user;
+    }
+
+    @ApiModelProperty(readOnly = true)
     public Long getShareID() {
         return shareID;
     }
@@ -46,20 +57,46 @@ public class Share {
         this.shareID = shareID;
     }
 
-    public Long getUser() {
+    @ApiModelProperty(readOnly = true)
+    public User getUser() {
         return user;
     }
 
-    public void setUser(Long user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
-    public Long getPhoto() {
+    @ApiModelProperty(hidden = true)
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    @ApiModelProperty(readOnly = true)
+    public Photo getPhoto() {
         return photo;
     }
 
-    public void setPhoto(Long photo) {
+    public void setPhoto(Photo photo) {
         this.photo = photo;
+    }
+
+    @ApiModelProperty(readOnly = true)
+    public Long getphoto_id() {
+        return photo.getPhotoID();
+    }
+
+    @ApiModelProperty(readOnly = true)
+    public String getuser_email() {
+        return user.getEmail();
+    }
+
+    @ApiModelProperty(readOnly = true)
+    public String getowner_email() {
+        return owner.getEmail();
     }
 }
 

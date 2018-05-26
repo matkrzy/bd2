@@ -1,6 +1,7 @@
 package com.photos.api.models.repositories;
 
 import com.photos.api.models.Category;
+import com.photos.api.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
@@ -14,15 +15,15 @@ import java.util.List;
 @Component
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    Category findByCategoryIDAndUser(Long categoryID, Long user);
+    Category findByCategoryIDAndUser(Long categoryID, User user);
 
-    List<Category> findAllByParentCategoryAndUser(Long parent, Long user);
+    List<Category> findAllByParentCategoryAndUser(Category parent, User user);
 
-    Category findByNameAndParentCategoryAndUser(String name, Long parent, Long user);
+    Category findByNameAndParentCategoryAndUser(String name, Category parent, User user);
 
-    void deleteAllByUser(Long user);
+    void deleteAllByUser(User user);
 
     Category findByCategoryID(Long category);
 
-    List<Category> findAllByUser(Long userID);
+    List<Category> findAllByUser(User user);
 }

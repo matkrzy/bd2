@@ -1,7 +1,11 @@
 package com.photos.api.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.photos.api.models.enums.PhotoState;
 import com.photos.api.models.enums.ShareState;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,6 +18,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "photo")
+@ApiModel
 public class Photo {
 
     @Id
@@ -27,12 +32,9 @@ public class Photo {
     private String name;
 
     @NotNull
-    @Column(name = "user_email")
-    private String user;
-
-    @NotNull
-    @Column(name = "user_id")
-    private Long userID;
+    @OneToOne
+    @JoinColumn(name = "owner")
+    private User owner;
 
     @Column(name = "path")
     private String path;
@@ -50,11 +52,9 @@ public class Photo {
     @Column(name = "photo_state")
     private PhotoState photoState;
 
-    public Photo(@NotNull String name, @NotNull String user, @NotNull Long userid, String path, @NotNull Timestamp uploadTime, String description, ShareState shareState, PhotoState photoState) {
-
+    public Photo(@NotNull String name, @NotNull User user, String path, @NotNull Timestamp uploadTime, String description, ShareState shareState, PhotoState photoState) {
         this.name = name;
-        this.user = user;
-        this.userID = userid;
+        this.owner = user;
         this.path = path;
         this.uploadTime = uploadTime;
         this.description = description;
@@ -65,18 +65,15 @@ public class Photo {
     public Photo() {
     }
 
-    public Long getUserID() {
-        return userID;
-    }
-
-    public void setUserID(Long userid) {
-        this.userID = userid;
+    public Photo(Long id) {
+        this.photoID = id;
     }
 
     public Long getPhotoID() {
         return photoID;
     }
 
+    @ApiModelProperty(readOnly = true)
     public void setPhotoID(Long photoID) {
         this.photoID = photoID;
     }
@@ -89,26 +86,39 @@ public class Photo {
         this.name = name;
     }
 
-    public String getUser() {
-        return user;
+    @JsonIgnore
+    public User getUser() {
+        return owner;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    @JsonProperty
+    @ApiModelProperty(hidden = true)
+    public void setUser(User user) {
+        this.owner = user;
     }
 
+    @ApiModelProperty(readOnly = true)
+    public String getowner_email() {
+        return owner.getEmail();
+    }
+
+    @JsonIgnore
     public String getPath() {
         return path;
     }
 
+    @JsonProperty
+    @ApiModelProperty(hidden = true)
     public void setPath(String path) {
         this.path = path;
     }
+
 
     public Timestamp getUploadTime() {
         return uploadTime;
     }
 
+    @ApiModelProperty(readOnly = true)
     public void setUploadTime(Timestamp uploadTime) {
         this.uploadTime = uploadTime;
     }
@@ -121,18 +131,22 @@ public class Photo {
         this.description = description;
     }
 
+    @JsonIgnore
     public ShareState getShareState() {
         return shareState;
     }
 
+    @JsonProperty
     public void setShareState(ShareState shareState) {
         this.shareState = shareState;
     }
 
+    @JsonIgnore
     public PhotoState getPhotoState() {
         return photoState;
     }
 
+    @JsonProperty
     public void setPhotoState(PhotoState photoState) {
         this.photoState = photoState;
     }

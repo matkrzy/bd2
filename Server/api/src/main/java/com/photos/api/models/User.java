@@ -1,6 +1,8 @@
 package com.photos.api.models;
 
 import com.photos.api.models.enums.Role;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,6 +14,8 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "user")
+@ApiModel
+
 public class User {
 
     @Id
@@ -36,10 +40,15 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Enumerated
     @Column(name = "role")
     private Role role;
 
     public User() {
+    }
+
+    public User(Long id) {
+        this.userID = id;
     }
 
     public User(@NotNull String email, @NotNull String firstName, @NotNull String lastName, @NotNull String password, Role role) {
@@ -50,6 +59,7 @@ public class User {
         this.role = role;
     }
 
+    @ApiModelProperty(readOnly = true)
     public Long getUserID() {
         return userID;
     }
@@ -90,6 +100,7 @@ public class User {
         this.password = password;
     }
 
+    @ApiModelProperty(readOnly = true)
     public Role getRole() {
         return role;
     }

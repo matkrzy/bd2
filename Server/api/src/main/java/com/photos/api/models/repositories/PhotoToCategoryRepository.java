@@ -1,7 +1,11 @@
 package com.photos.api.models.repositories;
 
+import com.photos.api.models.Category;
+import com.photos.api.models.Photo;
 import com.photos.api.models.PhotoToCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 /**
  * @author Micha Królewski on 2018-05-13.
@@ -11,11 +15,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PhotoToCategoryRepository extends JpaRepository<PhotoToCategory, Long> {
 
-    PhotoToCategory findByPhoto(Long photo);
+    PhotoToCategory findByPhotoAndCategory(Photo photo, Category category);
 
-    PhotoToCategory findByPhotoAndCategory(Long photo, Long category);
+    void deleteAllByCategory(Category category);
 
-    void deleteAllByCategory(Long category);
+    void deleteAllByPhoto(Photo photoID);
 
-    void deleteAllByPhoto(Long photoID);
+    List<PhotoToCategory> findAllByPhoto(Photo photo);
+
+    List<PhotoToCategory> findAllByCategory(Category category);
+
+    List<PhotoToCategory> findAllByCategoryIn(List<Category> categories);
+
+    List<PhotoToCategory> findAllByCategoryIsIn(List<Category> categories);
 }

@@ -1,6 +1,11 @@
 package com.photos.api.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -12,6 +17,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "tag")
+@ApiModel
 public class Tag {
 
     @Id
@@ -21,12 +27,14 @@ public class Tag {
     private Long tagID;
 
     @NotNull
-    @Column(name = "photo_id")
-    private Long photo;
+    @OneToOne
+    @JoinColumn(name = "photo")
+    private Photo photo;
 
     @NotNull
-    @Column(name = "user_id")
-    private Long user;
+    @OneToOne
+    @JoinColumn(name = "user")
+    private User user;
 
     @NotNull
     @Column(name = "name")
@@ -35,13 +43,13 @@ public class Tag {
     public Tag() {
     }
 
-    public Tag(@NotNull Long photo, @NotNull Long user, @NotNull String name) {
+    public Tag(@NotNull Photo photo, @NotNull User user, @NotNull String name) {
 
         this.photo = photo;
         this.user = user;
         this.name = name;
     }
-
+    @ApiModelProperty(readOnly = true)
     public Long getTagID() {
         return tagID;
     }
@@ -50,19 +58,29 @@ public class Tag {
         this.tagID = tagID;
     }
 
-    public Long getPhoto() {
+    @JsonIgnore
+    public Photo getPhoto() {
         return photo;
     }
 
-    public void setPhoto(Long photo) {
+    @JsonProperty
+    @ApiModelProperty(hidden = true)
+    public void setPhoto(Photo photo) {
         this.photo = photo;
     }
 
-    public Long getUser() {
+    public Long getphoto_id() {
+        return photo.getPhotoID();
+    }
+
+    @JsonIgnore
+    public User getUser() {
         return user;
     }
 
-    public void setUser(Long user) {
+    @JsonProperty
+    @ApiModelProperty(hidden = true)
+    public void setUser(User user) {
         this.user = user;
     }
 

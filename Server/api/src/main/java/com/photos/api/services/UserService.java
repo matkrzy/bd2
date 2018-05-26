@@ -104,15 +104,15 @@ public class UserService {
 
         try {
 
-            List<Category> categories = categoryRepository.findAllByUser(user.getUserID());
+            List<Category> categories = categoryRepository.findAllByUser(user);
             for (Category category : categories) {
-                PTCRepository.deleteAllByCategory(category.getCategoryID());
+                PTCRepository.deleteAllByCategory(category);
             }
-            categoryRepository.deleteAllByUser(user.getUserID());
+            categoryRepository.deleteAllByUser(user);
 
-            shareRepository.deleteAllByUser(user.getUserID());
-            tagRepository.deleteAllByUser(user.getUserID());
-            photoRepository.deleteAllByUserID(user.getUserID());
+            shareRepository.deleteAllByUser(user);
+            tagRepository.deleteAllByUser(user);
+            photoRepository.deleteAllByOwner(user);
 
             // TODO: 2018-05-19 delete folder with images
             userRepository.delete(user);
