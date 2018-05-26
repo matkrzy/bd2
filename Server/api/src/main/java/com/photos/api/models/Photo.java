@@ -114,7 +114,6 @@ public class Photo {
         this.path = path;
     }
 
-
     public Timestamp getUploadTime() {
         return uploadTime;
     }

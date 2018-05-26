@@ -50,7 +50,6 @@ public class Category {
         this.parentCategory = parentCategory;
     }
 
-
     public Long getCategoryID() {
         return categoryID;
     }
@@ -64,7 +63,7 @@ public class Category {
         return name;
     }
 
-    @ApiModelProperty(required = true)
+    @ApiModelProperty(required = true, example = "My Category")
     public void setName(String name) {
         this.name = name;
     }
@@ -86,7 +85,7 @@ public class Category {
     }
 
     @JsonProperty
-    @ApiModelProperty(required = true)
+    @ApiModelProperty(required = true, example = "1000")
     public void setParentCategory(Category parentCategory) {
         this.parentCategory = parentCategory;
     }
@@ -96,7 +95,7 @@ public class Category {
         return parentCategory != null ? parentCategory.getName() : null;
     }
 
-    @ApiModelProperty
+    @ApiModelProperty(readOnly = true)
     public Long getparent_id() {
         return parentCategory != null ? parentCategory.getCategoryID() : null;
     }

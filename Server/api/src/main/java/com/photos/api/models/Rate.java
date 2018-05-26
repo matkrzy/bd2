@@ -41,6 +41,7 @@ public class Rate {
         return rateID;
     }
 
+    @ApiModelProperty(hidden = true)
     public void setRateID(Long rateID) {
         this.rateID = rateID;
     }
@@ -49,6 +50,7 @@ public class Rate {
         return user;
     }
 
+    @ApiModelProperty(hidden = true)
     public void setUser(User user) {
         this.user = user;
     }
@@ -56,7 +58,8 @@ public class Rate {
     public Photo getPhoto() {
         return photo;
     }
-    @ApiModelProperty(required = true)
+
+    @ApiModelProperty(required = true, example = "1000")
     public void setPhoto(Photo photo) {
         this.photo = photo;
     }
@@ -65,6 +68,7 @@ public class Rate {
         return date;
     }
 
+    @ApiModelProperty(hidden = true)
     public void setDate(Timestamp date) {
         this.date = date;
     }

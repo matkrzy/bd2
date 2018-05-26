@@ -43,21 +43,23 @@ public class RateService {
         return rates.size();
     }
 
-    public boolean addRate(Rate rate) {
+    public boolean addRate(Photo photo) {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         User user = userRepository.findByEmail(email);
 
-        Rate check = rateRepository.findByPhotoAndUser(rate.getPhoto(), user);
+        Rate check = rateRepository.findByPhotoAndUser(photo, user);
         if (check != null) {
             return false;
         }
 
-        Photo photo = photoRepository.findByPhotoIDAndPhotoStateAndShareState(rate.getPhoto().getPhotoID(), PhotoState.ACTIVE, ShareState.PUBLIC);
-        if (photo == null) {
+        Photo photoo = photoRepository.findByPhotoIDAndPhotoStateAndShareState(photo.getPhotoID(), PhotoState.ACTIVE, ShareState.PUBLIC);
+        if (photoo == null) {
             return false;
         }
 
         try {
+            Rate rate = new Rate();
+            rate.setPhoto(photo);
             rate.setUser(user);
             rate.setDate(new Timestamp(System.currentTimeMillis()));
             rateRepository.save(rate);
