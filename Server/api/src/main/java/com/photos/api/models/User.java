@@ -72,6 +72,7 @@ public class User {
         return firstName;
     }
 
+    @ApiModelProperty(required = true)
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -80,6 +81,7 @@ public class User {
         return lastName;
     }
 
+    @ApiModelProperty(required = true)
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
@@ -88,6 +90,7 @@ public class User {
         return email;
     }
 
+    @ApiModelProperty(required = true)
     public void setEmail(String email) {
         this.email = email;
     }
@@ -96,6 +99,7 @@ public class User {
         return password;
     }
 
+    @ApiModelProperty(required = true)
     public void setPassword(String password) {
         this.password = password;
     }

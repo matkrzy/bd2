@@ -82,6 +82,7 @@ public class Photo {
         return name;
     }
 
+    @ApiModelProperty(required = true)
     public void setName(String name) {
         this.name = name;
     }
@@ -123,6 +124,7 @@ public class Photo {
         this.uploadTime = uploadTime;
     }
 
+    @ApiModelProperty(required = true)
     public String getDescription() {
         return description;
     }
@@ -137,6 +139,7 @@ public class Photo {
     }
 
     @JsonProperty
+    @ApiModelProperty(required = true)
     public void setShareState(ShareState shareState) {
         this.shareState = shareState;
     }
@@ -147,6 +150,7 @@ public class Photo {
     }
 
     @JsonProperty
+    @ApiModelProperty(required = true)
     public void setPhotoState(PhotoState photoState) {
         this.photoState = photoState;
     }

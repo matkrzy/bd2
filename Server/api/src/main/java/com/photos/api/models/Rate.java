@@ -1,5 +1,8 @@
 package com.photos.api.models;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
@@ -11,6 +14,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "rate")
+@ApiModel
 public class Rate {
 
     @Id
@@ -52,7 +56,7 @@ public class Rate {
     public Photo getPhoto() {
         return photo;
     }
-
+    @ApiModelProperty(required = true)
     public void setPhoto(Photo photo) {
         this.photo = photo;
     }

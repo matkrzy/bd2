@@ -49,6 +49,7 @@ public class Tag {
         this.user = user;
         this.name = name;
     }
+
     @ApiModelProperty(readOnly = true)
     public Long getTagID() {
         return tagID;
@@ -64,7 +65,7 @@ public class Tag {
     }
 
     @JsonProperty
-    @ApiModelProperty(hidden = true)
+    @ApiModelProperty(hidden = true, required = true)
     public void setPhoto(Photo photo) {
         this.photo = photo;
     }
@@ -88,6 +89,7 @@ public class Tag {
         return name;
     }
 
+    @ApiModelProperty(required = true)
     public void setName(String name) {
         this.name = name;
     }

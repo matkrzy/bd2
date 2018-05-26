@@ -52,7 +52,7 @@ public class PhotoToCategory {
         return photo;
     }
 
-    @ApiModelProperty(readOnly = true, example = "1000")
+    @ApiModelProperty(required = true)
     public void setPhoto(Photo photo) {
         this.photo = photo;
     }
@@ -61,7 +61,7 @@ public class PhotoToCategory {
         return category;
     }
 
-    @ApiModelProperty(readOnly = true, example = "1000")
+    @ApiModelProperty(required = true)
     public void setCategory(Category category) {
         this.category = category;
     }

@@ -62,6 +62,7 @@ public class Share {
         return user;
     }
 
+    @ApiModelProperty(required = true)
     public void setUser(User user) {
         this.user = user;
     }
@@ -80,6 +81,7 @@ public class Share {
         return photo;
     }
 
+    @ApiModelProperty(required = true)
     public void setPhoto(Photo photo) {
         this.photo = photo;
     }

@@ -86,6 +86,7 @@ public class Category {
     }
 
     @JsonProperty
+    @ApiModelProperty(required = true)
     public void setParentCategory(Category parentCategory) {
         this.parentCategory = parentCategory;
     }
