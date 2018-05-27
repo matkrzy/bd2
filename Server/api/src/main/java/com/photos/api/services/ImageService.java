@@ -1,10 +1,12 @@
 package com.photos.api.services;
 
 import com.photos.api.models.Photo;
+import com.photos.api.models.User;
 import com.photos.api.models.enums.PhotoState;
 import com.photos.api.models.enums.ShareState;
 import com.photos.api.models.repositories.PhotoRepository;
-import org.springframework.beans.factory.annotation.Value;
+import com.photos.api.models.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,10 +25,12 @@ import java.nio.file.Paths;
 @Service
 public class ImageService {
 
-
-    public static String UPLOAD_ROOT = System.getProperty("user.dir") +  "\\..\\imageStore";
+    public static String UPLOAD_ROOT = System.getProperty("user.dir") + "\\..\\imageStore";
     private final ResourceLoader resourceLoader;
     private final PhotoRepository photoRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public ImageService(ResourceLoader resourceLoader, PhotoRepository photoRepository) {
         this.resourceLoader = resourceLoader;
@@ -39,7 +43,8 @@ public class ImageService {
 
         if (photo == null) {
             String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-            photo = photoRepository.findByPhotoIDAndPhotoStateAndShareStateAndUser(id, PhotoState.ACTIVE, ShareState.PRIVATE, email);
+            User user = userRepository.findByEmail(email);
+            photo = photoRepository.findByPhotoIDAndPhotoStateAndShareStateAndOwner(id, PhotoState.ACTIVE, ShareState.PRIVATE, user);
             if (photo == null) {
                 return null;
             }
@@ -53,8 +58,9 @@ public class ImageService {
             try {
 
                 String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+                User user = userRepository.findByEmail(email);
                 String name = file.getOriginalFilename();
-                Photo photo = photoRepository.findByNameAndUserAndPhotoState(name, email, PhotoState.ACTIVE);
+                Photo photo = photoRepository.findByNameAndOwnerAndPhotoState(name, user, PhotoState.ACTIVE);
                 photo.setPath(/*UPLOAD_ROOT + "\\" +*/ email + "\\" + file.getOriginalFilename());
                 photoRepository.save(photo);
 

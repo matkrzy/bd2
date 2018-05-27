@@ -1,8 +1,6 @@
 package com.photos.api.services;
 
-import com.photos.api.models.Photo;
-import com.photos.api.models.Share;
-import com.photos.api.models.User;
+import com.photos.api.models.*;
 import com.photos.api.models.enums.PhotoState;
 import com.photos.api.models.enums.ShareState;
 import com.photos.api.models.repositories.*;
@@ -15,7 +13,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.photos.api.services.ImageService.UPLOAD_ROOT;
 
@@ -46,67 +46,146 @@ public class PhotoService {
     @Autowired
     private PhotoToCategoryRepository ptcRepository;
 
-    /**
-     * returning all photos for logged user
-     *
-     * @return
-     */
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+
     public List<Photo> getAll() {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         User user = userRepository.findByEmail(email);
-        List<Photo> photos = photoRepository.findAllByUserAndPhotoState(user.getEmail(), PhotoState.ACTIVE);
+        List<Photo> photos = photoRepository.findAllByOwnerAndPhotoState(user, PhotoState.ACTIVE);
         return photos;
     }
 
-    /**
-     * returning all public photos
-     *
-     * @return
-     */
-    public List<Photo> getPublic() {
-        return photoRepository.findAllByShareStateAndPhotoState(ShareState.PUBLIC, PhotoState.ACTIVE);
-    }
+    public List<Photo> getByCategoryAny(List<Category> categories) {
+        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        User user = userRepository.findByEmail(email);
 
 
-    /**
-     * @return
-     */
-    public List<Photo> getShared() {
-        User user = userRepository.findByEmail(((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
+        List<PhotoToCategory> ptcs = ptcRepository.findAllByCategoryIn(categories);
+
+        Map<Long, Photo> list = new HashMap<>();
         List<Photo> photos = new ArrayList<>();
-        List<Share> shares = shareRepository.findAllByUser(user.getUserID());
-
-        for (Share share : shares) {
-            photos.add(photoRepository.findByPhotoIDAndPhotoState(share.getPhoto(), PhotoState.ACTIVE));
+        for (PhotoToCategory ptc : ptcs) {
+            list.put(ptc.getPhoto().getPhotoID(), ptc.getPhoto());
+        }
+        for (Map.Entry<Long, Photo> entry : list.entrySet()) {
+            photos.add(entry.getValue());
         }
         return photos;
     }
 
-    /**
-     * @param id
-     * @return
-     */
+    public List<Photo> getByCategoryAll(List<Category> categories) {
+
+        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        User user = userRepository.findByEmail(email);
+
+        List<Photo> photos = new ArrayList<>();
+        List<PhotoToCategory> ptcs = ptcRepository.findAllByCategoryIn(categories);
+        ptcs.sort((o1, o2) -> o1.getPhoto().getPhotoID().compareTo(o2.getPhoto().getPhotoID()));
+
+        int counter = 0;
+        long lastId = 0;
+        for (PhotoToCategory ptc : ptcs) {
+            if (lastId == ptc.getPhoto().getPhotoID()) {
+                counter++;
+            } else {
+                lastId = ptc.getPhoto().getPhotoID();
+                counter = 1;
+            }
+            if (counter == categories.size()) {
+                photos.add(ptc.getPhoto());
+            }
+        }
+        return photos;
+    }
+
+    public List<Photo> getPublic() {
+        return photoRepository.findAllByShareStateAndPhotoState(ShareState.PUBLIC, PhotoState.ACTIVE);
+    }
+
+    private List<Tag> getTagObjects(List<Tag> tags) {
+        List<Tag> ret = new ArrayList<>();
+        for (Tag tag : tags) {
+            List<Tag> tmp = tagRepository.findAllByName(tag.getName());
+            ret.addAll(tmp);
+        }
+        ret.sort((o1, o2) -> o1.getPhoto().getPhotoID().compareTo(o2.getPhoto().getPhotoID()));
+
+        return ret;
+    }
+
+    public List<Photo> getByTagsAll(List<Tag> tagss, ShareState shareState) {
+
+        List<Tag> tags = getTagObjects(tagss);
+
+        List<Photo> photos = new ArrayList<>();
+        int counter = 0;
+        long lastId = 0;
+
+        for (Tag tag : tags) {
+            if (lastId == tag.getPhoto().getPhotoID()) {
+                counter++;
+            } else {
+                lastId = tag.getPhoto().getPhotoID();
+                counter = 1;
+            }
+            if (counter == tagss.size()) {
+                if (tag.getPhoto().getShareState() == shareState && tag.getPhoto().getPhotoState() == PhotoState.ACTIVE) {
+                    photos.add(tag.getPhoto());
+                }
+            }
+        }
+        return photos;
+
+
+    }
+
+    public List<Photo> getByTagsAny(List<Tag> tagss, ShareState shareState) {
+
+        List<Tag> tags = getTagObjects(tagss);
+
+        Map<Long, Photo> list = new HashMap<>();
+        List<Photo> photos = new ArrayList<>();
+        for (Tag tag : tags) {
+            if (tag.getPhoto().getShareState() == shareState && tag.getPhoto().getPhotoState() == PhotoState.ACTIVE) {
+                list.put(tag.getPhoto().getPhotoID(), tag.getPhoto());
+            }
+        }
+        for (Map.Entry<Long, Photo> entry : list.entrySet()) {
+            photos.add(entry.getValue());
+        }
+        return photos;
+    }
+
+    public List<Photo> getShared() {
+        User user = userRepository.findByEmail(((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
+        List<Photo> photos = new ArrayList<>();
+        List<Share> shares = shareRepository.findAllByUser(user);
+
+        for (Share share : shares) {
+            photos.add(share.getPhoto());
+        }
+        return photos;
+    }
+
     public Photo getPhoto(final Long id) {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         Photo photo = photoRepository.findByPhotoIDAndPhotoState(id, PhotoState.ACTIVE);
 
-        return photo != null && photo.getUser().equals(email) ? photo : null;
+        return photo != null && photo.getUser().getEmail().equals(email) ? photo : null;
     }
 
     public Photo getPhoto(final String name) {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         Photo photo = photoRepository.findByNameAndPhotoState(name, PhotoState.ACTIVE);
 
-        return photo != null && photo.getUser().equals(email) ? photo : null;
+        return photo != null && photo.getUser().getEmail().equals(email) ? photo : null;
     }
 
-    /**
-     * @param photo
-     * @return
-     */
     public boolean addPhoto(final Photo photo) {
 
-        if(photo.getName() == null){
+        if (photo.getName() == null) {
             return false;
         }
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
@@ -119,14 +198,16 @@ public class PhotoService {
             }
 
             User user = userRepository.findByEmail(email);
-            photo.setUser(email);
-            photo.setUserID(user.getUserID());
+            photo.setUser(user);
             photo.setUploadTime(new Timestamp(System.currentTimeMillis()));
             if (photo.getPhotoState() == null) {
                 photo.setPhotoState(PhotoState.ACTIVE);
             }
             if (photo.getShareState() == null) {
                 photo.setShareState(ShareState.PRIVATE);
+            }
+            if (photo.getDescription() == null) {
+                photo.setDescription("");
             }
 
             photoRepository.save(photo);
@@ -137,20 +218,20 @@ public class PhotoService {
 
     }
 
-
     public boolean deletePhoto(Long id) {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-        Photo check = photoRepository.findByPhotoIDAndUser(id, email);
+        User user = userRepository.findByEmail(email);
+        Photo check = photoRepository.findByPhotoIDAndOwner(id, user);
 
         if (check == null) {
             return false;
         }
 
         try {
-            ptcRepository.deleteAllByPhoto(check.getPhotoID());
-            shareRepository.deleteAllByPhoto(check.getPhotoID());
-            rateRepository.deleteAllByPhoto(check.getPhotoID());
-            tagRepository.deleteAllByPhoto(check.getPhotoID());
+            ptcRepository.deleteAllByPhoto(check);
+            shareRepository.deleteAllByPhoto(check);
+            rateRepository.deleteAllByPhoto(check);
+            tagRepository.deleteAllByPhoto(check);
             Files.deleteIfExists(Paths.get(UPLOAD_ROOT + "\\" + email + "\\", check.getName()));
             photoRepository.delete(check);
         } catch (Exception e) {
@@ -162,7 +243,8 @@ public class PhotoService {
     public boolean editPhoto(Long id, Photo photo) {
 
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-        Photo photoToUpdate = photoRepository.findByPhotoIDAndUser(id, email);
+        User user = userRepository.findByEmail(email);
+        Photo photoToUpdate = photoRepository.findByPhotoIDAndOwner(id, user);
 
         if (photoToUpdate == null) {
             return false;
@@ -186,4 +268,6 @@ public class PhotoService {
         }
         return true;
     }
+
+
 }

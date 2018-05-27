@@ -10,27 +10,25 @@ import java.util.List;
 
 public class ResponsePhoto extends Photo {
 
-    private byte rate;
+    private int rate;
     private List<Tag> tags;
-    private Category category;
 
-    public ResponsePhoto(Photo photo, byte rate, List<Tag> tags, Category category) {
-        super(photo.getName(), photo.getUser(), photo.getUserID(), photo.getPath(), photo.getUploadTime(), photo.getDescription(), photo.getShareState(), photo.getPhotoState());
+    public ResponsePhoto(Photo photo, int rate, List<Tag> tags) {
+        super(photo.getName(), photo.getUser(), photo.getPath(), photo.getUploadTime(), photo.getDescription(), photo.getShareState(), photo.getPhotoState());
         this.setPhotoID(photo.getPhotoID());
         this.rate = rate;
         this.tags = tags;
-        this.category = category;
     }
 
     public ResponsePhoto() {
 
     }
 
-    public byte getRate() {
+    public int getRate() {
         return rate;
     }
 
-    public void setRate(byte rate) {
+    public void setRate(int rate) {
         this.rate = rate;
     }
 
@@ -42,11 +40,5 @@ public class ResponsePhoto extends Photo {
         this.tags = tags;
     }
 
-    public Category getCategory() {
-        return category;
-    }
 
-    public void setCategory(Category category) {
-        this.category = category;
-    }
 }

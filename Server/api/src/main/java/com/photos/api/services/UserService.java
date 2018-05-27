@@ -69,6 +69,11 @@ public class UserService {
             user.setRole(Role.USER);
             userRepository.save(user);
             Files.createDirectory(Paths.get(UPLOAD_ROOT + "/" + user.getEmail()));
+            Category category = new Category();
+            category.setName("ARCHIVES");
+            category.setParentCategory(null);
+            category.setUser(user);
+            categoryRepository.save(category);
 
         } else {
             return false;
@@ -104,15 +109,15 @@ public class UserService {
 
         try {
 
-            List<Category> categories = categoryRepository.findAllByUser(user.getUserID());
+            List<Category> categories = categoryRepository.findAllByUser(user);
             for (Category category : categories) {
-                PTCRepository.deleteAllByCategory(category.getCategoryID());
+                PTCRepository.deleteAllByCategory(category);
             }
-            categoryRepository.deleteAllByUser(user.getUserID());
+            categoryRepository.deleteAllByUser(user);
 
-            shareRepository.deleteAllByUser(user.getUserID());
-            tagRepository.deleteAllByUser(user.getUserID());
-            photoRepository.deleteAllByUserID(user.getUserID());
+            shareRepository.deleteAllByUser(user);
+            tagRepository.deleteAllByUser(user);
+            photoRepository.deleteAllByOwner(user);
 
             // TODO: 2018-05-19 delete folder with images
             userRepository.delete(user);

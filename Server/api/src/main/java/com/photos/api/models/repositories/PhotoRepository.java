@@ -1,6 +1,7 @@
 package com.photos.api.models.repositories;
 
 import com.photos.api.models.Photo;
+import com.photos.api.models.User;
 import com.photos.api.models.enums.PhotoState;
 import com.photos.api.models.enums.ShareState;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,7 +17,7 @@ import java.util.List;
 @Component
 public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
-    List<Photo> findAllByUserAndPhotoState(String email, PhotoState photoState);
+    List<Photo> findAllByOwnerAndPhotoState(User user, PhotoState photoState);
 
     List<Photo> findAllByShareStateAndPhotoState(ShareState ss, PhotoState photoState);
 
@@ -26,13 +27,15 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
     Photo findByPhotoIDAndPhotoStateAndShareState(Long id, PhotoState photoState, ShareState shareState);
 
-    Photo findByPhotoIDAndUserAndPhotoState(Long id, String user, PhotoState photoState);
+    Photo findByPhotoIDAndOwnerAndPhotoState(Long id, User owner, PhotoState photoState);
 
-    Photo findByNameAndUserAndPhotoState(String name, String user, PhotoState photoState);
+    Photo findByNameAndOwnerAndPhotoState(String name, User owner, PhotoState photoState);
 
-    void deleteAllByUserID(Long userID);
+    void deleteAllByOwner(User owner);
 
-    Photo findByPhotoIDAndUser(Long id, String user);
+    Photo findByPhotoIDAndOwner(Long id, User user);
 
-    Photo findByPhotoIDAndPhotoStateAndShareStateAndUser(Long id, PhotoState active, ShareState aPrivate, String email);
+    Photo findByPhotoIDAndPhotoStateAndShareStateAndOwner(Long id, PhotoState active, ShareState aPrivate, User owner);
+
+    Photo findByPhotoID(Long photoID);
 }

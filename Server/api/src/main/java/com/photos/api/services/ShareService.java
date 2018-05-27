@@ -49,16 +49,16 @@ public class ShareService {
             }
 
             // sprawdzenie czy zdjecie nalezy do zalogowanego uzytkownika
-            if (photoRepository.findByPhotoIDAndUserAndPhotoState(share.getPhoto(), email, PhotoState.ACTIVE) == null) {
+            if (photoRepository.findByPhotoIDAndOwnerAndPhotoState(share.getPhoto().getPhotoID(), owner, PhotoState.ACTIVE) == null) {
                 return false;
             }
 
             // sprawdzenie czy istnieje uzytkownik ktoremu udostepniane jest zdjecie
-            if (userRepository.findByUserID(share.getUser()) == null) {
+            if (userRepository.findByUserID(share.getUser().getUserID()) == null) {
                 return false;
             }
 
-            share.setOwner(owner.getUserID());
+            share.setOwner(owner);
             shareRepository.save(share);
 
         } catch (Exception e) {
@@ -68,11 +68,11 @@ public class ShareService {
 
     }
 
-    public boolean deleteShare(Long id) {
+    public boolean deleteShare(Share sharee) {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         User owner = userRepository.findByEmail(email);
 
-        Share share = shareRepository.findByShareIDAndOwner(id, owner.getUserID());
+        Share share = shareRepository.findByPhotoAndUserAndOwner(sharee.getPhoto(), sharee.getUser(),owner);
         if (share == null) {
             return false;
         }

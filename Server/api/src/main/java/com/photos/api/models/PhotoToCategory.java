@@ -1,5 +1,8 @@
 package com.photos.api.models;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -10,6 +13,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "photo_to_category")
+@ApiModel
 public class PhotoToCategory {
 
     @Id
@@ -19,17 +23,19 @@ public class PhotoToCategory {
     private Long ptcID;
 
     @NotNull
-    @Column(name = "photo_id")
-    private Long photo;
+    @OneToOne
+    @JoinColumn(name = "photo")
+    private Photo photo;
 
     @NotNull
-    @Column(name = "category_id")
-    private Long category;
+    @OneToOne
+    @JoinColumn(name = "category")
+    private Category category;
 
     public PhotoToCategory() {
     }
 
-    public PhotoToCategory(@NotNull Long photo, @NotNull Long category) {
+    public PhotoToCategory(@NotNull Photo photo, @NotNull Category category) {
         this.photo = photo;
         this.category = category;
     }
@@ -42,21 +48,21 @@ public class PhotoToCategory {
         this.ptcID = ptcID;
     }
 
-    public Long getPhoto() {
+    public Photo getPhoto() {
         return photo;
     }
 
-    public void setPhoto(Long photo) {
+    @ApiModelProperty(required = true)
+    public void setPhoto(Photo photo) {
         this.photo = photo;
     }
 
-    public Long getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(Long category) {
+    @ApiModelProperty(required = true)
+    public void setCategory(Category category) {
         this.category = category;
     }
-
-
 }

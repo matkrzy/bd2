@@ -33,7 +33,8 @@ public class CategoryService {
     public List<Category> getAll(final Long parentid) {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         User user = userRepository.findByEmail(email);
-        List<Category> categories = categoryRepository.findAllByParentCategoryAndUser(parentid, user.getUserID());
+        Category parent = categoryRepository.findByCategoryIDAndUser(parentid, user);
+        List<Category> categories = categoryRepository.findAllByParentCategoryAndUser(parent, user);
         return categories.size() == 0 ? null : categories;
     }
 
@@ -47,21 +48,21 @@ public class CategoryService {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         User user = userRepository.findByEmail(email);
 
-        if (categoryRepository.findByNameAndParentCategoryAndUser(category.getName(), category.getParentCategory(), user.getUserID()) != null) {
+        if (categoryRepository.findByNameAndParentCategoryAndUser(category.getName(), category.getParentCategory(), user) != null) {
             return false;
         }
 
         if (category.getParentCategory() != null) {
-            Category parentCat = categoryRepository.findByCategoryIDAndUser(category.getParentCategory(), user.getUserID());
+            Category parentCat = categoryRepository.findByCategoryIDAndUser(category.getParentCategory().getCategoryID(), user);
             if (parentCat == null) {
                 return false;
             }
-            category.setParentCategory(parentCat.getCategoryID());
+            category.setParentCategory(parentCat);
         } else {
             category.setParentCategory(null);
         }
 
-        category.setUser(user.getUserID());
+        category.setUser(user);
         try {
             categoryRepository.save(category);
         } catch (Exception e) {
@@ -76,7 +77,7 @@ public class CategoryService {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         User user = userRepository.findByEmail(email);
 
-        Category categoryToUpdate = categoryRepository.findByCategoryIDAndUser(id, user.getUserID());
+        Category categoryToUpdate = categoryRepository.findByCategoryIDAndUser(id, user);
         if (category == null) {
             return false;
         }
@@ -86,14 +87,14 @@ public class CategoryService {
                 if (category.getParentCategory() == null) {
                     categoryToUpdate.setParentCategory(null);
                 } else {
-                    Category parentCat = categoryRepository.findByCategoryIDAndUser(category.getParentCategory(), user.getUserID());
+                    Category parentCat = categoryRepository.findByCategoryIDAndUser(category.getParentCategory().getCategoryID(), user);
                     if (parentCat == null && category.getParentCategory() != null) {
                         return false;
                     }
-                    categoryToUpdate.setParentCategory(parentCat.getCategoryID());
+                    categoryToUpdate.setParentCategory(parentCat);
                 }
             }
-            if (!categoryToUpdate.getName().equals(category.getName())) {
+            if (!categoryToUpdate.getName().equals(category.getName()) && category.getName() != null) {
                 categoryToUpdate.setName(category.getName());
             }
 
@@ -117,11 +118,11 @@ public class CategoryService {
             return false;
         }
 
-        Category category = categoryRepository.findByCategoryIDAndUser(id, user.getUserID());
+        Category category = categoryRepository.findByCategoryIDAndUser(id, user);
         if (category == null) {
             return false;
         }
-        List<Category> kids = categoryRepository.findAllByParentCategoryAndUser(category.getCategoryID(), user.getUserID());
+        List<Category> kids = categoryRepository.findAllByParentCategoryAndUser(category, user);
         if (kids.size() > 0) {
             deleteKids(kids, user);
         }
@@ -144,7 +145,7 @@ public class CategoryService {
     private void deleteKids(List<Category> kids, User user) {
         List<Category> kids1;
         for (Category tmpCat : kids) {
-            kids1 = categoryRepository.findAllByParentCategoryAndUser(tmpCat.getCategoryID(), user.getUserID());
+            kids1 = categoryRepository.findAllByParentCategoryAndUser(tmpCat, user);
             if (kids1 != null) {
                 deleteKids(kids1, user);
             }

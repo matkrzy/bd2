@@ -1,6 +1,8 @@
 package com.photos.api.models.repositories;
 
+import com.photos.api.models.Photo;
 import com.photos.api.models.Share;
+import com.photos.api.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
@@ -13,13 +15,15 @@ import java.util.List;
 
 @Component
 public interface ShareRepository extends JpaRepository<Share, Long> {
-    List<Share> findAllByUser(Long user);
+    List<Share> findAllByUser(User user);
 
-    Share findByPhotoAndUser(Long photo, Long user);
+    Share findByPhotoAndUser(Photo photo, User user);
 
-    Share findByShareIDAndOwner(Long id, Long owner);
+    Share findByShareIDAndOwner(Long id, User owner);
 
-    void deleteAllByUser(Long userID);
+    void deleteAllByUser(User user);
 
-    void deleteAllByPhoto(Long photo);
+    void deleteAllByPhoto(Photo photo);
+
+    Share findByPhotoAndUserAndOwner(Photo photo, User user, User owner);
 }

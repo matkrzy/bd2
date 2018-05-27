@@ -1,5 +1,8 @@
 package com.photos.api.models;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
@@ -11,6 +14,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "rate")
+@ApiModel
 public class Rate {
 
     @Id
@@ -20,42 +24,43 @@ public class Rate {
     private Long rateID;
 
     @NotNull
-    @Column(name = "user_id")
-    private Long user;
+    @OneToOne
+    @JoinColumn(name = "user")
+    private User user;
 
     @NotNull
-    @Column(name = "photo_id")
-    private Long photo;
+    @OneToOne
+    @JoinColumn(name = "photo")
+    private Photo photo;
 
     @NotNull
     @Column(name = "date")
     private Timestamp date;
 
-    @NotNull
-    @Column(name = "rate")
-    private Byte rate;
-
     public Long getRateID() {
         return rateID;
     }
 
+    @ApiModelProperty(hidden = true)
     public void setRateID(Long rateID) {
         this.rateID = rateID;
     }
 
-    public Long getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(Long user) {
+    @ApiModelProperty(hidden = true)
+    public void setUser(User user) {
         this.user = user;
     }
 
-    public Long getPhoto() {
+    public Photo getPhoto() {
         return photo;
     }
 
-    public void setPhoto(Long photo) {
+    @ApiModelProperty(required = true, example = "1000")
+    public void setPhoto(Photo photo) {
         this.photo = photo;
     }
 
@@ -63,15 +68,9 @@ public class Rate {
         return date;
     }
 
+    @ApiModelProperty(hidden = true)
     public void setDate(Timestamp date) {
         this.date = date;
     }
 
-    public Byte getRate() {
-        return rate;
-    }
-
-    public void setRate(Byte rate) {
-        this.rate = rate;
-    }
 }

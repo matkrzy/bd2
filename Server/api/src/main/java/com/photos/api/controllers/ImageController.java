@@ -1,6 +1,7 @@
 package com.photos.api.controllers;
 
 import com.photos.api.services.ImageService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -24,6 +25,7 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
 
+    @ApiOperation(value = "Returns image")
     @GetMapping("/{photoId}")
     public ResponseEntity getImage(@PathVariable Long photoId) {
 
@@ -38,10 +40,11 @@ public class ImageController {
         }
     }
 
+    @ApiOperation(value = "Creates new image")
     @PostMapping
     public ResponseEntity addImage(@RequestParam("file") MultipartFile file) throws IOException {
         return imageService.createImage(file) ?
-                ResponseEntity.status(HttpStatus.OK).build() :
+                ResponseEntity.status(HttpStatus.CREATED).build() :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 }
