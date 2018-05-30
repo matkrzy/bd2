@@ -52,7 +52,7 @@ public class UserService {
         String sessionEmail = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         User user = userRepository.findByEmail(email);
 
-        if (!email.equals(sessionEmail)) {
+        if (!email.equals(sessionEmail) && user != null) {
             User ret = new User();
             ret.setUserID(user.getUserID());
             ret.setEmail(user.getEmail());

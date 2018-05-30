@@ -38,6 +38,9 @@ public class GetPublicPhotosController {
     @Autowired
     private TagService tagService;
 
+    /////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////
+
     @ApiOperation(value = "Returns public photos which belongs to any of tags", response = ResponsePhoto.class)
     @GetMapping("/tags/any/{tags}")
     public ResponseEntity getPublicByTagsAny(@ApiParam(required = true, value = "id1,id2,...") @PathVariable List<Tag> tags) {
@@ -50,6 +53,8 @@ public class GetPublicPhotosController {
         responsePhotos.sort((o1, o2) -> o2.getRate() - o1.getRate());
         return ResponseEntity.status(HttpStatus.OK).body(responsePhotos);
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////
 
     @ApiOperation(value = "Returns public photos which belongs to all of tags", response = ResponsePhoto.class)
     @GetMapping("/tags/all/{tags}")
@@ -64,9 +69,11 @@ public class GetPublicPhotosController {
         return ResponseEntity.status(HttpStatus.OK).body(responsePhotos);
     }
 
-    @ApiOperation(value = "Returns public photos", response = ResponsePhoto.class)
-    @GetMapping("/{beg}/{end}")
-    public ResponseEntity getPublic(@PathVariable int beg, @PathVariable int end) {
+    /////////////////////////////////////////////////////////////////////////////////////
+
+    @ApiOperation(value = "Returns public photos HOT", response = ResponsePhoto.class)
+    @GetMapping("/hot/{beg}/{end}")
+    public ResponseEntity getHot(@PathVariable int beg, @PathVariable int end) {
 
         List<ResponsePhoto> responsePhotos = convert(photoService.getPublic(), beg, end);
         if (responsePhotos == null) {
@@ -76,6 +83,39 @@ public class GetPublicPhotosController {
         responsePhotos.sort((o1, o2) -> o2.getRate() - o1.getRate());
         return ResponseEntity.status(HttpStatus.OK).body(responsePhotos);
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////
+
+    @ApiOperation(value = "Returns public photos TRENDING", response = ResponsePhoto.class)
+    @GetMapping("/trending/{beg}/{end}")
+    public ResponseEntity getTrending(@PathVariable int beg, @PathVariable int end) {
+
+        List<ResponsePhoto> responsePhotos = convert(photoService.getTrending(), beg, end);
+        if (responsePhotos == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+
+        responsePhotos.sort((o1, o2) -> o2.getRate() - o1.getRate());
+        return ResponseEntity.status(HttpStatus.OK).body(responsePhotos);
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////
+
+    @ApiOperation(value = "Returns public photos FRESH", response = ResponsePhoto.class)
+    @GetMapping("/fresh/{beg}/{end}")
+    public ResponseEntity getFresh(@PathVariable int beg, @PathVariable int end) {
+
+        List<ResponsePhoto> responsePhotos = convert(photoService.getPublic(), beg, end);
+        if (responsePhotos == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+
+        responsePhotos.sort((o1, o2) -> o2.getUploadTime().compareTo(o1.getUploadTime()));
+        return ResponseEntity.status(HttpStatus.OK).body(responsePhotos);
+    }
+
+
+
 
     private List<ResponsePhoto> convert(List<Photo> photos, int b, int e) {
 

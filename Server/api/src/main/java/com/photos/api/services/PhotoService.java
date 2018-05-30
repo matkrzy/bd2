@@ -12,10 +12,7 @@ import javax.transaction.Transactional;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.photos.api.services.ImageService.UPLOAD_ROOT;
 
@@ -101,6 +98,11 @@ public class PhotoService {
 
     public List<Photo> getPublic() {
         return photoRepository.findAllByShareStateAndPhotoState(ShareState.PUBLIC, PhotoState.ACTIVE);
+    }
+
+    public List<Photo> getTrending() {
+        System.out.println(new Timestamp(System.currentTimeMillis() - 259_200_000));
+        return photoRepository.findAllByShareStateAndPhotoStateAndUploadTimeGreaterThan(ShareState.PUBLIC, PhotoState.ACTIVE, new Timestamp(System.currentTimeMillis() - 259200));
     }
 
     private List<Tag> getTagObjects(List<Tag> tags) {

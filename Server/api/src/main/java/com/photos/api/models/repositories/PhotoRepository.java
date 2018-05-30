@@ -7,6 +7,7 @@ import com.photos.api.models.enums.ShareState;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -20,6 +21,8 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     List<Photo> findAllByOwnerAndPhotoState(User user, PhotoState photoState);
 
     List<Photo> findAllByShareStateAndPhotoState(ShareState ss, PhotoState photoState);
+
+    List<Photo> findAllByShareStateAndPhotoStateAndUploadTimeGreaterThan(ShareState ss, PhotoState photoState, Timestamp ts);
 
     List<Photo> findAllByNameAndPhotoStateAndOwner(String name, PhotoState photoState, User owner);
 
