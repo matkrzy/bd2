@@ -42,7 +42,7 @@ public class GetPublicPhotosController {
     @GetMapping("/tags/any/{tags}")
     public ResponseEntity getPublicByTagsAny(@ApiParam(required = true, value = "id1,id2,...") @PathVariable List<Tag> tags) {
 
-        List<ResponsePhoto> responsePhotos = convert(photoService.getByTagsAny(tags, ShareState.PUBLIC));
+        List<ResponsePhoto> responsePhotos = convert(photoService.getByTagsAny(tags, ShareState.PUBLIC), 0, 100);
         if (responsePhotos == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
@@ -55,7 +55,7 @@ public class GetPublicPhotosController {
     @GetMapping("/tags/all/{tags}")
     public ResponseEntity getPublicByTagsAll(@ApiParam(required = true, value = "id1,id2,...") @PathVariable List<Tag> tags) {
 
-        List<ResponsePhoto> responsePhotos = convert(photoService.getByTagsAll(tags, ShareState.PUBLIC));
+        List<ResponsePhoto> responsePhotos = convert(photoService.getByTagsAll(tags, ShareState.PUBLIC), 0, 100);
         if (responsePhotos == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
@@ -65,10 +65,10 @@ public class GetPublicPhotosController {
     }
 
     @ApiOperation(value = "Returns public photos", response = ResponsePhoto.class)
-    @GetMapping
-    public ResponseEntity getPublic() {
+    @GetMapping("/{beg}/{end}")
+    public ResponseEntity getPublic(@PathVariable int beg, @PathVariable int end) {
 
-        List<ResponsePhoto> responsePhotos = convert(photoService.getPublic());
+        List<ResponsePhoto> responsePhotos = convert(photoService.getPublic(), beg, end);
         if (responsePhotos == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
@@ -77,10 +77,17 @@ public class GetPublicPhotosController {
         return ResponseEntity.status(HttpStatus.OK).body(responsePhotos);
     }
 
-    private List<ResponsePhoto> convert(List<Photo> photos) {
+    private List<ResponsePhoto> convert(List<Photo> photos, int b, int e) {
 
         List<ResponsePhoto> responsePhotos = new ArrayList<>();
 
+        if (b < 0 || b > photos.size()) {
+            b = 0;
+        }
+        if (e < 0 || e > photos.size()) {
+            e = photos.size();
+        }
+        photos = photos.subList(b, e);
         for (Photo photo : photos) {
             responsePhotos.add(
                     new ResponsePhoto(photo,

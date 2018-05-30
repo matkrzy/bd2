@@ -49,10 +49,10 @@ public class ImageService {
                 return null;
             }
         }
-        return resourceLoader.getResource("file:" + UPLOAD_ROOT + "\\" + photo.getPath());
+        return resourceLoader.getResource("file:" + UPLOAD_ROOT + "\\" + photo.getowner_email() + "\\" + photo.getPath());
     }
 
-    public boolean createImage(MultipartFile file) {
+    public boolean createImage(MultipartFile file, Long id) {
 
         if (!file.isEmpty()) {
             try {
@@ -60,11 +60,14 @@ public class ImageService {
                 String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
                 User user = userRepository.findByEmail(email);
                 String name = file.getOriginalFilename();
-                Photo photo = photoRepository.findByNameAndOwnerAndPhotoState(name, user, PhotoState.ACTIVE);
-                photo.setPath(/*UPLOAD_ROOT + "\\" +*/ email + "\\" + file.getOriginalFilename());
+                Photo photo = photoRepository.findByPhotoIDAndOwner(id, user);
+                if (photo.getPath() != null) {
+                    return false;
+                }
+                photo.setPath(id + "_id_" + file.getOriginalFilename());
                 photoRepository.save(photo);
 
-                Files.copy(file.getInputStream(), Paths.get(UPLOAD_ROOT + "\\" + email + "\\", file.getOriginalFilename()));
+                Files.copy(file.getInputStream(), Paths.get(UPLOAD_ROOT + "\\" + email + "\\", id + "_id_" + file.getOriginalFilename()));
             } catch (Exception e) {
                 return false;
             }

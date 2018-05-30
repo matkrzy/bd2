@@ -176,26 +176,22 @@ public class PhotoService {
         return photo != null && photo.getUser().getEmail().equals(email) ? photo : null;
     }
 
-    public Photo getPhoto(final String name) {
+    public List<Photo> getPhoto(final String name) {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-        Photo photo = photoRepository.findByNameAndPhotoState(name, PhotoState.ACTIVE);
+        User user = userRepository.findByEmail(email);
+        List<Photo> photos = photoRepository.findAllByNameAndPhotoStateAndOwner(name, PhotoState.ACTIVE, user);
 
-        return photo != null && photo.getUser().getEmail().equals(email) ? photo : null;
+        return photos.size() > 0 ? photos : null;
     }
 
-    public boolean addPhoto(final Photo photo) {
-
+    public Long addPhoto(final Photo photo) {
+        Long id;
         if (photo.getName() == null) {
-            return false;
+            return -1L;
         }
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
 
         try {
-
-            Photo check = photoRepository.findByNameAndPhotoState(photo.getName(), PhotoState.ACTIVE);
-            if (check != null) {
-                return false;
-            }
 
             User user = userRepository.findByEmail(email);
             photo.setUser(user);
@@ -211,10 +207,11 @@ public class PhotoService {
             }
 
             photoRepository.save(photo);
+            id = photo.getPhotoID();
         } catch (Exception e) {
-            return false;
+            return -1L;
         }
-        return true;
+        return id;
 
     }
 
@@ -267,6 +264,17 @@ public class PhotoService {
             return false;
         }
         return true;
+    }
+
+    public int getPhotosCount(ShareState ss, PhotoState ps) {
+
+        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        User user = userRepository.findByEmail(email);
+
+        return ss == ShareState.PRIVATE ?
+                photoRepository.countAllByOwnerAndPhotoState(user, ps) :
+                photoRepository.countAllByShareStateAndPhotoState(ss, ps);
+
     }
 
 

@@ -74,15 +74,14 @@ public class GetPrivatePhotosController {
     @ApiOperation(value = "Returns private photo by name", response = ResponsePhoto.class)
     @GetMapping("/name/{name}")
     public ResponseEntity getPhoto(@PathVariable final String name) {
-        Photo photo = photoService.getPhoto(name);
-        if (photo != null) {
-            ResponsePhoto p = new ResponsePhoto(photo,
-                    rateService.getPhotoRate(photo),
-                    tagService.getPhotoTags(photo));
-            return ResponseEntity.status(HttpStatus.OK).body(p);
+
+        List<ResponsePhoto> responsePhotos = convert(photoService.getPhoto(name));
+        if (responsePhotos == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        responsePhotos.sort((o1, o2) -> o2.getUploadTime().compareTo(o1.getUploadTime()));
+        return ResponseEntity.status(HttpStatus.OK).body(responsePhotos);
     }
 
 
@@ -172,7 +171,7 @@ public class GetPrivatePhotosController {
     /*----------------------------------------------------------*/
     /*----------------------------------------------------------*/
     private List<ResponsePhoto> convert(List<Photo> photos) {
-
+        if (photos == null) return null;
         List<ResponsePhoto> responsePhotos = new ArrayList<>();
 
         for (Photo photo : photos) {
