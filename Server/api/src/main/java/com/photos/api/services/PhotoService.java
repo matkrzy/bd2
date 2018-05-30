@@ -49,7 +49,6 @@ public class PhotoService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-
     public List<Photo> getAll() {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         User user = userRepository.findByEmail(email);
@@ -137,8 +136,6 @@ public class PhotoService {
             }
         }
         return photos;
-
-
     }
 
     public List<Photo> getByTagsAny(List<Tag> tagss, ShareState shareState) {

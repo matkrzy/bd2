@@ -50,12 +50,14 @@ public class UserService {
 
     public User getOne(final String email) {
         String sessionEmail = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        User user = userRepository.findByEmail(email);
 
         if (!email.equals(sessionEmail)) {
-            return null;
+            User ret = new User();
+            ret.setUserID(user.getUserID());
+            ret.setEmail(user.getEmail());
+            return ret;
         }
-
-        User user = userRepository.findByEmail(email);
         return user;
     }
 

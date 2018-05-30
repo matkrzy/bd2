@@ -19,8 +19,6 @@ public interface ShareRepository extends JpaRepository<Share, Long> {
 
     Share findByPhotoAndUser(Photo photo, User user);
 
-    Share findByShareIDAndOwner(Long id, User owner);
-
     void deleteAllByUser(User user);
 
     void deleteAllByPhoto(Photo photo);
