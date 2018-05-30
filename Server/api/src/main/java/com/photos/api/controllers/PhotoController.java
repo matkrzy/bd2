@@ -69,7 +69,9 @@ public class PhotoController {
     public ResponseEntity getPhotosCount(@PathVariable ShareState state) {
         try {
             int count = photoService.getPhotosCount(state, PhotoState.ACTIVE);
-            return ResponseEntity.status(HttpStatus.OK).body(count);
+            Map<String, Long> map = new HashMap<>();
+            map.put("count", new Long(count));
+            return ResponseEntity.status(HttpStatus.OK).body(map);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
