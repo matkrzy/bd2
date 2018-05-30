@@ -56,7 +56,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         com.photos.api.models.User user = userRepository.findByEmail(email);
         // TODO: 2018-04-21 passwordEncoder
-        return user != null ? new User(user.getEmail(), "{noop}" + user.getPassword(),
-                AuthorityUtils.createAuthorityList(user.getRole().getText())) : null;
+        return user != null ? new User(user.getEmail(), user.getPassword(),
+                AuthorityUtils.createAuthorityList(user.getRole())) : null;
     }
 }

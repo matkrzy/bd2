@@ -24,7 +24,7 @@ public class UserController {
     private UserService userService;
 
     @ApiOperation(value = "Returns all users", response = User.class)
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity getAll() {
         List<User> users = userService.getAll();
         return users != null ?
