@@ -41,7 +41,7 @@ namespace BD_client.Domain
             }
 
             var response = (HttpWebResponse)request.GetResponse();
-            if (response.StatusCode != HttpStatusCode.OK)
+            if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.Created)
                 throw new Exception();
             if (JWT == null)
             {

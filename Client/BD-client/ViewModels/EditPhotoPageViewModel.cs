@@ -192,6 +192,8 @@ namespace BD_client.ViewModels
             {
                 EditPhoto();
                 await dialogCoordinator.ShowMessageAsync(this, "Success", "Photo was edited");
+                MainWindow.MainVM.Page = "Pages/MyPhotosPage.xaml";
+                MainWindow.MainVM.SelectedIndex = -1;
             }
             catch (Exception)
             {

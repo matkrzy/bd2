@@ -19,7 +19,7 @@ namespace BD_client.Domain
         public int Id { get; set; }
         [JsonProperty("name")]
         public string Name { get; set; }
-        [JsonProperty("user")]
+        [JsonProperty("owner_email")]
         public string UserEmail { get; set; }
         [Browsable(false)]
         [JsonProperty("uploadTime")]
