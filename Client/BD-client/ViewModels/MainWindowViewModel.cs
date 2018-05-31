@@ -21,6 +21,9 @@ namespace BD_client.ViewModels
         public ICommand PublicPhotosCmd { get; }
         public ICommand CategoriesCmd { get; }
 
+        public List<int> List { get; set; }
+        public List<Photo> Photos { get; set; }
+
         private bool _enabled;
 
         private int _selectedIndex;
@@ -85,8 +88,8 @@ namespace BD_client.ViewModels
 
         public MainWindowViewModel()
         {
-
             BaseUrl = ConfigurationManager.AppSettings["BaseApiUrl"];
+            List = null;
             MyPhotosCmd = new RelayCommand(x => ShowMyPhotos());
             HomeCmd = new RelayCommand(x => ShowHome());
             ProfileCmd = new RelayCommand(x => Profile());

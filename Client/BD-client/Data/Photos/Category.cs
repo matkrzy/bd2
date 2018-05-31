@@ -14,7 +14,7 @@ namespace BD_client.Domain
         [JsonProperty("name")]
         public String Name { get; set;}
         [JsonProperty("user")]
-        public User User { get; set; }
+        public long UserID { get; set; }
         [JsonProperty("parentCategory")]
         public String ParentCategory { get; set; }
 

@@ -24,6 +24,8 @@ namespace BD_client.ViewModels
         public NotifyTaskCompletion<PhotoCollection> Photos { get; set; }
 
         private IDialogCoordinator dialogCoordinator;
+        private int _selectedPhoto;
+
 
         public string Page
         {
@@ -38,13 +40,24 @@ namespace BD_client.ViewModels
             }
         }
 
+        public int SelectedPhoto
+        {
+            get
+            {
+                return _selectedPhoto;
+            }
+            set
+            {
+                _selectedPhoto = value;
+                OnPropertyChanged("SelectedPhoto");
+            }
+        }
 
         public MyPhotosPageViewModel(IDialogCoordinator instance)
         {
             dialogCoordinator = instance;
             var path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + "//Img//photos";
             Photos = new NotifyTaskCompletion<PhotoCollection>(PhotoService.GetUserPhotos());
-            
         }
 
 
