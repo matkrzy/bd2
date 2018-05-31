@@ -82,12 +82,12 @@
     <Compile Include="Common\NotifyTaskCompletion.cs" />
     <Compile Include="Common\PasswordBoxAssistant.cs" />
     <Compile Include="Data\Photos\ExifMetadata.cs" />
-    <Compile Include="Data\Photos\Photov2.cs" />
     <Compile Include="Data\Photos\PhotoCollection.cs" />
     <Compile Include="Data\Photos\PhotoState.cs" />
     <Compile Include="Data\Photos\PublicPhoto.cs" />
     <Compile Include="Data\Photos\ShareState.cs" />
     <Compile Include="Data\Photos\Tag.cs" />
+    <Compile Include="Data\Utils\TagDTO.cs" />
     <Compile Include="Pages\LoadingPage.xaml.cs">
       <DependentUpon>LoadingPage.xaml</DependentUpon>
     </Compile>

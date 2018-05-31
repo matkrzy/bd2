@@ -24,27 +24,17 @@
     </Page.Resources>
 
     <Grid>
-
-        <Controls:SplitButton 
-            Icon="{DynamicResource appbar_folder}"
-            HorizontalContentAlignment="Left"
-            HorizontalAlignment="Center"
-            VerticalContentAlignment="Center"
-            Width="201"
-            SelectedIndex="{Binding SelectedCategory}"
-            ItemsSource="{Binding Categories}"
-            DisplayMemberPath="Name"
-            VerticalAlignment="Center" Margin="85,251,414,172" Height="77" />
-        <TextBox x:Name="description" Controls:TextBoxHelper.Watermark="Enter description" Text="{Binding Path=Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="77" Margin="516,251,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="145"/>
-        <TextBox x:Name="tags" Controls:TextBoxHelper.Watermark="Enter tags" Text="{Binding Path=Tags, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="77" Margin="322,251,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="145"/>
+        <TextBox x:Name="description" Controls:TextBoxHelper.Watermark="Enter description" Text="{Binding Path=Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="77" Margin="387,251,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="233"/>
+        <TextBox x:Name="tags" Controls:TextBoxHelper.Watermark="Enter tags" Text="{Binding Path=Tags, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="77" Margin="134,251,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="216"/>
         <Button x:Name="editBtn" Content="Edit" Height="50" Width="150" Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding EditCmd}" Margin="317,377,233,73"/>
         <Button x:Name="cancelBtn" Content="Cancel" Height="50" Width="150" Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding CancelCmd}" Margin="511,377,39,73"/>
 
         <DataGrid ItemsSource="{Binding Photos}" Margin="85,40,39,275"
+                  Name="PhotosDataGrid"
                   AutoGenerateColumns="True"
                   Style="{StaticResource AzureDataGrid}"
                   SelectionMode="Single"
-                  SelectedIndex="{Binding SelectedIndex}"
+                  SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   common:DataGridBehavior.UseBrowsableAttributeOnColumn="True">
             <DataGrid.ContextMenu>
                 <ContextMenu>

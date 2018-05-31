@@ -15,39 +15,44 @@ namespace BD_client.Domain
     public class Photo
     {
         [Browsable(false)]
-        [JsonProperty("id")]
-        public int Index { get; set; }
-        [JsonProperty("path")]
-        public String Path { get; set; }
+        [JsonProperty("photoID")]
+        public int Id { get; set; }
         [JsonProperty("name")]
-        public String Name { get; set; }
+        public string Name { get; set; }
+        [JsonProperty("user")]
+        public string UserEmail { get; set; }
+        [Browsable(false)]
+        [JsonProperty("uploadTime")]
+        public DateTime UploadTime { get; set; }
         [JsonProperty("description")]
-        public String Description { get; set; }
-        [JsonProperty("photoState")]
-        public PhotoState PhotoState { get; set; }
+        public string Description { get; set; }
         [JsonProperty("shareState")]
         public ShareState ShareState { get; set; }
-        [JsonProperty("uploadTime")]
+        [JsonProperty("photoState")]
+        public PhotoState PhotoState { get; set; }
         [Browsable(false)]
-        public DateTime UploadTime { get; set; }
-        [JsonProperty("tags")]
+        public int Rate { get; set; }
         [Browsable(false)]
         public List<Tag> Tags { get; set; }
         [Browsable(false)]
+        [JsonProperty("category")]
+        public Category Category { get; set; }
+
+        [Browsable(false)]
         public ExifMetadata ExifMetadata { get; set; }
+
         [Browsable(false)]
         public int LikeCount { get { return 45; } }
-        [Browsable(false)]
-        [JsonProperty("rate")]
-        public int Rate { get; set;}
+
         [Browsable(false)]
         public BitmapFrame Image { get; set; }
         [Browsable(false)]
         public Uri Uri { get; set; }
         [Browsable(false)]
-        [JsonProperty("category")]
-        public Category Category { get; set; }
-
+        public long UserID { get; set; }
+        [Browsable(false)]
+        [JsonProperty("path")]
+        public String Path { get; set; }
 
         public Photo(string path)
         {

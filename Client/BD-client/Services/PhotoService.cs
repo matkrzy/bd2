@@ -19,7 +19,7 @@ namespace BD_client.Services
             var response = await ApiRequest.GetAsync("api/v1/photos");
             var stringifiedJson = await response.Content.ReadAsStringAsync();
 
-            var photosDecription = JsonConvert.DeserializeObject<List<Photov2>>(stringifiedJson);
+            var photosDecription = JsonConvert.DeserializeObject<List<Photo>>(stringifiedJson);
             foreach (var photo in photosDecription)
             {
                 var res = await ApiRequest.GetAsync($"/api/v1/images/{photo.Id}");
@@ -31,8 +31,8 @@ namespace BD_client.Services
                     fileStream.Close();
                 }
             }
-            MainWindow.MainVM.Photos = new PhotoCollection(destination);
-            return MainWindow.MainVM.Photos;
+            MainWindow.MainVM.Photos = photosDecription;
+            return new PhotoCollection(destination);
 
 
         }

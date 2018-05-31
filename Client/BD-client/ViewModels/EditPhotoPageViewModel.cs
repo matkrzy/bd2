@@ -1,10 +1,12 @@
-﻿using BD_client.Domain;
+﻿using BD_client.Data.Utils;
+using BD_client.Domain;
 using MahApps.Metro.Controls.Dialogs;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,19 +34,46 @@ namespace BD_client.ViewModels
             SelectedCategory = 0;
             Photos = new ObservableCollection<Photo>();
             Categories = new ObservableCollection<Category>();
-            Categories.Add(new Domain.Category() {Name = "Birthday" });
-            Categories.Add(new Domain.Category() { Name = "Easter" });
+            GetCategories();
             CancelCmd = new RelayCommand(x => Cancel());
             EditCmd = new RelayCommand(x => Edit());
-            if (MainWindow.MainVM.List != null )
-                getSelectedPhtotos();
-            
+            if (MainWindow.MainVM.List != null)
+                GetSelectedPhtotos();
+
         }
 
-        private void getSelectedPhtotos()
+        private void GetCategories()
+        {
+            string url = MainWindow.MainVM.BaseUrl + "api/v1/categories";
+            String responseContent = ApiRequest.Get(url);
+            JsonTextReader reader = new JsonTextReader(new StringReader(responseContent));
+            reader.SupportMultipleContent = true;
+            List<Category> categoriesList = null;
+            while (true)
+            {
+                if (!reader.Read())
+                {
+                    break;
+                }
+
+                JsonSerializer serializer = new JsonSerializer();
+                categoriesList = serializer.Deserialize<List<Category>>(reader);
+
+            }
+
+            foreach (Category category in categoriesList)
+            {
+                Categories.Add(category);
+            }
+
+
+        }
+
+
+        private void GetSelectedPhtotos()
         {
 
-            for(int i =0; i<MainWindow.MainVM.List.Count;i++)
+            for (int i = 0; i < MainWindow.MainVM.List.Count; i++)
             {
                 int index = MainWindow.MainVM.List[i];
                 Photo newPhoto = MainWindow.MainVM.Photos[index];
@@ -52,6 +81,39 @@ namespace BD_client.ViewModels
             }
             MainWindow.MainVM.List.Clear();
             MainWindow.MainVM.List = null;
+
+            ShowPhotosDetails();
+        }
+
+        private void ShowPhotosDetails()
+        {
+            Tags = "";
+            if (Photos[SelectedIndex].Tags != null)
+            {
+                for (int i = 0; i < Photos[SelectedIndex].Tags.Count; i++)
+                {
+                    Tags += Photos[SelectedIndex].Tags[i].Name;
+                    if(i+1 != Photos[SelectedIndex].Tags.Count)
+                        Tags += " ";
+                }
+            }
+
+            if (Photos[SelectedIndex].Category != null)
+            {
+                for (int i = 0; i < Categories.Count; i++)
+                {
+                    if (Categories[i].Name.Equals((Photos[SelectedIndex].Category.Name)))
+                    {
+                        SelectedCategory = i;
+                        break;
+                    }
+                }
+            }
+            Description = "";
+            if (Photos[SelectedIndex].Description != null)
+            {
+                Description = Photos[SelectedIndex].Description;
+            }
         }
 
         private void Cancel()
@@ -60,7 +122,7 @@ namespace BD_client.ViewModels
             MainWindow.MainVM.SelectedIndex = -1;
         }
 
-        private void EditPhoto()
+        private void EditPhoto()    
         {
             string url = MainWindow.MainVM.BaseUrl + "api/v1/photos/" + Photos[SelectedIndex].Id;
             string[] jsonTags = Tags.Split(' ');
@@ -85,9 +147,10 @@ namespace BD_client.ViewModels
             //Post tags
             url = MainWindow.MainVM.BaseUrl + "api/v1/tags";
             bool repeat = false;
+            List<TagDTO> tagList = new List<TagDTO>();
             for (int i = 0; i < jsonTags.Length; i++)
             {
-                if (Photos[SelectedIndex].Tags != null)
+                if (Photos[SelectedIndex].Tags.Count != 0)
                 {
                     for (int j = 0; j < Photos[SelectedIndex].Tags.Count; j++)
                     {
@@ -100,60 +163,35 @@ namespace BD_client.ViewModels
                 }
                 if (!repeat)
                 {
-                    var valuesTags = new Dictionary<string, string>
-                {
-                   { "name", jsonTags[i] },
-                   { "photo", Photos[SelectedIndex].Id.ToString() }
-                };
-                    try
-                    {
-                        json = JsonConvert.SerializeObject(valuesTags, Formatting.Indented);
-                        ApiRequest.Post(url, json);
-                    }
-                    catch (Exception)
-                    {
-                        throw new Exception();
-                    }
+                    TagDTO newTag = new TagDTO();
+                    newTag.name = jsonTags[i];
+                    newTag.photo = Photos[SelectedIndex].Id;
+                    tagList.Add(newTag);
                 }
+    
                 repeat = false;
             }
-
-
-            //Put category
-            if (Categories[SelectedCategory].Name.Equals(Photos[SelectedIndex].Category.Name))
-                repeat = true;
-
-            if (!repeat)
+            try
             {
-                var valuesCategory = new Dictionary<string, string>
-            {
-               { "idphoto", Photos[SelectedIndex].Id.ToString() },
-               { "idcategory",Categories[SelectedCategory].Id.ToString() }
-            };
-
-                url = MainWindow.MainVM.BaseUrl + "/categories/"+Photos[SelectedIndex].Id+"/"+ Categories[SelectedCategory].Id;
-                try
+                if (tagList.Count != 0)
                 {
-                    json = JsonConvert.SerializeObject(valuesCategory, Formatting.Indented);
-                    ApiRequest.Put(url, json);
-                }
-                catch (Exception)
-                {
-                    throw new Exception();
+                    json = JsonConvert.SerializeObject(tagList, Formatting.Indented);
+                    ApiRequest.Post(url, json);
                 }
             }
-            repeat = false;
+            catch (Exception)
+            {
+                throw new Exception();
+            }
         }
 
-        private async void Edit()
+        public async void Edit()
         {
 
             try
             {
                 EditPhoto();
                 await dialogCoordinator.ShowMessageAsync(this, "Success", "Photo was edited");
-                MainWindow.MainVM.Page = "Pages/MyPhotosPage.xaml";
-                MainWindow.MainVM.SelectedIndex = -1;
             }
             catch (Exception)
             {
@@ -210,8 +248,8 @@ namespace BD_client.ViewModels
             }
             set
             {
-                _selectedIndex = value;
-                OnPropertyChanged("SelectedIndex");
+                if (SetField(ref _selectedIndex, value, "SelectedIndex"))
+                    ShowPhotosDetails();
             }
         }
 
@@ -228,6 +266,13 @@ namespace BD_client.ViewModels
             }
         }
 
+        protected bool SetField<T>(ref T field, T value, string propertyName)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+            field = value;
+            OnPropertyChanged(propertyName);
+            return true;
+        }
 
         virtual protected void OnPropertyChanged(string propName)
         {

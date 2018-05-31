@@ -22,7 +22,7 @@ namespace BD_client.ViewModels
         public ICommand CategoriesCmd { get; }
 
         public List<int> List { get; set; }
-        public PhotoCollection Photos { get; set; }
+        public List<Photo> Photos { get; set; }
 
         private bool _enabled;
 
@@ -88,7 +88,6 @@ namespace BD_client.ViewModels
 
         public MainWindowViewModel()
         {
-
             BaseUrl = ConfigurationManager.AppSettings["BaseApiUrl"];
             List = null;
             MyPhotosCmd = new RelayCommand(x => ShowMyPhotos());
