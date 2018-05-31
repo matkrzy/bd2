@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:BD_client.Pages"
+      xmlns:model="clr-namespace:BD_client.ViewModels.Category"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
       Title="CategoriesPage">
@@ -46,7 +47,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="60"/>
         </Grid.RowDefinitions>               
-        <TreeView Grid.Column="0" Grid.Row="0">
+        <TreeView Name="Categories" Grid.Column="0" Grid.Row="0" ItemsSource="{Binding RootCategories.Result, Mode=OneWay}">
             <TreeView.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Add"/>
@@ -54,36 +55,11 @@
                     <MenuItem Header="Remove"/>
                 </ContextMenu>
             </TreeView.ContextMenu>
-            <TreeViewItem Header="Journeys">
-                <TreeViewItem Header="USA"></TreeViewItem>
-                <TreeViewItem Header="Canada"></TreeViewItem>
-                <TreeViewItem Header="Mexico"></TreeViewItem>
-            </TreeViewItem>
-            <TreeViewItem Header="My animals">
-                <TreeViewItem Header="My dog"></TreeViewItem>
-                <TreeViewItem Header="My cat"></TreeViewItem>
-                <TreeViewItem Header="My parrot"></TreeViewItem>
-            </TreeViewItem>
-            <TreeViewItem Header="Cars">
-                <TreeViewItem Header="Bugatti">
-                    <TreeViewItem Header="Veyron"></TreeViewItem>
-                    <TreeViewItem Header="Chiron"></TreeViewItem>
-                </TreeViewItem>
-                <TreeViewItem Header="Ferrari">
-                    <TreeViewItem Header="488"></TreeViewItem>
-                    <TreeViewItem Header="Enzo"></TreeViewItem>
-                </TreeViewItem>
-            </TreeViewItem>
-            <TreeViewItem Header="My Grandma">
-                <TreeViewItem Header="School years"></TreeViewItem>
-                <TreeViewItem Header="Wedding"></TreeViewItem>
-                <TreeViewItem Header="Retirement"></TreeViewItem>
-            </TreeViewItem>
-            <TreeViewItem Header="Piotr Gazda's Anime Girls">
-                <TreeViewItem Header="Anime1"></TreeViewItem>
-                <TreeViewItem Header="Anime2"></TreeViewItem>
-                <TreeViewItem Header="Anime3"></TreeViewItem>
-            </TreeViewItem>
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type model:CategoryViewModel}" ItemsSource="{Binding Children, Mode=OneWay}" >
+                    <TextBlock Text="{Binding Name}" />
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
         </TreeView>
         <Button Height="50" Width="100" Grid.Column="0" Grid.Row="1">Add Category</Button>
         <ListBox Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Width="400"

@@ -18,7 +18,7 @@ namespace BD_client.ViewModels
         public event PropertyChangedEventHandler PropertyChanged = null;
         private IDialogCoordinator dialogCoordinator;
         private string _page;
-        public ObservableCollection<Category> Categories { get; set; }
+        public ObservableCollection<Domain.Category> Categories { get; set; }
         public ObservableCollection<SearchFilter> SearchFilters { get; set; }
         public ICommand SearchCmd { get; set; }
         public ICommand CancelCmd { get; set; }
@@ -36,7 +36,7 @@ namespace BD_client.ViewModels
         public SearchPageViewModel(IDialogCoordinator instance)
         {
             dialogCoordinator = instance;
-            Categories = new ObservableCollection<Category>();
+            Categories = new ObservableCollection<Domain.Category>();
             SearchFilters = new ObservableCollection<SearchFilter>();
             Categories.Add(new Domain.Category() { Name = "Birthday" });
             Categories.Add(new Domain.Category() { Name = "Easter" });
