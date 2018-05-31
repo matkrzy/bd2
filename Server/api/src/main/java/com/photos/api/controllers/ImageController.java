@@ -41,9 +41,9 @@ public class ImageController {
     }
 
     @ApiOperation(value = "Creates new image")
-    @PostMapping
-    public ResponseEntity addImage(@RequestParam("file") MultipartFile file) throws IOException {
-        return imageService.createImage(file) ?
+    @PostMapping("/{photoId}")
+    public ResponseEntity addImage(@RequestParam("file") MultipartFile file, @PathVariable Long photoId) throws IOException {
+        return imageService.createImage(file,photoId) ?
                 ResponseEntity.status(HttpStatus.CREATED).build() :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }

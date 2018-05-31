@@ -1,8 +1,8 @@
 package com.photos.api.controllers;
 
 import com.photos.api.models.Photo;
-import com.photos.api.models.ResponsePhoto;
-import com.photos.api.models.Tag;
+import com.photos.api.models.enums.PhotoState;
+import com.photos.api.models.enums.ShareState;
 import com.photos.api.services.PhotoService;
 import com.photos.api.services.PhotoToCategoryService;
 import com.photos.api.services.RateService;
@@ -13,8 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Micha Królewski on 2018-04-07.
@@ -40,8 +40,11 @@ public class PhotoController {
     @ApiOperation(value = "Creates new photo")
     @PostMapping
     public ResponseEntity addPhoto(@RequestBody final Photo photo) {
-        return photoService.addPhoto(photo) ?
-                ResponseEntity.status(HttpStatus.CREATED).build() :
+        Long id = photoService.addPhoto(photo);
+        Map<String, Long> map = new HashMap<>();
+        map.put("id", id);
+        return id != -1 ?
+                ResponseEntity.status(HttpStatus.CREATED).body(map) :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
@@ -59,5 +62,18 @@ public class PhotoController {
         return photoService.editPhoto(id, photo) ?
                 ResponseEntity.status(HttpStatus.OK).build() :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    @ApiOperation(value = "Returns number of photos by its share state")
+    @GetMapping("/count/{state}")
+    public ResponseEntity getPhotosCount(@PathVariable ShareState state) {
+        try {
+            int count = photoService.getPhotosCount(state, PhotoState.ACTIVE);
+            Map<String, Long> map = new HashMap<>();
+            map.put("count", new Long(count));
+            return ResponseEntity.status(HttpStatus.OK).body(map);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 }

@@ -40,9 +40,8 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Enumerated
     @Column(name = "role")
-    private Role role;
+    private String role;
 
     public User() {
     }
@@ -51,7 +50,7 @@ public class User {
         this.userID = id;
     }
 
-    public User(@NotNull String email, @NotNull String firstName, @NotNull String lastName, @NotNull String password, Role role) {
+    public User(@NotNull String email, @NotNull String firstName, @NotNull String lastName, @NotNull String password, String role) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -105,11 +104,11 @@ public class User {
     }
 
     @ApiModelProperty(readOnly = true)
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
     }
 

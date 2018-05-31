@@ -6,6 +6,7 @@ import com.photos.api.models.enums.Role;
 import com.photos.api.models.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -43,6 +44,9 @@ public class UserService {
     @Autowired
     private TagRepository tagRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     public List<User> getAll() {
         List<User> users = userRepository.findAll();
         return users;
@@ -50,12 +54,14 @@ public class UserService {
 
     public User getOne(final String email) {
         String sessionEmail = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-
-        if (!email.equals(sessionEmail)) {
-            return null;
-        }
-
         User user = userRepository.findByEmail(email);
+
+        if (!email.equals(sessionEmail) && user != null) {
+            User ret = new User();
+            ret.setUserID(user.getUserID());
+            ret.setEmail(user.getEmail());
+            return ret;
+        }
         return user;
     }
 
@@ -66,7 +72,8 @@ public class UserService {
                 return false;
             }
 
-            user.setRole(Role.USER);
+            user.setRole(Role.USER.getText());
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
             userRepository.save(user);
             Files.createDirectory(Paths.get(UPLOAD_ROOT + "/" + user.getEmail()));
             Category category = new Category();

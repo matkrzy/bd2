@@ -7,6 +7,7 @@ import com.photos.api.models.enums.ShareState;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -21,15 +22,19 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
     List<Photo> findAllByShareStateAndPhotoState(ShareState ss, PhotoState photoState);
 
-    Photo findByNameAndPhotoState(String name, PhotoState photoState);
+    List<Photo> findAllByShareStateAndPhotoStateAndUploadTimeGreaterThan(ShareState ss, PhotoState photoState, Timestamp ts);
+
+    List<Photo> findAllByNameAndPhotoStateAndOwner(String name, PhotoState photoState, User owner);
+
+    int countAllByShareStateAndPhotoState(ShareState ss, PhotoState photoState);
+
+    int countAllByOwnerAndPhotoState(User user, PhotoState photoState);
 
     Photo findByPhotoIDAndPhotoState(Long id, PhotoState photoState);
 
     Photo findByPhotoIDAndPhotoStateAndShareState(Long id, PhotoState photoState, ShareState shareState);
 
     Photo findByPhotoIDAndOwnerAndPhotoState(Long id, User owner, PhotoState photoState);
-
-    Photo findByNameAndOwnerAndPhotoState(String name, User owner, PhotoState photoState);
 
     void deleteAllByOwner(User owner);
 
@@ -38,4 +43,5 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
     Photo findByPhotoIDAndPhotoStateAndShareStateAndOwner(Long id, PhotoState active, ShareState aPrivate, User owner);
 
     Photo findByPhotoID(Long photoID);
+
 }

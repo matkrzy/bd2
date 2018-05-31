@@ -73,16 +73,15 @@ public class GetPrivatePhotosController {
 
     @ApiOperation(value = "Returns private photo by name", response = ResponsePhoto.class)
     @GetMapping("/name/{name}")
-    public ResponseEntity getPhoto(@PathVariable final String name) {
-        Photo photo = photoService.getPhoto(name);
-        if (photo != null) {
-            ResponsePhoto p = new ResponsePhoto(photo,
-                    rateService.getPhotoRate(photo),
-                    tagService.getPhotoTags(photo));
-            return ResponseEntity.status(HttpStatus.OK).body(p);
+    public ResponseEntity getPhotos(@PathVariable final String name) {
+
+        List<ResponsePhoto> responsePhotos = convert(photoService.getPhoto(name));
+        if (responsePhotos == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        responsePhotos.sort((o1, o2) -> o2.getUploadTime().compareTo(o1.getUploadTime()));
+        return ResponseEntity.status(HttpStatus.OK).body(responsePhotos);
     }
 
 
@@ -91,7 +90,7 @@ public class GetPrivatePhotosController {
     /*----------------------------------------------------------*/
 
     @ApiOperation(value = "Returns private photos which belongs to any of categories", response = ResponsePhoto.class)
-    @GetMapping("/category/any/{categories}")
+    @GetMapping("/categories/any/{categories}")
     public ResponseEntity getByCategoryAny(@ApiParam(required = true, value = "id1,id2,...") @PathVariable List<Category> categories) {
         List<ResponsePhoto> responsePhotos = convert(photoService.getByCategoryAny(categories));
 
@@ -104,7 +103,7 @@ public class GetPrivatePhotosController {
     }
 
     @ApiOperation(value = "Returns private photos which belongs to all of categories", response = ResponsePhoto.class)
-    @GetMapping("/category/all/{categories}")
+    @GetMapping("/categories/all/{categories}")
     public ResponseEntity getByCategoryAll(@ApiParam(required = true, value = "id1,id2,...") @PathVariable List<Category> categories) {
 
         List<ResponsePhoto> responsePhotos = convert(photoService.getByCategoryAll(categories));
@@ -172,7 +171,7 @@ public class GetPrivatePhotosController {
     /*----------------------------------------------------------*/
     /*----------------------------------------------------------*/
     private List<ResponsePhoto> convert(List<Photo> photos) {
-
+        if (photos == null) return null;
         List<ResponsePhoto> responsePhotos = new ArrayList<>();
 
         for (Photo photo : photos) {

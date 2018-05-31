@@ -36,32 +36,54 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         Cookie[] cookies = request.getCookies();
         if (cookies == null) {
-            chain.doFilter(request, response);
             return;
         }
 
+        String url = request.getRequestURI();
+        if (url.equals("/api/v1/account/logout")) {
+            logout(cookies);
+            return;
+        }
         UsernamePasswordAuthenticationToken userAuth = getAuthenticationToken(cookies);
+        if (userAuth == null) {
+            return;
+        }
+
         SecurityContextHolder.getContext().setAuthentication(userAuth);
-
-        // generating new token
-        // response.addHeader(HEADER_STRING, TOKEN_PREFIX + generateToken(userAuth));
         chain.doFilter(request, response);
+    }
 
+    private void logout(Cookie[] cookies) {
+        String token = "";
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(JWT)) {
+                token = cookie.getValue();
+                break;
+            }
+        }
+        customUserDetailsService.destroyToken(token);
     }
 
     private UsernamePasswordAuthenticationToken getAuthenticationToken(Cookie[] cookies) {
 
         String email = "";
+        String token = "";
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals(JWT)) {
                 email = getLoggedUserEmail(cookie);
+                token = cookie.getValue();
                 System.out.println(email.toUpperCase());
                 break;
             }
         }
 
-        if (email == "") return null;
-       UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
-        return userDetails != null ? new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()) : null;
+        if (customUserDetailsService.isTokenActive(token)) {
+            if (email.equals("")) {
+                return null;
+            }
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
+            return userDetails != null ? new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()) : null;
+        }
+        return null;
     }
 }

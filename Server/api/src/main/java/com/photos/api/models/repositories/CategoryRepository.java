@@ -23,7 +23,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     void deleteAllByUser(User user);
 
-    Category findByCategoryID(Long category);
-
     List<Category> findAllByUser(User user);
 }

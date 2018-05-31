@@ -24,7 +24,7 @@ public class UserController {
     private UserService userService;
 
     @ApiOperation(value = "Returns all users", response = User.class)
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity getAll() {
         List<User> users = userService.getAll();
         return users != null ?
@@ -32,13 +32,13 @@ public class UserController {
                 ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    @ApiOperation(value = "Returns user by email", response = User.class)
+    @ApiOperation(value = "Returns user by email | or user id if it is not logger user", response = User.class)
     @GetMapping("/{email}")
     public ResponseEntity getOne(@PathVariable final String email) {
         User user = userService.getOne(email);
         return user != null ?
                 ResponseEntity.status(HttpStatus.OK).body(user) :
-                ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     @ApiOperation(value = "Creates new user")
