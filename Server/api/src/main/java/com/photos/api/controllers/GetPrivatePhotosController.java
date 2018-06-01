@@ -170,6 +170,42 @@ public class GetPrivatePhotosController {
     /*----------------------------------------------------------*/
     /*----------------------------------------------------------*/
     /*----------------------------------------------------------*/
+
+    @ApiOperation(value = "Returns private photos which are shared to the current user", response = ResponsePhoto.class)
+    @GetMapping("/nocat")
+    public ResponseEntity getNoCategoryPhotos() {
+
+        List<ResponsePhoto> responsePhotos = convert(photoService.getNoCategoryPhotos());
+        if (responsePhotos == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+
+        responsePhotos.sort((o1, o2) -> o2.getUploadTime().compareTo(o1.getUploadTime()));
+        return ResponseEntity.status(HttpStatus.OK).body(responsePhotos);
+    }
+
+
+    /*----------------------------------------------------------*/
+    /*----------------------------------------------------------*/
+    /*----------------------------------------------------------*/
+
+    @ApiOperation(value = "Returns private photos which are shared to the current user", response = ResponsePhoto.class)
+    @GetMapping("/archived")
+    public ResponseEntity getArchived() {
+
+        List<ResponsePhoto> responsePhotos = convert(photoService.getArchived());
+        if (responsePhotos == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+
+        responsePhotos.sort((o1, o2) -> o2.getUploadTime().compareTo(o1.getUploadTime()));
+        return ResponseEntity.status(HttpStatus.OK).body(responsePhotos);
+    }
+
+
+    /*----------------------------------------------------------*/
+    /*----------------------------------------------------------*/
+    /*----------------------------------------------------------*/
     private List<ResponsePhoto> convert(List<Photo> photos) {
         if (photos == null) return null;
         List<ResponsePhoto> responsePhotos = new ArrayList<>();

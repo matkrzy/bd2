@@ -44,4 +44,7 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
     Photo findByPhotoID(Long photoID);
 
+    List<Photo> findAllByShareStateAndPhotoStateAndOwner(ShareState aPrivate, PhotoState archived, User user);
+
+    List<Photo> findAllByShareStateAndPhotoStateAndHasCategoryAndOwner(ShareState aPrivate, PhotoState archived, boolean has, User user);
 }

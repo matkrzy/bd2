@@ -52,6 +52,9 @@ public class Photo {
     @Column(name = "photo_state")
     private PhotoState photoState;
 
+    @Column(name = "has_category")
+    private boolean hasCategory;
+
     public Photo(@NotNull String name, @NotNull User user, String path, @NotNull Timestamp uploadTime, String description, ShareState shareState, PhotoState photoState) {
         this.name = name;
         this.owner = user;
@@ -60,6 +63,7 @@ public class Photo {
         this.description = description;
         this.shareState = shareState;
         this.photoState = photoState;
+        this.hasCategory = false;
     }
 
     public Photo() {
@@ -85,17 +89,6 @@ public class Photo {
     @ApiModelProperty(required = true)
     public void setName(String name) {
         this.name = name;
-    }
-
-    @JsonIgnore
-    public User getUser() {
-        return owner;
-    }
-
-    @JsonProperty
-    @ApiModelProperty(hidden = true)
-    public void setUser(User user) {
-        this.owner = user;
     }
 
     @ApiModelProperty(readOnly = true)
@@ -152,5 +145,27 @@ public class Photo {
     @ApiModelProperty(required = true)
     public void setPhotoState(PhotoState photoState) {
         this.photoState = photoState;
+    }
+
+    @JsonIgnore
+    public User getOwner() {
+        return owner;
+    }
+
+    @JsonProperty
+    @ApiModelProperty(hidden = true)
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    @JsonIgnore
+    public boolean isHasCategory() {
+        return hasCategory;
+    }
+
+    @JsonProperty
+    @ApiModelProperty(hidden = true)
+    public void setHasCategory(boolean hasCategory) {
+        this.hasCategory = hasCategory;
     }
 }
