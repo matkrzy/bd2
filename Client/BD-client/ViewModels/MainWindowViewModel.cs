@@ -17,7 +17,6 @@ namespace BD_client.ViewModels
         public ICommand ProfileCmd { get; set; }
         public ICommand LogoutCmd { get; set; }
         public ICommand MyPhotosCmd { get; set; }
-        public ICommand HomeCmd { get; set; }
         public ICommand PublicPhotosCmd { get; }
         public ICommand CategoriesCmd { get; }
 
@@ -91,7 +90,6 @@ namespace BD_client.ViewModels
             BaseUrl = ConfigurationManager.AppSettings["BaseApiUrl"];
             List = null;
             MyPhotosCmd = new RelayCommand(x => ShowMyPhotos());
-            HomeCmd = new RelayCommand(x => ShowHome());
             ProfileCmd = new RelayCommand(x => Profile());
             LogoutCmd = new RelayCommand(x => Logout());
             PublicPhotosCmd = new RelayCommand(x => ShowPublicPhotos());
@@ -102,7 +100,7 @@ namespace BD_client.ViewModels
             // tryb developmentu
             if (mode.Equals("development"))
             {
-                Page = "Pages/HomePage.xaml";
+                Page = "Pages/MyPhotosPage.xaml";
                 LogInPageViewModel.TemporaryLogin();
                 _enabled = true;
                 _selectedIndex = -1;
@@ -134,11 +132,6 @@ namespace BD_client.ViewModels
             MainWindow.MainVM.SelectedIndex = -1;
         }
 
-        private void ShowHome()
-        {
-            MainWindow.MainVM.Page = "Pages/HomePage.xaml";
-            MainWindow.MainVM.SelectedIndex = -1;
-        }
         private void ShowPublicPhotos()
         {
             MainWindow.MainVM.Page = "Pages/PublicPhotos.xaml";
@@ -147,6 +140,8 @@ namespace BD_client.ViewModels
 
         private void Logout()
         {
+            string url = MainWindow.MainVM.BaseUrl + "api/v1/account/logout";
+            ApiRequest.Post(url,null);
             ApiRequest.JWT = null;
             MainWindow.MainVM.Page = "Pages/LogInPage.xaml";
             MainWindow.MainVM.SelectedIndex = -1;

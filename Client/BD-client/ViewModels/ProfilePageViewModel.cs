@@ -132,37 +132,15 @@ namespace BD_client.ViewModels
 
         private void GetUserInfo()
         {
-            string url = MainWindow.MainVM.BaseUrl + "api/v1/users";
+            string url = MainWindow.MainVM.BaseUrl + "api/v1/users/"+ MainWindow.MainVM.User;
             String responseContent = ApiRequest.Get(url);
-            JsonTextReader reader = new JsonTextReader(new StringReader(responseContent));
-            reader.SupportMultipleContent = true;
-
-            while (true)
-            {
-                if (!reader.Read())
-                {
-                    break;
-                }
-
-                JsonSerializer serializer = new JsonSerializer();
-                var usersList = serializer.Deserialize < List<User>>(reader);
-                for (int i = 0; i < usersList.Count; i++)
-                {
-                    if (usersList[i].Email.Equals(MainWindow.MainVM.User))
-                    {
-                        id = usersList[i].id;
-                        Name = usersList[i].FirstName;
-                        Surname = usersList[i].LastName;
-                        Email = usersList[i].Email;
-                        Password = usersList[i].Password;
-                        Role = usersList[i].Role.ToString();
-                        break;
-                        
-                    }
-                }
-
-            }
-
+            User user = JsonConvert.DeserializeObject<User>(responseContent);
+            id = user.id;
+            Name = user.FirstName;
+            Surname = user.LastName;
+            Email = user.Email;
+            Password = user.Password;
+            Role = user.Role.Value.ToString();
 
         }
 
@@ -188,7 +166,7 @@ namespace BD_client.ViewModels
             {
                 EditUser();
                 await dialogCoordinator.ShowMessageAsync(this, "Success", "Profile was edited");
-                MainWindow.MainVM.Page = "Pages/HomePage.xaml";
+                MainWindow.MainVM.Page = "Pages/MyPhotosPage.xaml";
                 MainWindow.MainVM.SelectedIndex = -1;
             }
             catch (Exception)

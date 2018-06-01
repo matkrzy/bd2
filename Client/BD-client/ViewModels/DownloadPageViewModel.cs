@@ -62,9 +62,22 @@ namespace BD_client.ViewModels
             DownloadCmd = new RelayCommand(x => Download());
             CancelCmd = new RelayCommand(x => Cancel());
             RemovePhotoCmd = new RelayCommand(x => RemovePhoto());
-            Photos.Add(new Domain.Photo() { Id = 1, Path = "C:\\Photo1.jpg" });
-            Photos.Add(new Domain.Photo() { Id = 2, Path = "C:\\Photo2.jpg" });
+            if (MainWindow.MainVM.List != null)
+                GetSelectedPhtotos();
         }
+
+        private void GetSelectedPhtotos()
+        {
+            for (int i = 0; i < MainWindow.MainVM.List.Count; i++)
+            {
+                int index = MainWindow.MainVM.List[i];
+                Photo newPhoto = MainWindow.MainVM.Photos[index];
+                Photos.Add(newPhoto);
+            }
+            MainWindow.MainVM.List.Clear();
+            MainWindow.MainVM.List = null;
+        }
+
         private void RemovePhoto()
         {
             Photos.RemoveAt(DataGridSelectedIndex);

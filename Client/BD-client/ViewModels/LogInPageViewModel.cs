@@ -90,7 +90,7 @@ namespace BD_client.ViewModels
             {
                 LoginUser();
                 MainWindow.MainVM.Enabled = true;
-                MainWindow.MainVM.Page = "Pages/HomePage.xaml";
+                MainWindow.MainVM.Page = "Pages/MyPhotosPage.xaml";
                 MainWindow.MainVM.SelectedIndex = -1;
                 MainWindow.MainVM.User = Email;
             }

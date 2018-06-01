@@ -143,7 +143,6 @@
               HorizontalAlignment="Left"
               VerticalAlignment="Stretch"
               Panel.ZIndex="100">
-            <MenuItem Header="Home" Command="{Binding HomeCmd}" IsEnabled="{Binding Enabled}" />
             <MenuItem Header="My photos" Command="{Binding MyPhotosCmd}" IsEnabled="{Binding Enabled}" />
             <MenuItem Header="Public photos" Command="{Binding PublicPhotosCmd}" IsEnabled="{Binding Enabled}"/>
             <MenuItem Header="Categories" Command="{Binding CategoriesCmd}" IsEnabled="{Binding Enabled}"/>

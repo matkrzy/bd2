@@ -10,6 +10,8 @@ using MahApps.Metro.Controls;
 using System.Runtime.Remoting.Contexts;
 using System.Collections.ObjectModel;
 using BD_client.Domain;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace BD_client.ViewModels
 {
@@ -38,8 +40,6 @@ namespace BD_client.ViewModels
             dialogCoordinator = instance;
             Categories = new ObservableCollection<Category>();
             SearchFilters = new ObservableCollection<SearchFilter>();
-            Categories.Add(new Domain.Category() { Name = "Birthday" });
-            Categories.Add(new Domain.Category() { Name = "Easter" });
             SearchCmd = new RelayCommand(x => ShowResults());
             CancelCmd = new RelayCommand(x => Cancel());
             CategoryCmd = new RelayCommand(x => AddCategoryFilter());
@@ -47,9 +47,35 @@ namespace BD_client.ViewModels
             TagsCmd = new RelayCommand(x => AddTagsFilter());
             ExifCmd = new RelayCommand(x => AddExifFilter());
             RemoveFilterCmd = new RelayCommand(x => RemoveFilter());
-
-
+            GetCategories();
             CategorySelectedIndex = 0;
+        }
+
+        private void GetCategories()
+        {
+            string url = MainWindow.MainVM.BaseUrl + "api/v1/categories";
+            String responseContent = ApiRequest.Get(url);
+            JsonTextReader reader = new JsonTextReader(new StringReader(responseContent));
+            reader.SupportMultipleContent = true;
+            List<Category> categoriesList = null;
+            while (true)
+            {
+                if (!reader.Read())
+                {
+                    break;
+                }
+
+                JsonSerializer serializer = new JsonSerializer();
+                categoriesList = serializer.Deserialize<List<Category>>(reader);
+
+            }
+
+            foreach (Category category in categoriesList)
+            {
+                Categories.Add(category);
+            }
+
+
         }
 
         private void AddExifFilter()
