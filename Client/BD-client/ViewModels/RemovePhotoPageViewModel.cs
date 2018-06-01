@@ -1,5 +1,6 @@
 ﻿using BD_client.Domain;
 using MahApps.Metro.Controls.Dialogs;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -80,9 +81,32 @@ namespace BD_client.ViewModels
 
         private async void Remove()
         {
-            //remove
-            await dialogCoordinator.ShowMessageAsync(this, "Success", Photos.Count + " of " + Photos.Count + " photos was removed");
-            Photos.Clear();
+            List<int> photoIndex = RemovePhotoFromServer();
+            await dialogCoordinator.ShowMessageAsync(this, "Result", photoIndex.Count + " of " + Photos.Count + " photos was removed");
+            for (int i = photoIndex.Count - 1; i >= 0; i--)
+            {
+                Photos.RemoveAt(photoIndex[i]);
+            }
+        }
+
+        private List<int> RemovePhotoFromServer()
+        {
+            var photoIndex = new List<int>();
+            for (int i = 0; i < Photos.Count; i++)
+            {
+                var photosUrl = MainWindow.MainVM.BaseUrl + "api/v1/photos/"+Photos[i].Id;
+                try
+                {
+                    ApiRequest.Delete(photosUrl);
+                    photoIndex.Add(i);
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+            return photoIndex;
+
         }
 
         private void Cancel()

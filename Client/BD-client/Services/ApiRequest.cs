@@ -21,7 +21,7 @@ namespace BD_client.Domain
         public static void Post(String url, String value)
         {
 
-            byte[] data=null;
+            byte[] data = null;
             if (value != null)
                 data = Encoding.ASCII.GetBytes(value);
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
@@ -90,8 +90,8 @@ namespace BD_client.Domain
         {
             var cookieContainer = new CookieContainer();
             var baseUri = new Uri(MainWindow.MainVM.BaseUrl);
-            using (var handler = new HttpClientHandler { CookieContainer = cookieContainer }) 
-            using(var client = new HttpClient(handler) { BaseAddress = baseUri })
+            using (var handler = new HttpClientHandler { CookieContainer = cookieContainer })
+            using (var client = new HttpClient(handler) { BaseAddress = baseUri })
             {
                 var stringContent = new StringContent(content.ToString(), Encoding.UTF8, "application/json");
                 cookieContainer.Add(baseUri, new Cookie("JWT", JWT));
@@ -196,6 +196,27 @@ namespace BD_client.Domain
             }
             return responseContent;
         }
-    }
 
+        public static void Delete(String url)
+        {
+            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
+            var cookieContainer = new CookieContainer();
+            request.CookieContainer = cookieContainer;
+            if (JWT != null)
+            {
+                Cookie cookie = new Cookie();
+                cookie.Name = "JWT";
+                cookie.Value = JWT;
+                cookie.Domain = request.RequestUri.Host;
+                request.CookieContainer.Add(cookie);
+            }
+            request.Method = "DELETE";
+
+            var response = (HttpWebResponse)request.GetResponse();
+            if (response.StatusCode != HttpStatusCode.OK)
+                throw new Exception();
+        }
+
+
+    }
 }
