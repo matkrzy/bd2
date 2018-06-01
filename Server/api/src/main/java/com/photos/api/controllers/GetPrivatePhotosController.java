@@ -171,7 +171,7 @@ public class GetPrivatePhotosController {
     /*----------------------------------------------------------*/
     /*----------------------------------------------------------*/
 
-    @ApiOperation(value = "Returns private photos which are shared to the current user", response = ResponsePhoto.class)
+    @ApiOperation(value = "Returns private photos with no category assignment", response = ResponsePhoto.class)
     @GetMapping("/nocat")
     public ResponseEntity getNoCategoryPhotos() {
 
@@ -189,7 +189,7 @@ public class GetPrivatePhotosController {
     /*----------------------------------------------------------*/
     /*----------------------------------------------------------*/
 
-    @ApiOperation(value = "Returns private photos which are shared to the current user", response = ResponsePhoto.class)
+    @ApiOperation(value = "Returns private archived photos", response = ResponsePhoto.class)
     @GetMapping("/archived")
     public ResponseEntity getArchived() {
 
