@@ -14,7 +14,7 @@ public class ResponsePhoto extends Photo {
     private List<Tag> tags;
 
     public ResponsePhoto(Photo photo, int rate, List<Tag> tags) {
-        super(photo.getName(), photo.getUser(), photo.getPath(), photo.getUploadTime(), photo.getDescription(), photo.getShareState(), photo.getPhotoState());
+        super(photo.getName(), photo.getOwner(), photo.getPath(), photo.getUploadTime(), photo.getDescription(), photo.getShareState(), photo.getPhotoState());
         this.setPhotoID(photo.getPhotoID());
         this.rate = rate;
         this.tags = tags;

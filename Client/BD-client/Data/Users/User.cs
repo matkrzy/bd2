@@ -20,9 +20,7 @@ namespace BD_client.Domain
         [JsonProperty("password")]
         public String Password { get; set; }
         [JsonProperty("role")]
-        public UserState Role { get; set; }
-        [JsonProperty("links")]
-        public String[] Links { get; set; }
+        public UserState? Role { get; set; }
 
         public User()
         {

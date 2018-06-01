@@ -5,14 +5,12 @@ import com.photos.api.models.Photo;
 import com.photos.api.models.PhotoToCategory;
 import com.photos.api.models.User;
 import com.photos.api.models.repositories.CategoryRepository;
+import com.photos.api.models.repositories.PhotoRepository;
 import com.photos.api.models.repositories.PhotoToCategoryRepository;
 import com.photos.api.models.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Micha Królewski on 2018-05-12.
@@ -31,15 +29,8 @@ public class PhotoToCategoryService {
     @Autowired
     private UserRepository userRepository;
 
-
-//    public List<Category> getPhotoCategory(Photo photo) {
-//        List<PhotoToCategory> ptcs = PTCRepository.findAllByPhoto(photo);
-//        List<Category> categories = new ArrayList<>();
-//        for (PhotoToCategory ptc : ptcs) {
-//            categories.add(ptc.getCategory());
-//        }
-//        return categories;
-//    }
+    @Autowired
+    private PhotoRepository photoRepository;
 
     public boolean setCategory(PhotoToCategory ptc) {
 
@@ -53,6 +44,9 @@ public class PhotoToCategoryService {
         }
         PTCRepository.save(ptc);
 
+        Photo photo = photoRepository.getOne(ptc.getPhoto().getPhotoID());
+        photo.setHasCategory(true);
+        photoRepository.save(photo);
         return true;
     }
 
@@ -69,6 +63,9 @@ public class PhotoToCategoryService {
         }
         check.setCategory(category);
         PTCRepository.save(check);
+        Photo photo = photoRepository.getOne(check.getPhoto().getPhotoID());
+        photo.setHasCategory(true);
+        photoRepository.save(photo);
         return true;
     }
 
@@ -79,6 +76,11 @@ public class PhotoToCategoryService {
             return false;
         }
         PTCRepository.delete(ptc);
+        if (PTCRepository.findFirstByPhoto(ptc.getPhoto()) == null) {
+            Photo photo = photoRepository.getOne(ptc.getPhoto().getPhotoID());
+            photo.setHasCategory(false);
+            photoRepository.save(photo);
+        }
         return true;
     }
 }

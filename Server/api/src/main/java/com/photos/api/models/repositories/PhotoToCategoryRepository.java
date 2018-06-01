@@ -22,4 +22,8 @@ public interface PhotoToCategoryRepository extends JpaRepository<PhotoToCategory
     void deleteAllByPhoto(Photo photoID);
 
     List<PhotoToCategory> findAllByCategoryIn(List<Category> categories);
+
+    List<PhotoToCategory> findAllByCategory(Category categories);
+
+    PhotoToCategory findFirstByPhoto(Photo photo);
 }

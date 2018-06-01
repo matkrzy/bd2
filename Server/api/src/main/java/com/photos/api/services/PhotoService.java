@@ -12,7 +12,10 @@ import javax.transaction.Transactional;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.photos.api.services.ImageService.UPLOAD_ROOT;
 
@@ -172,7 +175,7 @@ public class PhotoService {
         String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         Photo photo = photoRepository.findByPhotoIDAndPhotoState(id, PhotoState.ACTIVE);
 
-        return photo != null && photo.getUser().getEmail().equals(email) ? photo : null;
+        return photo != null && photo.getOwner().getEmail().equals(email) ? photo : null;
     }
 
     public List<Photo> getPhoto(final String name) {
@@ -193,7 +196,7 @@ public class PhotoService {
         try {
 
             User user = userRepository.findByEmail(email);
-            photo.setUser(user);
+            photo.setOwner(user);
             photo.setUploadTime(new Timestamp(System.currentTimeMillis()));
             if (photo.getPhotoState() == null) {
                 photo.setPhotoState(PhotoState.ACTIVE);
@@ -277,4 +280,17 @@ public class PhotoService {
     }
 
 
+    public List<Photo> getArchived() {
+
+        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        User user = userRepository.findByEmail(email);
+        return photoRepository.findAllByShareStateAndPhotoStateAndOwner(ShareState.PRIVATE, PhotoState.ARCHIVED, user);
+    }
+
+    public List<Photo> getNoCategoryPhotos() {
+        String email = ((org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        User user = userRepository.findByEmail(email);
+
+        return photoRepository.findAllByShareStateAndPhotoStateAndHasCategoryAndOwner(ShareState.PRIVATE, PhotoState.ACTIVE, false, user);
+    }
 }

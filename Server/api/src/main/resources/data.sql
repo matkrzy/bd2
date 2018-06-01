@@ -11,15 +11,15 @@ INSERT INTO user (id,first_name,last_name,email,password,role) VALUES (1005,'Mat
 /*
     INSERT PHOTO
 */
-INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,owner,path) VALUES (1001,'photo1_description','tlo.jpg',1,1,'18-04-21 10:34:09',1000,'michal.krolewski@mail.com\\tlo.jpg');
-INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,owner,path) VALUES (1002,'photo2_description','USC50FOC051B021001.jpg',1,1,'18-02-27 10:34:09',1000,'michal.krolewski@mail.com\\USC50FOC051B021001.jpg');
-INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,owner,path) VALUES (1003,'photo3_description','20171120_103445.jpg',1,0,'18-03-21 10:34:09',1001,'piotr.gorczyca@mail.com\\20171120_103445.jpg');
-INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,owner,path) VALUES (1004,'photo4_description','images.jpg',1,0,'18-04-21 10:34:09',1002,'marta.miler@mail.com\\images.jpg');
-INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,owner,path) VALUES (1005,'photo5_description','pexels-photo-247932.jpg',1,0,'18-01-12 10:34:09',1002,'marta.miler@mail.com\\pexels-photo-247932.jpg');
-INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,owner,path) VALUES (1006,'photo6_description','maxresdefault.jpg',1,0,'18-02-23 10:34:09',1003,'piotr.gazda@mail.com\\maxresdefault.jpg');
-INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,owner,path )VALUES (1007,'photo7_description','img_63351521.jpg',1,0,'18-04-16 10:34:09',1004,'olaf.kris@mail.com\\img_63351521.jpg');
-INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,owner,path) VALUES (1008,'photo8_description','pexels-photo-46710.jpeg',1,1,'18-03-05 10:34:09',1004,'olaf.kris@mail.com\\pexels-photo-46710.jpeg');
-INSERT INTO photo (id,description,name,photo_state,share_state,upload_time,owner,path) VALUES (1009,'photo9_description','ocean.jpg',1,1,'18-04-11 10:34:09',1005,'mateusz.krzyzanowski@mail.com\\ocean.jpg');
+INSERT INTO photo (id,has_category,description,name,photo_state,share_state,upload_time,owner,path) VALUES (1001,1,'photo1_description','tlo.jpg',1,1,'18-04-21 10:34:09',1000,'michal.krolewski@mail.com\\tlo.jpg');
+INSERT INTO photo (id,has_category,description,name,photo_state,share_state,upload_time,owner,path) VALUES (1002,1,'photo2_description','USC50FOC051B021001.jpg',1,1,'18-02-27 10:34:09',1000,'michal.krolewski@mail.com\\USC50FOC051B021001.jpg');
+INSERT INTO photo (id,has_category,description,name,photo_state,share_state,upload_time,owner,path) VALUES (1003,1,'photo3_description','20171120_103445.jpg',1,0,'18-03-21 10:34:09',1001,'piotr.gorczyca@mail.com\\20171120_103445.jpg');
+INSERT INTO photo (id,has_category,description,name,photo_state,share_state,upload_time,owner,path) VALUES (1004,1,'photo4_description','images.jpg',1,0,'18-04-21 10:34:09',1002,'marta.miler@mail.com\\images.jpg');
+INSERT INTO photo (id,has_category,description,name,photo_state,share_state,upload_time,owner,path) VALUES (1005,1,'photo5_description','pexels-photo-247932.jpg',1,0,'18-01-12 10:34:09',1002,'marta.miler@mail.com\\pexels-photo-247932.jpg');
+INSERT INTO photo (id,has_category,description,name,photo_state,share_state,upload_time,owner,path) VALUES (1006,1,'photo6_description','maxresdefault.jpg',1,0,'18-02-23 10:34:09',1003,'piotr.gazda@mail.com\\maxresdefault.jpg');
+INSERT INTO photo (id,has_category,description,name,photo_state,share_state,upload_time,owner,path )VALUES (1007,1,'photo7_description','img_63351521.jpg',1,0,'18-04-16 10:34:09',1004,'olaf.kris@mail.com\\img_63351521.jpg');
+INSERT INTO photo (id,has_category,description,name,photo_state,share_state,upload_time,owner,path) VALUES (1008,1,'photo8_description','pexels-photo-46710.jpeg',1,1,'18-03-05 10:34:09',1004,'olaf.kris@mail.com\\pexels-photo-46710.jpeg');
+INSERT INTO photo (id,has_category,description,name,photo_state,share_state,upload_time,owner,path) VALUES (1009,1,'photo9_description','ocean.jpg',1,1,'18-04-11 10:34:09',1005,'mateusz.krzyzanowski@mail.com\\ocean.jpg');
 
 
 /*

@@ -82,12 +82,12 @@
     <Compile Include="Common\NotifyTaskCompletion.cs" />
     <Compile Include="Common\PasswordBoxAssistant.cs" />
     <Compile Include="Data\Photos\ExifMetadata.cs" />
-    <Compile Include="Data\Photos\Photov2.cs" />
     <Compile Include="Data\Photos\PhotoCollection.cs" />
     <Compile Include="Data\Photos\PhotoState.cs" />
     <Compile Include="Data\Photos\PublicPhoto.cs" />
     <Compile Include="Data\Photos\ShareState.cs" />
     <Compile Include="Data\Photos\Tag.cs" />
+    <Compile Include="Data\Utils\TagDTO.cs" />
     <Compile Include="Pages\LoadingPage.xaml.cs">
       <DependentUpon>LoadingPage.xaml</DependentUpon>
     </Compile>
@@ -108,9 +108,6 @@
     </Compile>
     <Compile Include="Pages\EditPhotoPage.xaml.cs">
       <DependentUpon>EditPhotoPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\HomePage.xaml.cs">
-      <DependentUpon>HomePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\LogInPage.xaml.cs">
       <DependentUpon>LogInPage.xaml</DependentUpon>
@@ -141,7 +138,6 @@
     <Compile Include="ViewModels\Category\CategoryViewModel.cs" />
     <Compile Include="ViewModels\DownloadPageViewModel.cs" />
     <Compile Include="ViewModels\EditPhotoPageViewModel.cs" />
-    <Compile Include="ViewModels\HomePageViewModel.cs" />
     <Compile Include="ViewModels\LogInPageViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\MyPhotosPageViewModel.cs" />
@@ -180,10 +176,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\EditPhotoPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\HomePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

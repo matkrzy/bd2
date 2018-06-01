@@ -21,7 +21,10 @@ namespace BD_client.Domain
         //TODO: zmienić te akcje
         public static void Post(String url, String value)
         {
-            byte[] data = Encoding.ASCII.GetBytes(value);
+
+            byte[] data = null;
+            if (value != null)
+                data = Encoding.ASCII.GetBytes(value);
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
             var cookieContainer = new CookieContainer();
             request.CookieContainer = cookieContainer;
@@ -34,15 +37,18 @@ namespace BD_client.Domain
                 request.CookieContainer.Add(cookie);
             }
             request.Method = "POST";
-            request.ContentType = "application/json";
-            request.ContentLength = data.Length;
-            using (Stream stream = request.GetRequestStream())
+            if (value != null)
             {
-                stream.Write(data, 0, data.Length);
+                request.ContentType = "application/json";
+                request.ContentLength = data.Length;
+                using (Stream stream = request.GetRequestStream())
+                {
+                    stream.Write(data, 0, data.Length);
+                }
             }
 
             var response = (HttpWebResponse)request.GetResponse();
-            if (response.StatusCode != HttpStatusCode.OK)
+            if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.Created)
                 throw new Exception();
             if (JWT == null)
             {
@@ -85,8 +91,8 @@ namespace BD_client.Domain
         {
             var cookieContainer = new CookieContainer();
             var baseUri = new Uri(MainWindow.MainVM.BaseUrl);
-            using (var handler = new HttpClientHandler { CookieContainer = cookieContainer }) 
-            using(var client = new HttpClient(handler) { BaseAddress = baseUri })
+            using (var handler = new HttpClientHandler { CookieContainer = cookieContainer })
+            using (var client = new HttpClient(handler) { BaseAddress = baseUri })
             {
                 var stringContent = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json");
                 cookieContainer.Add(baseUri, new Cookie("JWT", JWT));
@@ -165,6 +171,28 @@ namespace BD_client.Domain
                 throw new Exception();
         }
 
+        public static void PutInParams(String url)
+        {
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            var cookieContainer = new CookieContainer();
+            request.CookieContainer = cookieContainer;
+            if (JWT != null)
+            {
+                Cookie cookie = new Cookie();
+                cookie.Name = "JWT";
+                cookie.Value = JWT;
+                cookie.Domain = request.RequestUri.Host;
+                request.CookieContainer.Add(cookie);
+            }
+            request.Method = "PUT";
+
+            var response = (HttpWebResponse)request.GetResponse();
+            if (response.StatusCode != HttpStatusCode.OK)
+                throw new Exception();
+        }
+
+
 
         public static String Get(String url)
         {
@@ -194,6 +222,27 @@ namespace BD_client.Domain
             }
             return responseContent;
         }
-    }
 
+        public static void Delete(String url)
+        {
+            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
+            var cookieContainer = new CookieContainer();
+            request.CookieContainer = cookieContainer;
+            if (JWT != null)
+            {
+                Cookie cookie = new Cookie();
+                cookie.Name = "JWT";
+                cookie.Value = JWT;
+                cookie.Domain = request.RequestUri.Host;
+                request.CookieContainer.Add(cookie);
+            }
+            request.Method = "DELETE";
+
+            var response = (HttpWebResponse)request.GetResponse();
+            if (response.StatusCode != HttpStatusCode.OK)
+                throw new Exception();
+        }
+
+
+    }
 }
