@@ -20,7 +20,7 @@ namespace BD_client.ViewModels
         public event PropertyChangedEventHandler PropertyChanged = null;
         private IDialogCoordinator dialogCoordinator;
         private string _page;
-        public ObservableCollection<Category> Categories { get; set; }
+        public ObservableCollection<Domain.Category> Categories { get; set; }
         public ObservableCollection<SearchFilter> SearchFilters { get; set; }
         public ICommand SearchCmd { get; set; }
         public ICommand CancelCmd { get; set; }
@@ -38,7 +38,7 @@ namespace BD_client.ViewModels
         public SearchPageViewModel(IDialogCoordinator instance)
         {
             dialogCoordinator = instance;
-            Categories = new ObservableCollection<Category>();
+            Categories = new ObservableCollection<Domain.Category>();
             SearchFilters = new ObservableCollection<SearchFilter>();
             SearchCmd = new RelayCommand(x => ShowResults());
             CancelCmd = new RelayCommand(x => Cancel());
@@ -57,7 +57,7 @@ namespace BD_client.ViewModels
             String responseContent = ApiRequest.Get(url);
             JsonTextReader reader = new JsonTextReader(new StringReader(responseContent));
             reader.SupportMultipleContent = true;
-            List<Category> categoriesList = null;
+            List<Domain.Category> categoriesList = null;
             while (true)
             {
                 if (!reader.Read())
@@ -66,11 +66,11 @@ namespace BD_client.ViewModels
                 }
 
                 JsonSerializer serializer = new JsonSerializer();
-                categoriesList = serializer.Deserialize<List<Category>>(reader);
+                categoriesList = serializer.Deserialize<List<Domain.Category>>(reader);
 
             }
 
-            foreach (Category category in categoriesList)
+            foreach (var category in categoriesList)
             {
                 Categories.Add(category);
             }

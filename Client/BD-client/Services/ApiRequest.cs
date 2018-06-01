@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -93,9 +94,34 @@ namespace BD_client.Domain
             using (var handler = new HttpClientHandler { CookieContainer = cookieContainer })
             using (var client = new HttpClient(handler) { BaseAddress = baseUri })
             {
-                var stringContent = new StringContent(content.ToString(), Encoding.UTF8, "application/json");
+                var stringContent = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json");
                 cookieContainer.Add(baseUri, new Cookie("JWT", JWT));
                 return await client.PostAsync(url, stringContent);
+            }
+        }
+
+        public static async Task<HttpResponseMessage> DeleteAsync(string url)
+        {
+            var cookieContainer = new CookieContainer();
+            var baseUri = new Uri(MainWindow.MainVM.BaseUrl);
+            using (var handler = new HttpClientHandler { CookieContainer = cookieContainer })
+            using (var client = new HttpClient(handler) { BaseAddress = baseUri })
+            {
+                cookieContainer.Add(baseUri, new Cookie("JWT", JWT));
+                return await client.DeleteAsync(url);
+            }
+        }
+
+        public static async Task<HttpResponseMessage> PutAsync(string url, object content)
+        {
+            var cookieContainer = new CookieContainer();
+            var baseUri = new Uri(MainWindow.MainVM.BaseUrl);
+            using (var handler = new HttpClientHandler { CookieContainer = cookieContainer })
+            using (var client = new HttpClient(handler) { BaseAddress = baseUri })
+            {
+                var stringContent = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json");
+                cookieContainer.Add(baseUri, new Cookie("JWT", JWT));
+                return await client.PutAsync(url, stringContent);
             }
         }
 

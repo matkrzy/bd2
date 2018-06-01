@@ -17,7 +17,7 @@ namespace BD_client.ViewModels
     class EditPhotoPageViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged = null;
-        public ObservableCollection<Category> Categories { get; set; }
+        public ObservableCollection<Domain.Category> Categories { get; set; }
         public ICommand CancelCmd { get; set; }
         public ICommand EditCmd { get; set; }
         private IDialogCoordinator dialogCoordinator;
@@ -33,7 +33,7 @@ namespace BD_client.ViewModels
             dialogCoordinator = instance;
             SelectedCategory = 0;
             Photos = new ObservableCollection<Photo>();
-            Categories = new ObservableCollection<Category>();
+            Categories = new ObservableCollection<Domain.Category>();
             CancelCmd = new RelayCommand(x => Cancel());
             EditCmd = new RelayCommand(x => Edit());
             if (MainWindow.MainVM.List != null)

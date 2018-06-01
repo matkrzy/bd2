@@ -130,9 +130,12 @@
     <Compile Include="Pages\SharePage.xaml.cs">
       <DependentUpon>SharePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\Base\BaseService.cs" />
+    <Compile Include="Services\CategoryService.cs" />
     <Compile Include="Services\PhotoService.cs" />
     <Compile Include="ViewModels\AddPhotosPageViewModel.cs" />
     <Compile Include="ViewModels\CategoriesPageViewModel.cs" />
+    <Compile Include="ViewModels\Category\CategoryViewModel.cs" />
     <Compile Include="ViewModels\DownloadPageViewModel.cs" />
     <Compile Include="ViewModels\EditPhotoPageViewModel.cs" />
     <Compile Include="ViewModels\LogInPageViewModel.cs" />
@@ -145,6 +148,9 @@
     <Compile Include="ViewModels\RemovePhotoPageViewModel.cs" />
     <Compile Include="ViewModels\SearchPageViewModel.cs" />
     <Compile Include="ViewModels\SharePageViewModel.cs" />
+    <Compile Include="Windows\InputTextModalWindow.xaml.cs">
+      <DependentUpon>InputTextModalWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -216,6 +222,10 @@
     <Page Include="Resources\IconsNonShared.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\InputTextModalWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

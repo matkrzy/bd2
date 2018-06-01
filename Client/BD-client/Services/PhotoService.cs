@@ -7,12 +7,17 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using BD_client.Data.Photos;
 using System.IO;
+using BD_client.Services.Base;
 
 namespace BD_client.Services
 {
     public static class PhotoService
     {
 
+        /// <summary>
+        /// To jest do poprawy
+        /// </summary>
+        /// <returns></returns>
         public static async Task<PhotoCollection> GetUserPhotos()
         {
             var destination = System.IO.Directory.GetCurrentDirectory() + @"\..\..\tmp\own";
@@ -33,8 +38,15 @@ namespace BD_client.Services
             }
             MainWindow.MainVM.Photos = photosDecription;
             return new PhotoCollection(destination);
+        }        
 
-
+        public static async Task<List<Photo>> GetUsersPhotosByCategoriesIds(bool all, params int[] categoriesIds)
+        {
+            var categories = string.Join(",", categoriesIds);
+            var mode = all ? "all" : "any";
+            var path = $"api/v1/photos/categories/{mode}/{categories}";
+            return await BaseService.GetAsync<List<Photo>>(path);
         }
+
     }
 }
