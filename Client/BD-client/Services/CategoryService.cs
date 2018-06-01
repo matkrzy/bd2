@@ -13,11 +13,26 @@ namespace BD_client.Services
         public static async Task<List<Category>> GetUsersRootCategories()
         {
             return await BaseService.GetAsync<List<Category>>("api/v1/categories");
-        } 
+        }
 
         public static async Task<List<Category>> GetCategoryChildren(int parentId)
         {
             return await BaseService.GetAsync<List<Category>>($"api/v1/categories/{parentId}");
+        }
+
+        public static async Task<bool> AddCategory(Category category)
+        {
+            return await BaseService.PostAsync("api/v1/categories", category);
+        }
+
+        public static async Task<bool> DeleteCategory(int categoryId)
+        {
+            return await BaseService.DeleteAsync($"api/v1/categories/{categoryId}");
+        }
+
+        public static async Task<bool> EditCategory(Category category)
+        {
+            return await BaseService.PutAsync($"api/v1/categories/{category.Id}", category);
         }
     }
 }

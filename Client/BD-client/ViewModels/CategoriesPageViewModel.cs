@@ -5,6 +5,7 @@ using BD_client.Services;
 using BD_client.ViewModels.Category;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -15,30 +16,18 @@ namespace BD_client.ViewModels
     public class CategoriesPageViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public PhotoCollection Photos { get; set; }
-        public NotifyTaskCompletion<List<CategoryViewModel>> RootCategories { get; set; }
+        public PhotoCollectionv2 Photos { get; set; }
+        public NotifyTaskCompletion<ObservableCollection<CategoryViewModel>> RootCategories { get; set; }
 
         public CategoriesPageViewModel()
         {
-            var path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + "//Img//photos";
-            Photos = new PhotoCollection(path);
-            RootCategories = new NotifyTaskCompletion<List<CategoryViewModel>>(GetUsersRootCategoryViewModels());
-
+            //var path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + "//Img//photos";
+            var path = System.IO.Directory.GetCurrentDirectory() + @"\..\..\tmp\own";
+            Photos = new PhotoCollectionv2(path);
+            //RootCategories = new NotifyTaskCompletion<List<CategoryViewModel>>(GetUsersRootCategoryViewModels());
         }
 
-        private async Task<List<CategoryViewModel>> GetUsersRootCategoryViewModels()
-        {
-            try
-            {
-                var categories = await CategoryService.GetUsersRootCategories();
-                return categories.Select(x => new CategoryViewModel(x)).ToList();
 
-            }
-            catch (Exception e)
-            {
-                throw;
-            }            
-        }
 
     }
 }

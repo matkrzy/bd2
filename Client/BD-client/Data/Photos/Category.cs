@@ -13,5 +13,7 @@ namespace BD_client.Domain
         public int Id { get; set; }
         [JsonProperty("name")]
         public string Name { get; set; }
+        [JsonProperty("parentCategory")]
+        public int? ParentId { get; set; }
     }
 }

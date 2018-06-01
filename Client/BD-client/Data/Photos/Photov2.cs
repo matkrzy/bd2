@@ -15,6 +15,7 @@ namespace BD_client.Data.Photos
     {
         [JsonProperty("photoID")]
         public int Id { get; set; }
+        [JsonProperty("name")]
         public string Name { get; set; }
         public string UserEmail { get; set; }
         public DateTime UploadTime { get; set; }

@@ -16,5 +16,24 @@ namespace BD_client.Services.Base
             var stringifiedJson = await res.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<T>(stringifiedJson);
         }
+
+
+        public static async Task<bool> PostAsync(string path, object body)
+        {
+            var res = await ApiRequest.PostAsync(path, body);
+            return res.IsSuccessStatusCode;
+        }
+
+        public static async Task<bool> DeleteAsync(string path)
+        {
+            var res = await ApiRequest.DeleteAsync(path);
+            return res.IsSuccessStatusCode;
+        }
+
+        public static async Task<bool> PutAsync(string path, object body)
+        {
+            var res = await ApiRequest.PutAsync(path, body);
+            return res.IsSuccessStatusCode;
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BD_client.Data.Photos;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -6,6 +8,34 @@ using System.Windows;
 
 namespace BD_client.Domain
 {
+    //TODO: PhotoCollectionv2
+    public class PhotoCollectionv2 : ObservableCollection<Photo>
+    {
+        public List<Photov2> Photos { get; set; }
+        public DirectoryInfo DirectoryInfo { get; set; }
+        public PhotoCollectionv2(string path)
+        {
+            DirectoryInfo = new DirectoryInfo(path);
+            Photos = new List<Photov2>();
+        }
+        public void Update()
+        {
+            ClearItems();
+            var filesToDisplay = new List<FileInfo>();
+            var photoIds = Photos.Select(x => x.Id);
+
+            foreach (var fileInfo in DirectoryInfo.GetFiles())
+            {
+                var photoId = int.Parse(Path.GetFileNameWithoutExtension(fileInfo.FullName));
+                if (photoIds.Contains(photoId))
+                {
+                    Add(new Photo(fileInfo.FullName));
+                }
+            }
+        }
+    }
+
+    [Obsolete]
     public class PhotoCollection : ObservableCollection<Photo>
     {
         private DirectoryInfo Directory;
@@ -18,19 +48,19 @@ namespace BD_client.Domain
         public PhotoCollection(string path)
         {
             Directory = new DirectoryInfo(path);
-            Update();     
+            Update();
         }
         private void Update()
         {
             ClearItems();
             try
             {
-                foreach(var fileInfo in Directory.GetFiles("*.jpg"))
+                foreach (var fileInfo in Directory.GetFiles("*.jpg"))
                 {
                     Add(new Photo(fileInfo.FullName));
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 MessageBox.Show($"An Error Occured: {e.Message}");
             }
