@@ -57,7 +57,7 @@ namespace BD_client.ViewModels
             String responseContent = ApiRequest.Get(url);
             JsonTextReader reader = new JsonTextReader(new StringReader(responseContent));
             reader.SupportMultipleContent = true;
-            List<Category> categoriesList = null;
+            List<Domain.Category> categoriesList = null;
             while (true)
             {
                 if (!reader.Read())
@@ -66,11 +66,11 @@ namespace BD_client.ViewModels
                 }
 
                 JsonSerializer serializer = new JsonSerializer();
-                categoriesList = serializer.Deserialize<List<Category>>(reader);
+                categoriesList = serializer.Deserialize<List<Domain.Category>>(reader);
 
             }
 
-            foreach (Category category in categoriesList)
+            foreach (var category in categoriesList)
             {
                 Categories.Add(category);
             }

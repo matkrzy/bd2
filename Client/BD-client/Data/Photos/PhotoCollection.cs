@@ -11,12 +11,12 @@ namespace BD_client.Domain
     //TODO: PhotoCollectionv2
     public class PhotoCollectionv2 : ObservableCollection<Photo>
     {
-        public List<Photov2> Photos { get; set; }
+        public List<Photo> Photos { get; set; }
         public DirectoryInfo DirectoryInfo { get; set; }
         public PhotoCollectionv2(string path)
         {
             DirectoryInfo = new DirectoryInfo(path);
-            Photos = new List<Photov2>();
+            Photos = new List<Photo>();
         }
         public void Update()
         {

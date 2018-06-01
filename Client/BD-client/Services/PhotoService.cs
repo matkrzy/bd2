@@ -40,12 +40,12 @@ namespace BD_client.Services
             return new PhotoCollection(destination);
         }        
 
-        public static async Task<List<Photov2>> GetUsersPhotosByCategoriesIds(bool all, params int[] categoriesIds)
+        public static async Task<List<Photo>> GetUsersPhotosByCategoriesIds(bool all, params int[] categoriesIds)
         {
             var categories = string.Join(",", categoriesIds);
             var mode = all ? "all" : "any";
             var path = $"api/v1/photos/categories/{mode}/{categories}";
-            return await BaseService.GetAsync<List<Photov2>>(path);
+            return await BaseService.GetAsync<List<Photo>>(path);
         }
 
     }

@@ -33,7 +33,7 @@ namespace BD_client.ViewModels
             dialogCoordinator = instance;
             SelectedCategory = 0;
             Photos = new ObservableCollection<Photo>();
-            Categories = new ObservableCollection<Category>();
+            Categories = new ObservableCollection<Domain.Category>();
             CancelCmd = new RelayCommand(x => Cancel());
             EditCmd = new RelayCommand(x => Edit());
             if (MainWindow.MainVM.List != null)
