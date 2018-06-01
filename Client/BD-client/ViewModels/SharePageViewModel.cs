@@ -1,9 +1,11 @@
 ﻿using BD_client.Domain;
 using MahApps.Metro.Controls.Dialogs;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,7 +39,7 @@ namespace BD_client.ViewModels
         }
 
         private string _page;
-        private string _username;
+        private string _email;
         private int _dataGridSelectedIndex;
 
 
@@ -54,16 +56,16 @@ namespace BD_client.ViewModels
             }
         }
 
-        public string Username
+        public string Email
         {
             get
             {
-                return _username;
+                return _email ;
             }
             set
             {
-                _username = value;
-                OnPropertyChanged("Username");
+                _email = value;
+                OnPropertyChanged("Email");
             }
         }
 
@@ -76,23 +78,82 @@ namespace BD_client.ViewModels
             ShareCmd = new RelayCommand(x => Share());
             CancelCmd = new RelayCommand(x => Cancel());
             RemovePhotoCmd = new RelayCommand(x => RemovePhoto());
-            Photos.Add(new Domain.Photo() { Id = 1, Path = "C:\\Photo1.jpg" });
-            Photos.Add(new Domain.Photo() { Id = 2, Path = "C:\\Photo2.jpg" });
-            Users = new ObservableCollection<User>();
-            Users.Add(new Domain.User() { FirstName = "Marta" });
-            Users.Add(new Domain.User() { FirstName = "Gazder" });
-            Users.Add(new Domain.User() { FirstName = "Gorczi" });
-            Users.Add(new Domain.User() { FirstName = "Michał" });
+            if (MainWindow.MainVM.List != null)
+                GetSelectedPhtotos();
         }
+
+
+        private void GetSelectedPhtotos()
+        {
+            for (int i = 0; i < MainWindow.MainVM.List.Count; i++)
+            {
+                int index = MainWindow.MainVM.List[i];
+                Photo newPhoto = MainWindow.MainVM.Photos[index];
+                Photos.Add(newPhoto);
+            }
+            MainWindow.MainVM.List.Clear();
+            MainWindow.MainVM.List = null;
+        }
+
         private void RemovePhoto()
         {
             Photos.RemoveAt(DataGridSelectedIndex);
         }
         private async void Share()
         {
-            //share
-            await dialogCoordinator.ShowMessageAsync(this, "Success", Photos.Count + " of " + Photos.Count + " photos was shared to user " + Username);
-            Photos.Clear();
+            List<int> photoIndex = SharePhoto();
+            await dialogCoordinator.ShowMessageAsync(this, "Result", photoIndex.Count + " of " + Photos.Count + " photos was shared");
+            for (int i = photoIndex.Count - 1; i >= 0; i--)
+            {
+                Photos.RemoveAt(photoIndex[i]);
+            }
+        }
+
+        private User GetUserInfo(string email)
+        {
+            string url = MainWindow.MainVM.BaseUrl + "api/v1/users/" + email;
+            String responseContent = ApiRequest.Get(url);
+            User user = JsonConvert.DeserializeObject<User>(responseContent);
+            return user;
+
+        }
+
+        private List<int> SharePhoto()
+        {
+            var photoIndex = new List<int>();
+            User user;
+            try
+            {
+                 user = GetUserInfo(Email);
+            }
+            catch (Exception)
+            {
+                return photoIndex;
+            }
+
+            for (int i = 0; i < Photos.Count; i++)
+            {
+
+                var valuesPhoto = new Dictionary<string, long>
+                {
+                    { "user", user.id },
+                    {"photo", Photos[i].Id }
+                };
+
+                var json = JsonConvert.SerializeObject(valuesPhoto, Formatting.Indented);
+                var photosUrl = MainWindow.MainVM.BaseUrl + "api/v1/shares";
+                try
+                {
+                    ApiRequest.Post(photosUrl, json);
+                    photoIndex.Add(i);
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+            return photoIndex;
+
         }
 
         private void Cancel()

@@ -26,17 +26,18 @@ namespace BD_client.Domain
         public DateTime UploadTime { get; set; }
         [JsonProperty("description")]
         public string Description { get; set; }
+        [Browsable(false)]
         [JsonProperty("shareState")]
         public ShareState ShareState { get; set; }
+        [Browsable(false)]
         [JsonProperty("photoState")]
         public PhotoState PhotoState { get; set; }
         [Browsable(false)]
+        [JsonProperty("rate")]
         public int Rate { get; set; }
         [Browsable(false)]
+        [JsonProperty("tags")]
         public List<Tag> Tags { get; set; }
-        [Browsable(false)]
-        [JsonProperty("category")]
-        public Category Category { get; set; }
 
         [Browsable(false)]
         public ExifMetadata ExifMetadata { get; set; }

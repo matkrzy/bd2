@@ -27,18 +27,9 @@
 
         <Button x:Name="shareBtn" Content="Share Photos" Height="50" Width="150" Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding ShareCmd}" Margin="332,402,215,48"/>
         <Button x:Name="cancelBtn" Content="Cancel" Height="50" Width="150" Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding CancelCmd}" Margin="521,402,30,48"/>
+        <TextBox x:Name="userNameBox" Text="{Binding Path=Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Controls:TextBoxHelper.Watermark="E-mail" Controls:TextBoxHelper.ClearTextButton="True" HorizontalAlignment="Left" Height="23" Margin="55,415,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="183"/>
 
         <Label x:Name="downloadItems" Content="Do you want to share this items?" HorizontalAlignment="Left" Margin="55,97,0,0" VerticalAlignment="Top"/>
-        <Controls:SplitButton 
-            Icon="{DynamicResource appbar_user}"
-            HorizontalContentAlignment="Left"
-            HorizontalAlignment="Center"
-            VerticalContentAlignment="Center"
-            Width="224"
-            SelectedIndex="0"
-            ItemsSource="{Binding Users}"
-            DisplayMemberPath="Name"
-            VerticalAlignment="Center" Margin="84,380,392,48" Height="72" />
 
         <DataGrid ItemsSource="{Binding Photos}" Margin="55,128,30,134"
                   AutoGenerateColumns="True"

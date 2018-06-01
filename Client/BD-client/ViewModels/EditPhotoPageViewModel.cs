@@ -34,41 +34,12 @@ namespace BD_client.ViewModels
             SelectedCategory = 0;
             Photos = new ObservableCollection<Photo>();
             Categories = new ObservableCollection<Category>();
-            GetCategories();
             CancelCmd = new RelayCommand(x => Cancel());
             EditCmd = new RelayCommand(x => Edit());
             if (MainWindow.MainVM.List != null)
                 GetSelectedPhtotos();
 
         }
-
-        private void GetCategories()
-        {
-            string url = MainWindow.MainVM.BaseUrl + "api/v1/categories";
-            String responseContent = ApiRequest.Get(url);
-            JsonTextReader reader = new JsonTextReader(new StringReader(responseContent));
-            reader.SupportMultipleContent = true;
-            List<Category> categoriesList = null;
-            while (true)
-            {
-                if (!reader.Read())
-                {
-                    break;
-                }
-
-                JsonSerializer serializer = new JsonSerializer();
-                categoriesList = serializer.Deserialize<List<Category>>(reader);
-
-            }
-
-            foreach (Category category in categoriesList)
-            {
-                Categories.Add(category);
-            }
-
-
-        }
-
 
         private void GetSelectedPhtotos()
         {
@@ -98,17 +69,6 @@ namespace BD_client.ViewModels
                 }
             }
 
-            if (Photos[SelectedIndex].Category != null)
-            {
-                for (int i = 0; i < Categories.Count; i++)
-                {
-                    if (Categories[i].Name.Equals((Photos[SelectedIndex].Category.Name)))
-                    {
-                        SelectedCategory = i;
-                        break;
-                    }
-                }
-            }
             Description = "";
             if (Photos[SelectedIndex].Description != null)
             {
