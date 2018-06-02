@@ -27,8 +27,8 @@
         <TextBox x:Name="searchTags" Controls:TextBoxHelper.Watermark="Tags" HorizontalAlignment="Left" Height="29" Margin="310,101,0,0" TextWrapping="Wrap" Text="{Binding TagsPhrase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="150" Style="{DynamicResource SearchMetroTextBox}" Controls:TextBoxHelper.ButtonCommand="{Binding TagsCmd}"/>
         <TextBox x:Name="searchExif" Controls:TextBoxHelper.Watermark="Exif" HorizontalAlignment="Left" Height="29" Margin="310,135,0,0" TextWrapping="Wrap" Text="{Binding ExifPhrase, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="150" Style="{DynamicResource SearchMetroTextBox}" Controls:TextBoxHelper.ButtonCommand="{Binding ExifCmd}"/>
 
-        <Button x:Name="searchBtn" Content="Search" Height="50" Width="150" Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding SearchCmd}" Margin="330,221,215,229"/>
-        <Button x:Name="cancelBtn" Content="Cancel" Height="50" Width="150" Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding CancelCmd}" Margin="520,221,30,229"/>
+        <Button x:Name="searchBtn" Content="Search" Height="50" Width="150" Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding SearchCmd}" Margin="332,191,218,259"/>
+        <Button x:Name="cancelBtn" Content="Cancel" Height="50" Width="150" Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding CancelCmd}" Margin="520,191,30,259"/>
         <Controls:SplitButton 
             Icon="{DynamicResource appbar_folder}"
             HorizontalContentAlignment="Left"
@@ -51,8 +51,21 @@
                     <MenuItem Header="Remove" Command="{Binding RemoveFilterCmd}"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>
-
         </DataGrid>
+
+        <DataGrid ItemsSource="{Binding PhotosResult}" Margin="106,283,30,62"
+                  AutoGenerateColumns="True"
+                  Style="{StaticResource AzureDataGrid}"
+                  SelectedIndex="{Binding DataGridPhotoSelectedIndex}"
+                  SelectionMode="Single">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Remove" Command="{Binding RemovePhotoCmd}"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+        
+        
 
     </Grid>
 </Page>

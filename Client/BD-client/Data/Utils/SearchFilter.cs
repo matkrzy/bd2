@@ -8,9 +8,9 @@ namespace BD_client.Domain
 {
     public class SearchFilter
     {
-        public String Type { get; set; }
+        public string Type { get; set; }
 
-        public String Filter { get; set; }
+        public string Filter { get; set; }
 
         public SearchFilter()
         {
