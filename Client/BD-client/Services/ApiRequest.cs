@@ -100,7 +100,7 @@ namespace BD_client.Domain
             }
         }
 
-        public static async Task<HttpResponseMessage> DeleteAsync(string url)
+        public static async Task<HttpResponseMessage> DeleteAsync(string url, object content = null)
         {
             var cookieContainer = new CookieContainer();
             var baseUri = new Uri(MainWindow.MainVM.BaseUrl);
@@ -108,7 +108,21 @@ namespace BD_client.Domain
             using (var client = new HttpClient(handler) { BaseAddress = baseUri })
             {
                 cookieContainer.Add(baseUri, new Cookie("JWT", JWT));
-                return await client.DeleteAsync(url);
+
+                if (content == null)
+                {
+                    return await client.DeleteAsync(url);
+                }
+                else
+                {
+                    var request = new HttpRequestMessage
+                    {
+                        Content = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json"),
+                        Method = HttpMethod.Delete,
+                        RequestUri = new Uri(MainWindow.MainVM.BaseUrl + url)
+                    };
+                    return await client.SendAsync(request);
+                }
             }
         }
 

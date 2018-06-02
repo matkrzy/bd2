@@ -17,21 +17,40 @@ namespace BD_client.Domain
         {
             DirectoryInfo = new DirectoryInfo(path);
             Photos = new List<Photo>();
-        }
+        }                
         public void Update()
         {
             ClearItems();
-            var filesToDisplay = new List<FileInfo>();
-            var photoIds = Photos.Select(x => x.Id);
-
             foreach (var fileInfo in DirectoryInfo.GetFiles())
             {
-                var photoId = int.Parse(Path.GetFileNameWithoutExtension(fileInfo.FullName));
-                if (photoIds.Contains(photoId))
+                int photoId;
+                if (int.TryParse(Path.GetFileNameWithoutExtension(fileInfo.FullName), out photoId))
                 {
-                    Add(new Photo(fileInfo.FullName));
+                    var photo = Photos.FirstOrDefault(x => x.Id == photoId);
+                    if(photo != null)
+                    {
+                        Add(new Photo
+                        {
+                            Id = photoId,
+                            Path = fileInfo.FullName,
+                            Name = photo.Name
+                        });
+                    }
                 }
             }
+        }
+        public void Update(IEnumerable<int> exceptIds)
+        {
+            ClearItems();
+            foreach(var fileInfo in DirectoryInfo.GetFiles())
+            {
+                int photoId;
+                if (int.TryParse(Path.GetFileNameWithoutExtension(fileInfo.FullName), out photoId) && !exceptIds.Contains(photoId))
+                {
+                    Add(new Photo(fileInfo.FullName, photoId));
+                }
+            }
+
         }
     }
 
@@ -55,9 +74,10 @@ namespace BD_client.Domain
             ClearItems();
             try
             {
+                //TODO:
                 foreach (var fileInfo in Directory.GetFiles("*.jpg"))
                 {
-                    Add(new Photo(fileInfo.FullName));
+                    Add(new Photo(fileInfo.FullName, 0));
                 }
             }
             catch (Exception e)

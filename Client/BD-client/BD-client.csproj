@@ -151,6 +151,9 @@
     <Compile Include="Windows\InputTextModalWindow.xaml.cs">
       <DependentUpon>InputTextModalWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\SelectPhotosModalWindow.xaml.cs">
+      <DependentUpon>SelectPhotosModalWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -224,6 +227,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\InputTextModalWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\SelectPhotosModalWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

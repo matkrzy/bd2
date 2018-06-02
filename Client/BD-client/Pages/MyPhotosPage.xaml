@@ -18,39 +18,23 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
                 <!-- Slider -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatSlider.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-            <!-- Headers for metadata properties -->
-            <Style x:Key="MetadataHeader" TargetType="{x:Type Label}">
-                <Setter Property="Background">
-                    <Setter.Value>
-                        <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5" >
-                            <LinearGradientBrush.GradientStops>
-                                <GradientStop Offset="0.5" Color="{x:Static SystemColors.AppWorkspaceColor}" />
-                                <GradientStop Offset="2" Color="Transparent" />
-                            </LinearGradientBrush.GradientStops>
-                        </LinearGradientBrush>
-                    </Setter.Value>
-                </Setter>
-                <Setter Property="Foreground" Value="White" />
-                <Setter Property="FontWeight" Value="Bold" />
-            </Style>
+            </ResourceDictionary.MergedDictionaries>            
         </ResourceDictionary>
 
     </Page.Resources>
-    <Grid>
+    <Grid Name="MainGrid" Margin="40,40,10,10">
         <!-- Column definitions -->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="200"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
-        <GroupBox Grid.Column="0" Grid.RowSpan="2" Margin="51,40,149,0" Grid.ColumnSpan="2">            
+        <GroupBox Grid.Column="0">
             <ListBox
+                    Width="{Binding ActualWidth, ElementName=MainGrid}"                
                     ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                    Width="500"
                     HorizontalAlignment="Left"
                     IsSynchronizedWithCurrentItem="True"
                     Name="MyPhotosListBox" 
@@ -67,7 +51,7 @@
                     <DataTemplate>
                         <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                             <Image Source="{Binding Path}" Height="Auto" Width="{Binding ElementName=ZoomSlider, Path='Value'}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Stretch="UniformToFill" Margin="0 5 5 0" />
-                            <TextBlock Text="2017-06-22" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
+                            <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -82,31 +66,14 @@
             </ListBox>
         </GroupBox>
         <Slider Name="ZoomSlider" 
-                Margin="60,0,10,0" 
+                Width="200"
+                HorizontalAlignment="Right"
                 Orientation="Horizontal" 
                 Minimum="40" 
                 Maximum="250" 
-                Value="100"
-                Grid.Column="1" Grid.Row="1" 
+                Value="100" Grid.Row="1" 
                 Style="{DynamicResource FlatSlider}"
                 SmallChange="5"
-                LargeChange="20" />
-
-        <!-- Metadata Panel -->
-        <GroupBox Grid.Column="1" Grid.Row="0" BorderThickness="0" Margin="51,40,0,0">
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                <StackPanel>
-                    <Label Style="{StaticResource MetadataHeader}">Date Image Taken:</Label>
-                    <Label Content="2012-06-22 16:14:14" />
-                    <Label Style="{StaticResource MetadataHeader}">Camera Model:</Label>
-                    <Label Content="Canon EOS 1300D" />
-                    <Label Style="{StaticResource MetadataHeader}">Width:</Label>
-                    <Label Content="17000" />
-                    <Label Style="{StaticResource MetadataHeader}">Height:</Label>
-                    <Label Content="25000" />
-                </StackPanel>
-            </ScrollViewer>
-        </GroupBox>
-
+                LargeChange="20" Margin="0,0,20,0" />
     </Grid>
 </Page>

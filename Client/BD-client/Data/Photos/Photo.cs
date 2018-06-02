@@ -55,12 +55,14 @@ namespace BD_client.Domain
         [JsonProperty("path")]
         public String Path { get; set; }
 
-        public Photo(string path)
+        public Photo(string path, int id)
         {
+            Id = id;
             Path = path;
             Uri = new Uri(path);
             Image = BitmapFrame.Create(Uri);
             ExifMetadata = new ExifMetadata(Uri);
+
         }
 
         public Photo()
