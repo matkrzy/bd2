@@ -23,13 +23,9 @@
 
     </Page.Resources>
     <Grid Name="MainGrid" Margin="40,40,10,10">
-        <!-- Column definitions -->
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <GroupBox Grid.Column="0">
             <ListBox
@@ -40,8 +36,10 @@
                     Name="MyPhotosListBox" 
                     ItemsSource="{Binding Photos.Result}"
                     SelectionMode="Extended"
-                    SelectedItem="{Binding SelectedPhoto}"
-                    MouseDoubleClick="OnPhotoDbClick">
+                    MouseDoubleClick="OnPhotoDbClick"
+
+                    SelectedItem="{Binding SelectedPhoto}">
+                    <!--^^^^^^^^^^^^^ czerwona ramka -->
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel Orientation="Horizontal"/>
@@ -50,7 +48,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                            <Image Source="{Binding Path}" Height="Auto" Width="{Binding ElementName=ZoomSlider, Path='Value'}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Stretch="UniformToFill" Margin="0 5 5 0" />
+                            <Image Source="{Binding Path}" Height="{Binding ElementName=ZoomSlider, Path='Value'}" Width="{Binding ElementName=ZoomSlider, Path='Value'}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Stretch="UniformToFill" Margin="0 5 5 0" />
                             <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
                         </StackPanel>
                     </DataTemplate>

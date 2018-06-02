@@ -16,6 +16,12 @@ namespace BD_client.Domain
         {
             DirectoryInfo = new DirectoryInfo(path);
             Photos = new List<Photo>();
+        }
+        public PhotoCollection(string path, List<Photo> photos)
+        {
+            DirectoryInfo = new DirectoryInfo(path);
+            Photos = photos;
+            Update();
         }                
         public void Update()
         {
@@ -51,6 +57,7 @@ namespace BD_client.Domain
             }
 
         }
+        //TODO: tego sie pozbyc
         public void DisplayAll()
         {
             ClearItems();

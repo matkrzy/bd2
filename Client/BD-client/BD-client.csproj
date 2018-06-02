@@ -132,6 +132,7 @@
     </Compile>
     <Compile Include="Services\Base\BaseService.cs" />
     <Compile Include="Services\CategoryService.cs" />
+    <Compile Include="Services\ImageService.cs" />
     <Compile Include="Services\PhotoService.cs" />
     <Compile Include="ViewModels\AddPhotosPageViewModel.cs" />
     <Compile Include="ViewModels\CategoriesPageViewModel.cs" />

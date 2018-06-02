@@ -75,6 +75,8 @@ namespace BD_client.Domain
             }
         }
 
+
+        #region Piotrek
         public static async Task<HttpResponseMessage> GetAsync(string url)
         {
             var baseUri = new Uri(MainWindow.MainVM.BaseUrl);
@@ -99,6 +101,8 @@ namespace BD_client.Domain
                 return await client.PostAsync(url, stringContent);
             }
         }
+
+
 
         public static async Task<HttpResponseMessage> DeleteAsync(string url, object content = null)
         {
@@ -138,11 +142,13 @@ namespace BD_client.Domain
                 return await client.PutAsync(url, stringContent);
             }
         }
+        #endregion
 
-        public static async Task PostImage(string url, string fileName, Stream value)
+        public static async Task<bool> PostFile(string url, string pathToFile, string fileName)
         {
-            HttpContent fileStreamContent = new StreamContent(value);
-            var baseAddress = new Uri(url);
+            var reader = File.Open(pathToFile, FileMode.Open);
+            var fileStreamContent = new StreamContent(reader);
+            var baseAddress = new Uri(MainWindow.MainVM.BaseUrl);
             var cookieContainer = new CookieContainer();
             using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
             using (var formData = new MultipartFormDataContent())
@@ -151,10 +157,7 @@ namespace BD_client.Domain
                 cookieContainer.Add(baseAddress, new Cookie("JWT", JWT));
                 formData.Add(fileStreamContent, "file", fileName);
                 var response = await client.PostAsync(url, formData);
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new Exception("Photo not added");
-                }
+                return response.IsSuccessStatusCode;
             }
         }
 
