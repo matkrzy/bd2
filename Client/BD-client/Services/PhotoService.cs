@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using BD_client.Data.Photos;
 using System.IO;
 using BD_client.Services.Base;
+using BD_client.Domain.Enums;
 
 namespace BD_client.Services
 {
@@ -34,6 +35,15 @@ namespace BD_client.Services
             var dictionary = JsonConvert.DeserializeObject<Dictionary<string, int>>(content);
             //return await BaseService.PostAsync("api/v1/photos", body);
             return dictionary["id"];
+        }
+
+        public static async Task<List<Photo>> GetPublicPhotos(PublicPhotoType tab, int currentPage, int photosPerPage)
+        {
+            var type = tab.ToString().ToLower();
+            var beg = currentPage * photosPerPage;
+            var end = beg + photosPerPage;
+            return await BaseService.GetAsync<List<Photo>>($"api/v1/photos/public/{type}/{beg}/{end}");
+
         }
 
     }

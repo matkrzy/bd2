@@ -34,12 +34,9 @@ namespace BD_client.Domain
                     var photo = Photos.FirstOrDefault(x => x.Id == photoId);
                     if(photo != null)
                     {
-                        Add(new Photo
-                        {
-                            Id = photoId,
-                            Path = fileInfo.FullName,
-                            Name = photo.Name
-                        });
+                        //TODO:
+                        photo.Path = fileInfo.FullName;
+                        Add(photo);
                     }
                 }
             }
