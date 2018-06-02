@@ -26,8 +26,11 @@ namespace BD_client.ViewModels
             dialogCoordinator = instance;
             var basePath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + "//Img//public";
             HotPhotos = new PhotoCollection(basePath + "//hot");
+            HotPhotos.DisplayAll();
             TrendingPhotos = new PhotoCollection(basePath + "//trending");
+            TrendingPhotos.DisplayAll();
             FreshPhotos = new PhotoCollection(basePath + "//fresh");
+            FreshPhotos.DisplayAll();
             LikeCmd = new RelayCommand(x => Like());
         }
 

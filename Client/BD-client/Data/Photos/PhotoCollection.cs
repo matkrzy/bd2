@@ -8,12 +8,11 @@ using System.Windows;
 
 namespace BD_client.Domain
 {
-    //TODO: PhotoCollectionv2
-    public class PhotoCollectionv2 : ObservableCollection<Photo>
+    public class PhotoCollection : ObservableCollection<Photo>
     {
         public List<Photo> Photos { get; set; }
         public DirectoryInfo DirectoryInfo { get; set; }
-        public PhotoCollectionv2(string path)
+        public PhotoCollection(string path)
         {
             DirectoryInfo = new DirectoryInfo(path);
             Photos = new List<Photo>();
@@ -52,30 +51,13 @@ namespace BD_client.Domain
             }
 
         }
-    }
-
-    [Obsolete]
-    public class PhotoCollection : ObservableCollection<Photo>
-    {
-        private DirectoryInfo Directory;
-        public PhotoCollection()
-        {
-            var path = System.IO.Directory.GetCurrentDirectory() + @"\..\..\tmp";
-            Directory = new DirectoryInfo(path);
-            Update();
-        }
-        public PhotoCollection(string path)
-        {
-            Directory = new DirectoryInfo(path);
-            Update();
-        }
-        private void Update()
+        public void DisplayAll()
         {
             ClearItems();
             try
             {
                 //TODO:
-                foreach (var fileInfo in Directory.GetFiles("*.jpg"))
+                foreach (var fileInfo in DirectoryInfo.GetFiles("*.jpg"))
                 {
                     Add(new Photo(fileInfo.FullName, 0));
                 }
@@ -85,32 +67,5 @@ namespace BD_client.Domain
                 MessageBox.Show($"An Error Occured: {e.Message}");
             }
         }
-    }
-
-    [Obsolete]
-    public class TemporaryPhotoCollection : ObservableCollection<string>
-    {
-        private DirectoryInfo Directory;
-        public TemporaryPhotoCollection(string path)
-        {
-            Directory = new DirectoryInfo(path);
-            Update();
-        }
-        private void Update()
-        {
-            ClearItems();
-            try
-            {
-                foreach (var fileInfo in Directory.GetFiles("*.jpg"))
-                {
-                    Add(fileInfo.FullName);
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show($"An Error Occured: {e.Message}");
-            }
-        }
-
     }
 }

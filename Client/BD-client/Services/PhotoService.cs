@@ -37,7 +37,9 @@ namespace BD_client.Services
                 }
             }
             MainWindow.MainVM.Photos = photosDecription;
-            return new PhotoCollection(destination);
+            var collection = new PhotoCollection(destination);
+            collection.DisplayAll();
+            return collection;
         }        
 
         public static async Task<List<Photo>> GetUsersPhotosByCategoriesIds(bool all, params int[] categoriesIds)

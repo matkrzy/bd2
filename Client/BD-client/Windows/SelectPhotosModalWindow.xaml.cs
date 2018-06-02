@@ -20,13 +20,13 @@ namespace BD_client.Windows
     /// </summary>
     public partial class SelectPhotosModalWindow : Window
     {
-        private PhotoCollectionv2 Photos { get; set; }
+        private PhotoCollection Photos { get; set; }
 
         public SelectPhotosModalWindow(IEnumerable<int> alreadyAssignedPhotosIds)
         {
             InitializeComponent();
             var path = System.IO.Directory.GetCurrentDirectory() + @"\..\..\tmp\own";
-            Photos = new PhotoCollectionv2(path);
+            Photos = new PhotoCollection(path);
             Photos.Update(alreadyAssignedPhotosIds);
             DataContext = Photos;      
         }
