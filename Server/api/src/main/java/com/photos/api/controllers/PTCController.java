@@ -33,6 +33,7 @@ public class PTCController {
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
+    // TODO: 2018-06-02 DELETE
     @ApiOperation(value = "Updates existing assignment")
     @PutMapping("/{category}")
     public ResponseEntity setNewCategory(@RequestBody final PhotoToCategory ptc,@ApiParam(required = true, value = "new category id") @PathVariable final Category category){
