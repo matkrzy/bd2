@@ -34,5 +34,17 @@ namespace BD_client.Services
         {
             return await BaseService.PutAsync($"api/v1/categories/{category.Id}", category);
         }
+
+        public static async Task<bool> AssignPhotoToCategory(int categoryId, int photoId)
+        {
+            var body = new { photo = photoId, category = categoryId };
+            return await BaseService.PostAsync("api/v1/category", body);
+        }
+
+        public static async Task<bool> DissociatePhotoFromCategory(int categoryId, int photoId)
+        {
+            var body = new { photo = photoId, category = categoryId };
+            return await BaseService.DeleteAsync("api/v1/category", body);
+        }
     }
 }

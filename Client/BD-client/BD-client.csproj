@@ -88,6 +88,7 @@
     <Compile Include="Data\Photos\ShareState.cs" />
     <Compile Include="Data\Photos\Tag.cs" />
     <Compile Include="Data\Utils\TagDTO.cs" />
+    <Compile Include="Domain\Enums\PublicPhotoType.cs" />
     <Compile Include="Pages\LoadingPage.xaml.cs">
       <DependentUpon>LoadingPage.xaml</DependentUpon>
     </Compile>
@@ -132,6 +133,7 @@
     </Compile>
     <Compile Include="Services\Base\BaseService.cs" />
     <Compile Include="Services\CategoryService.cs" />
+    <Compile Include="Services\ImageService.cs" />
     <Compile Include="Services\PhotoService.cs" />
     <Compile Include="ViewModels\AddPhotosPageViewModel.cs" />
     <Compile Include="ViewModels\CategoriesPageViewModel.cs" />
@@ -150,6 +152,9 @@
     <Compile Include="ViewModels\SharePageViewModel.cs" />
     <Compile Include="Windows\InputTextModalWindow.xaml.cs">
       <DependentUpon>InputTextModalWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\SelectPhotosModalWindow.xaml.cs">
+      <DependentUpon>SelectPhotosModalWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -224,6 +229,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\InputTextModalWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\SelectPhotosModalWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

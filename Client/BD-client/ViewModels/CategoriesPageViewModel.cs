@@ -16,15 +16,13 @@ namespace BD_client.ViewModels
     public class CategoriesPageViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public PhotoCollectionv2 Photos { get; set; }
+        public PhotoCollection Photos { get; set; }
         public NotifyTaskCompletion<ObservableCollection<CategoryViewModel>> RootCategories { get; set; }
 
         public CategoriesPageViewModel()
         {
-            //var path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + "//Img//photos";
             var path = System.IO.Directory.GetCurrentDirectory() + @"\..\..\tmp\own";
-            Photos = new PhotoCollectionv2(path);
-            //RootCategories = new NotifyTaskCompletion<List<CategoryViewModel>>(GetUsersRootCategoryViewModels());
+            Photos = new PhotoCollection(path);
         }
 
 

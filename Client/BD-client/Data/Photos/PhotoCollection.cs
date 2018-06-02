@@ -8,56 +8,62 @@ using System.Windows;
 
 namespace BD_client.Domain
 {
-    //TODO: PhotoCollectionv2
-    public class PhotoCollectionv2 : ObservableCollection<Photo>
+    public class PhotoCollection : ObservableCollection<Photo>
     {
         public List<Photo> Photos { get; set; }
         public DirectoryInfo DirectoryInfo { get; set; }
-        public PhotoCollectionv2(string path)
+        public PhotoCollection(string path)
         {
             DirectoryInfo = new DirectoryInfo(path);
             Photos = new List<Photo>();
         }
+        public PhotoCollection(string path, List<Photo> photos)
+        {
+            DirectoryInfo = new DirectoryInfo(path);
+            Photos = photos;
+            Update();
+        }                
         public void Update()
         {
             ClearItems();
-            var filesToDisplay = new List<FileInfo>();
-            var photoIds = Photos.Select(x => x.Id);
-
             foreach (var fileInfo in DirectoryInfo.GetFiles())
             {
-                var photoId = int.Parse(Path.GetFileNameWithoutExtension(fileInfo.FullName));
-                if (photoIds.Contains(photoId))
+                int photoId;
+                if (int.TryParse(Path.GetFileNameWithoutExtension(fileInfo.FullName), out photoId))
                 {
-                    Add(new Photo(fileInfo.FullName));
+                    var photo = Photos.FirstOrDefault(x => x.Id == photoId);
+                    if(photo != null)
+                    {
+                        //TODO:
+                        photo.Path = fileInfo.FullName;
+                        Add(photo);
+                    }
                 }
             }
         }
-    }
+        public void Update(IEnumerable<int> exceptIds)
+        {
+            ClearItems();
+            foreach(var fileInfo in DirectoryInfo.GetFiles())
+            {
+                int photoId;
+                if (int.TryParse(Path.GetFileNameWithoutExtension(fileInfo.FullName), out photoId) && !exceptIds.Contains(photoId))
+                {
+                    Add(new Photo(fileInfo.FullName, photoId));
+                }
+            }
 
-    [Obsolete]
-    public class PhotoCollection : ObservableCollection<Photo>
-    {
-        private DirectoryInfo Directory;
-        public PhotoCollection()
-        {
-            var path = System.IO.Directory.GetCurrentDirectory() + @"\..\..\tmp";
-            Directory = new DirectoryInfo(path);
-            Update();
         }
-        public PhotoCollection(string path)
-        {
-            Directory = new DirectoryInfo(path);
-            Update();
-        }
-        private void Update()
+        //TODO: tego sie pozbyc
+        public void DisplayAll()
         {
             ClearItems();
             try
             {
-                foreach (var fileInfo in Directory.GetFiles("*.jpg"))
+                //TODO:
+                foreach (var fileInfo in DirectoryInfo.GetFiles("*.jpg"))
                 {
-                    Add(new Photo(fileInfo.FullName));
+                    Add(new Photo(fileInfo.FullName, 0));
                 }
             }
             catch (Exception e)
@@ -65,32 +71,5 @@ namespace BD_client.Domain
                 MessageBox.Show($"An Error Occured: {e.Message}");
             }
         }
-    }
-
-    [Obsolete]
-    public class TemporaryPhotoCollection : ObservableCollection<string>
-    {
-        private DirectoryInfo Directory;
-        public TemporaryPhotoCollection(string path)
-        {
-            Directory = new DirectoryInfo(path);
-            Update();
-        }
-        private void Update()
-        {
-            ClearItems();
-            try
-            {
-                foreach (var fileInfo in Directory.GetFiles("*.jpg"))
-                {
-                    Add(fileInfo.FullName);
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show($"An Error Occured: {e.Message}");
-            }
-        }
-
     }
 }
