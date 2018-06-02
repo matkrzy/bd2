@@ -49,7 +49,7 @@ public class ImageService {
                 return null;
             }
         }
-        return resourceLoader.getResource("file:" + UPLOAD_ROOT + "\\" + photo.getowner_email() + "\\" + photo.getPath());
+        return resourceLoader.getResource("file:" + UPLOAD_ROOT + "\\" + photo.getowner_email() + "\\" + photo.getPhotoID() + ".jpg");
     }
 
     public boolean createImage(MultipartFile file, Long id) {
@@ -64,10 +64,10 @@ public class ImageService {
                 if (photo.getPath() != null) {
                     return false;
                 }
-                photo.setPath(id + "_id_" + file.getOriginalFilename());
+                photo.setPath(id.toString());
                 photoRepository.save(photo);
 
-                Files.copy(file.getInputStream(), Paths.get(UPLOAD_ROOT + "\\" + email + "\\", id + "_id_" + file.getOriginalFilename()));
+                Files.copy(file.getInputStream(), Paths.get(UPLOAD_ROOT + "\\" + email + "\\", id.toString() + ".jpg"));
             } catch (Exception e) {
                 return false;
             }
