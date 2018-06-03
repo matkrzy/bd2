@@ -17,7 +17,6 @@ namespace BD_client.Services.Base
             return JsonConvert.DeserializeObject<T>(stringifiedJson);
         }
 
-
         public static async Task<bool> PostAsync(string path, object body)
         {
             var res = await ApiRequest.PostAsync(path, body);

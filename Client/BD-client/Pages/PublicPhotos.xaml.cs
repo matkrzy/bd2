@@ -4,6 +4,7 @@ using BD_client.Domain.Enums;
 using BD_client.Services;
 using BD_client.ViewModels;
 using MahApps.Metro.Controls.Dialogs;
+using System;
 using System.Configuration;
 using System.IO;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ namespace BD_client.Pages
         private readonly int PhotosPerPage;
         public int PhotosCount { get; set; }
         public PublicPhotosPageViewModel ViewModel;
+        private string PhotoDestination;
 
 
         public PublicPhotos()
@@ -30,69 +32,107 @@ namespace BD_client.Pages
             InitializeComponent();
 
             TabControl.SelectionChanged += async (s, e) => OnTabSelectionChanged(s, e);
+            PreviousButton.IsEnabled = false;
+            PreviousButton.Click += async (s, e) => OnProceedClick(false);
+            NextButton.Click += async (s, e) => OnProceedClick(true);
 
+            PhotoDestination = Directory.GetCurrentDirectory() + @"\..\..\tmp\public";
             CurrentPage = 0;
             CurrentTab = PublicPhotoType.Hot;
             PhotosPerPage = int.Parse(ConfigurationManager.AppSettings["PhotosPerPage"]);
-            ViewModel = new PublicPhotosPageViewModel(DialogCoordinator.Instance);
-            ViewModel.Photos = new NotifyTaskCompletion<PhotoCollection>(GetPhotos());
+            ViewModel = new PublicPhotosPageViewModel(DialogCoordinator.Instance, PhotoDestination);
             DataContext = ViewModel;
         }
 
-        private async Task<PhotoCollection> GetPhotos()
+        private async Task GetPublicPhotos()
         {
-            var destination = Directory.GetCurrentDirectory() + @"\..\..\tmp\public";
+            ClearDirectory();
+            //TODO: docelowo będzie tak
             var photos = await PhotoService.GetPublicPhotos(CurrentTab, CurrentPage, PhotosPerPage);
-            //TODO: różne typy zdjęć, nie tylko jpg
-            foreach (var photo in photos)
+            //var photos = await PhotoService.GetAllUserPhotos();
+            if (photos != null)
             {
-                var completePath = $@"{destination}\{photo.Id}.jpg";
-                if (!File.Exists(completePath))
+                ViewModel.Photos.Photos.AddRange(photos);
+                //TODO: loader
+                //start loader
+                foreach (var photo in photos)
                 {
-                    // jeżeli zdjęcie nie jest jeszcze pobrane
-                    if (!(await ImageService.DownloadImageToLocation(completePath, photo.Id)))
+                    //TODO: różne typy zdjęć, nie jedynie .jpg
+                    var completePath = $@"{PhotoDestination}\{photo.Id}.jpg";
+                    if (!File.Exists(completePath))
                     {
-                        //TODO: wyświetlić komunikat informujący o błędzie
+                        // jeżeli zdjęcie nie jest jeszcze pobrane
+                        if (!(await ImageService.DownloadImageToLocation(completePath, photo.Id)))
+                        {
+                            //TODO: wyświetlić komunikat informujący o błędzie
+                        }
                     }
                 }
             }
-            return new PhotoCollection(destination, photos);
+            //TODO:
+            //stoploader
+            ViewModel.Photos.Update();
         }
 
-        //TODO: photos synchronized odtąd
+        private async Task OnProceedClick(bool next)
+        {
+            if (next)
+            {
+                PreviousButton.IsEnabled = true;
+                CurrentPage++;
+                if (!(await CheckIfThereAreMoreToDisplay()))
+                {
+                    //Jeżeli nie ma więcej zdjęc do wyświetlenia, zablokuj przycisk
+                    NextButton.IsEnabled = false;
+                }
+            }
+            else
+            {
+                CurrentPage--;
+                //Jeżeli się cofnęliśmy to oznacza ze można przejść do przodu z powrotem
+                NextButton.IsEnabled = true;
+                if(CurrentPage == 0)
+                {
+                    //Nie ma już nic wcześniej
+                    PreviousButton.IsEnabled = false;
+                }
+            }
+            await GetPublicPhotos();
+
+            //Przescrolluj wszystko do góry
+            //HotPhotosListBox.SelectedItem = HotPhotosListBox.Items[0];
+
+            HotPhotosListBox.ScrollIntoView(HotPhotosListBox.Items[0]);
+        }
+
         private async Task OnTabSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             CurrentTab = (PublicPhotoType)TabControl.SelectedIndex;
-            //ViewModel.Photos = new NotifyTaskCompletion<PhotoCollection>(GetAllUserPhotos());
-            var photos = await PhotoService.GetAllUserPhotos();
-            ViewModel.PhotosSynchronized.Photos.Clear();
-            if (photos != null)
-            {
-                ViewModel.PhotosSynchronized.Photos.AddRange(photos);
-            }
-            ViewModel.PhotosSynchronized.Update();
+            CurrentPage = 0;
+            PreviousButton.IsEnabled = false;
+            await GetPublicPhotos();
+            NextButton.IsEnabled = await CheckIfThereAreMoreToDisplay();
         }
 
-        //TODO:
-        //tymczasowo
-        private async Task<PhotoCollection> GetAllUserPhotos()
+        private async Task<bool> CheckIfThereAreMoreToDisplay()
         {
-            var destination = Directory.GetCurrentDirectory() + @"\..\..\tmp\public";
-            var photos = await PhotoService.GetAllUserPhotos();
-            //TODO: różne typy zdjęć, nie tylko jpg
-            foreach (var photo in photos)
-            {
-                var completePath = $@"{destination}\{photo.Id}.jpg";
-                if (!File.Exists(completePath))
-                {
-                    // jeżeli zdjęcie nie jest jeszcze pobrane
-                    if (!(await ImageService.DownloadImageToLocation(completePath, photo.Id)))
-                    {
-                        //TODO: wyświetlić komunikat informujący o błędzie
-                    }
-                }
-            }
-            return new PhotoCollection(destination, photos);
+            var totalCount = await PhotoService.GetPhotosCount(true);
+            //var previousPage = (CurrentPage - 1) < 0 ? 0 : CurrentPage - 1;
+            var displayedPhotosCount = CurrentPage * PhotosPerPage + PhotosPerPage;
+            return totalCount > displayedPhotosCount;
         }
+
+        private void ClearDirectory()
+        {
+            //usunięcie wszystkich publicznych zdjęć z folderu
+            var directoryInfo = new DirectoryInfo(PhotoDestination);
+            foreach (var file in directoryInfo.GetFiles())
+            {
+                file.Delete();
+            }
+            ViewModel.Photos.Photos.Clear();
+        }
+
+
     }
 }

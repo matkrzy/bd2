@@ -46,5 +46,14 @@ namespace BD_client.Services
 
         }
 
+        public static async Task<int> GetPhotosCount(bool arePublic)
+        {
+            var shareState = arePublic ? "PUBLIC" : "PRIVATE";
+            var res = await ApiRequest.GetAsync($"api/v1/photos/count/{shareState}");
+            var content = await res.Content.ReadAsStringAsync();
+            var dictionary = JsonConvert.DeserializeObject<Dictionary<string, int>>(content);
+            return dictionary["count"];
+        }
+
     }
 }
