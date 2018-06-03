@@ -2,12 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using MahApps.Metro.Controls;
-using System.Runtime.Remoting.Contexts;
 using System.Collections.ObjectModel;
 using BD_client.Domain;
 using Newtonsoft.Json;
@@ -22,14 +17,18 @@ namespace BD_client.ViewModels
         private string _page;
         public ObservableCollection<Domain.Category> Categories { get; set; }
         public ObservableCollection<SearchFilter> SearchFilters { get; set; }
+        public ObservableCollection<Photo> PhotosResult { get; set; }
+        public List<Photo> Photos { get; set; }
         public ICommand SearchCmd { get; set; }
         public ICommand CancelCmd { get; set; }
         public ICommand CategoryCmd { get; set; }
         public ICommand DescriptionCmd { get; set; }
         public ICommand TagsCmd { get; set; }
         public ICommand ExifCmd { get; set; }
+        public ICommand RemovePhotoCmd { get; set; }
         public ICommand RemoveFilterCmd { get; set; }
         private int _categorySelectedIndex;
+        private int _dataGridPhotoSelectedIndex;
         private int _dataGridSelectedIndex;
         private String _descriptionPhrase;
         private String _exifPhrase;
@@ -39,6 +38,8 @@ namespace BD_client.ViewModels
         {
             dialogCoordinator = instance;
             Categories = new ObservableCollection<Domain.Category>();
+            Photos = MainWindow.MainVM.Photos;
+            PhotosResult = new ObservableCollection<Photo>();
             SearchFilters = new ObservableCollection<SearchFilter>();
             SearchCmd = new RelayCommand(x => ShowResults());
             CancelCmd = new RelayCommand(x => Cancel());
@@ -47,8 +48,14 @@ namespace BD_client.ViewModels
             TagsCmd = new RelayCommand(x => AddTagsFilter());
             ExifCmd = new RelayCommand(x => AddExifFilter());
             RemoveFilterCmd = new RelayCommand(x => RemoveFilter());
+            RemovePhotoCmd = new RelayCommand(x => RemovePhoto());
             GetCategories();
             CategorySelectedIndex = 0;
+        }
+
+        private void RemovePhoto()
+        {
+            PhotosResult.RemoveAt(DataGridPhotoSelectedIndex);
         }
 
         private void GetCategories()
@@ -69,10 +76,21 @@ namespace BD_client.ViewModels
                 categoriesList = serializer.Deserialize<List<Domain.Category>>(reader);
 
             }
-
+            bool repeated = false;
             foreach (var category in categoriesList)
             {
-                Categories.Add(category);
+                foreach (var displayCategory in Categories)
+                {
+                    if (displayCategory.Name.ToLower().Equals(category.Name.ToLower()))
+                    {
+                        repeated = true;
+                        break;
+                    }
+                }
+                if(!repeated)
+                    Categories.Add(category);
+
+                repeated = false;
             }
 
 
@@ -176,11 +194,338 @@ namespace BD_client.ViewModels
             }
         }
 
-
-        private async void ShowResults()
+        public int DataGridPhotoSelectedIndex
         {
-            await dialogCoordinator.ShowMessageAsync(this, "Success", "Results");
+            get
+            {
+                return _dataGridPhotoSelectedIndex;
+            }
+            set
+            {
+                _dataGridPhotoSelectedIndex = value;
+                OnPropertyChanged("DataGridPhotoSelectedIndex");
+            }
         }
+
+
+        private List<int> SearchCategories(List<int> SelectedCategoriesIds)
+        {
+            List<int> photoIndex = new List<int>();
+            List<Photo> photosToDisplay = new List<Photo>();
+            List<Photo> tmpResult = null;
+            foreach(var selectedCategory in SelectedCategoriesIds)
+            {
+                photosToDisplay.Clear();
+                string url = MainWindow.MainVM.BaseUrl + "api/v1/photos/categories/any/" + selectedCategory;
+                string response = ApiRequest.Get(url);
+                var photosFromCategory = JsonConvert.DeserializeObject<List<Photo>>(response);
+                foreach(var photo in photosFromCategory)
+                {
+                    photosToDisplay.Add(photo);
+                }
+
+                tmpResult = Intersect(tmpResult, photosToDisplay);
+
+            }
+            for (int i = 0; i < Photos.Count; i++)
+            {
+                for (int j = 0; j < tmpResult.Count; j++)
+                {
+                    if (Photos[i].Id == tmpResult[j].Id)
+                    {
+                        photoIndex.Add(i);
+                        break;
+                    }
+                }
+            }
+            return photoIndex;
+        }
+
+        private List<int> SearchTags(string searchPhrase)
+        {
+            List<int> photoIndex = new List<int>();
+            for(int i = 0; i < Photos.Count; i++)
+            {
+                for (int j = 0; j < Photos[i].Tags.Count; j++)
+                {
+                    if (Photos[i].Tags[j].Name.ToLower().Contains(searchPhrase.ToLower()))
+                    {
+                        photoIndex.Add(i);
+                    }
+                }
+            }
+
+            return photoIndex;
+        }
+
+        private List<int> SearchDescription(string searchPhrase)
+        {
+            List<int> photoIndex = new List<int>();
+            for(int i = 0; i<Photos.Count;i++)
+            {
+                if (Photos[i].Description.ToLower().Contains(searchPhrase.ToLower()))
+                    photoIndex.Add(i);
+            }
+            return photoIndex;
+        }
+
+        //private List<int> SearchExif()
+        //{
+
+        //}
+        private List<int> GetCategoriesFilters()
+        {
+            List<int> searchCategories = new List<int>();
+            foreach (var searchFilter in SearchFilters)
+            {
+                if (searchFilter.Type == "Category")
+                {
+                    foreach (var category in Categories)
+                    {
+                        if (category.Name == searchFilter.Filter)
+                        {
+                            searchCategories.Add(unchecked((int)category.Id));
+                        }
+                    }
+                }
+            }
+            if (searchCategories.Count == 0)
+                return null;
+            else
+                return searchCategories;
+        }
+
+        private List<string> GetExifFilters()
+        {
+            List<string> searchExif = new List<string>();
+            foreach (var searchFilter in SearchFilters)
+            {
+                if (searchFilter.Type == "Exif")
+                {
+                    searchExif.Add(searchFilter.Filter);
+                }
+            }
+            if (searchExif.Count == 0)
+                return null;
+            else
+                return searchExif;
+        }
+
+        private List<string> GetDescriptionFilters()
+        {
+            List<string> searchDescription = new List<string>();
+            foreach (var searchFilter in SearchFilters)
+            {
+                if (searchFilter.Type == "Description")
+                {
+                    searchDescription.Add(searchFilter.Filter);
+                }
+            }
+
+            if (searchDescription.Count == 0)
+                return null;
+            else
+                return searchDescription;
+        }
+
+        private List<string> GetTagFilters()
+        {
+            List<string> searchTag = new List<string>();
+            foreach (var searchFilter in SearchFilters)
+            {
+                if (searchFilter.Type == "Tag")
+                {
+                    searchTag.Add(searchFilter.Filter);
+                }
+            }
+            if (searchTag.Count == 0)
+                return null;
+            else
+                return searchTag;
+        }
+
+
+        private List<int> GetAllPhotoIndexCategories()
+        {
+            List<int> searchCategories = GetCategoriesFilters();
+            if (searchCategories != null)
+            {
+                List<int> photoIndexCategories = SearchCategories(searchCategories);
+                return photoIndexCategories;
+            }
+            else
+                return searchCategories;
+
+        }
+
+        private List<int> GetAllPhotoIndexTags()
+        {
+            List<int> resultPhotoIndex = null;
+            List<string> searchTag = GetTagFilters();
+            if (searchTag != null)
+            {
+                foreach (var tag in searchTag)
+                {
+                    List<int> photoIndex = SearchTags(tag);
+                    resultPhotoIndex = Intersect(resultPhotoIndex, photoIndex);
+                }
+                return resultPhotoIndex;
+            }
+            else
+                return null;
+
+
+        }
+
+        private List<int> GetAllPhotoIndexDescription()
+        {
+            List<int> resultPhotoIndex = null;
+            List<string> searchDescription = GetDescriptionFilters();
+            if (searchDescription != null)
+            {
+
+                foreach (var description in searchDescription)
+                {
+                    List<int> photoIndex = SearchDescription(description);
+                    resultPhotoIndex = Intersect(resultPhotoIndex, photoIndex);
+                }
+
+                return resultPhotoIndex;
+            }
+            else
+                return null;
+        }
+
+
+        private List<int> GetAllPhotoIndexExif()
+        {
+            List<int> resultPhotoIndex = null;
+            List<string> searchExif = GetExifFilters();
+            if (searchExif != null)
+            {
+                return resultPhotoIndex;
+            }
+            else
+                return null;
+        }
+
+
+
+        private void ShowResults()
+        {
+            PhotosResult.Clear();
+            List<int> photoIndexes = commonPart();
+            foreach (var photoIndex in photoIndexes)
+            {
+                PhotosResult.Add(Photos[photoIndex]);
+            }
+        }
+
+        private List<int> commonPart()
+        {
+            List<int> allPhotoIndexCategories = GetAllPhotoIndexCategories();
+            List<int> allPhotoIndexTags = GetAllPhotoIndexTags();
+            List<int> allPhotoIndexDescription = GetAllPhotoIndexDescription();
+            //List<int> allPhotoIndexExif = GetAllPhotoIndexExif();
+            List<int> result = null;
+
+            result = Intersect(allPhotoIndexCategories, allPhotoIndexTags);
+            result = Intersect(result, allPhotoIndexDescription);
+            //result = Intersect(result, allPhotoIndexExif);
+
+            return result;
+        }
+
+
+        private List<T> Intersect<T>(List<T> list1, List<T> list2)
+        {
+            List<T> result = new List<T>();
+            if (list1 == null && list2 == null)
+                return null;
+
+            if (list1 != null)
+            {
+                if (list1.Count != 0 && list2 == null)
+                {
+                    foreach (var item in list1)
+                    {
+                        result.Add(item);
+                    }
+                    return result;
+                }
+            }
+
+            if (list2 != null)
+            {
+                if (list2.Count != 0 && list1 == null)
+                {
+                    foreach (var item in list2)
+                    {
+                        result.Add(item);
+                    }
+                    return result;
+                }
+            }
+
+
+            if (list1.Count == 0 && list2.Count == 0)
+            {
+                foreach (var item in list1)
+                {
+                    result.Add(item);
+                }
+                return result;
+            }
+
+            if (list1.Count != 0 && list2.Count == 0)
+                return result;
+
+            if (list2.Count != 0 && list1.Count == 0)
+                return result;
+
+            foreach (var item1 in list1)
+            {
+                foreach (var item2 in list2)
+                {
+                    if(item1 is int)
+                    {
+                        if(IsIntEqual(Convert.ToInt32(item1), Convert.ToInt32(item2))){
+                            if (!result.Contains(item1))
+                                result.Add(item1);
+                        }
+
+                    }
+                    if (item1 is Photo)
+                    {
+                        if (IsPhotoEqual((Photo)(object)item1, (Photo)(object)item2))
+                        {
+                            if (!result.Contains(item1))
+                                result.Add(item1);
+                        }
+                    }
+
+                }
+            }
+
+            return result;
+
+        }
+
+        private bool IsIntEqual(int item1, int item2)
+        {
+            if (item1 == item2)
+                return true;
+            else
+                return false;
+        }
+        private bool IsPhotoEqual(Photo item1, Photo item2)
+        {
+            if (item1.Id == item2.Id)
+                return true;
+            else
+                return false;
+        }
+
 
         private void Cancel()
         {
