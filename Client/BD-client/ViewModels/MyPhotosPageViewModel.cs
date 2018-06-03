@@ -24,7 +24,6 @@ namespace BD_client.ViewModels
         public NotifyTaskCompletion<PhotoCollection> Photos { get; set; }
 
         private IDialogCoordinator dialogCoordinator;
-        private int _selectedPhoto;
 
 
         public string Page
@@ -37,19 +36,6 @@ namespace BD_client.ViewModels
             {
                 _page = value;
                 OnPropertyChanged("Page");
-            }
-        }
-
-        public int SelectedPhoto
-        {
-            get
-            {
-                return _selectedPhoto;
-            }
-            set
-            {
-                _selectedPhoto = value;
-                OnPropertyChanged("SelectedPhoto");
             }
         }
 
