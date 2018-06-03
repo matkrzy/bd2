@@ -40,10 +40,6 @@ namespace BD_client.Domain
         [Browsable(false)]
         [JsonProperty("tags")]
         public List<Tag> Tags { get; set; }
-
-        [Browsable(false)]
-        public ExifMetadata ExifMetadata { get; set; }
-
         [Browsable(false)]
         public int LikeCount { get { return 45; } }
 
@@ -62,8 +58,6 @@ namespace BD_client.Domain
             Id = id;
             Path = path;
             Uri = new Uri(path);
-            //Image = BitmapFrame.Create(Uri);
-            ExifMetadata = new ExifMetadata(Uri);
 
         }
 

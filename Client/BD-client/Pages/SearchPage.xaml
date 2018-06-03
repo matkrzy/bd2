@@ -78,6 +78,14 @@
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Edit" Click="OnEditPhoto"/>
+                        <MenuItem Header="Download" Click="OnDownloadPhoto"/>
+                        <MenuItem Header="Remove" Click="OnRemovePhoto"/>
+                        <MenuItem Header="Share" Click="OnSharePhoto"/>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
             </ListBox>
         </GroupBox>
         <Slider Name="ZoomSlider" 

@@ -1,4 +1,5 @@
-﻿using BD_client.Domain;
+﻿using BD_client.Data.Photos;
+using BD_client.Domain;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,6 +35,11 @@ namespace BD_client.Services
         public static async Task<bool> UploadImage(int id, string pathToImage, string imageName)
         {
             return await ApiRequest.PostFile($"api/v1/images/{id}", pathToImage, imageName);
+        }
+
+        public static ExifMetadata GetPhotoMetadata(string imagePath)
+        {
+            return new ExifMetadata(imagePath);
         }
     }
 }

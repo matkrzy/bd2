@@ -91,6 +91,9 @@
     <Compile Include="Data\Photos\Tag.cs" />
     <Compile Include="Data\Utils\TagDTO.cs" />
     <Compile Include="Domain\Enums\PublicPhotoType.cs" />
+    <Compile Include="Pages\HelpPage.xaml.cs">
+      <DependentUpon>HelpPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\LoadingPage.xaml.cs">
       <DependentUpon>LoadingPage.xaml</DependentUpon>
     </Compile>
@@ -142,6 +145,7 @@
     <Compile Include="ViewModels\Category\CategoryViewModel.cs" />
     <Compile Include="ViewModels\DownloadPageViewModel.cs" />
     <Compile Include="ViewModels\EditPhotoPageViewModel.cs" />
+    <Compile Include="ViewModels\HelpPageViewModel.cs" />
     <Compile Include="ViewModels\LogInPageViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\MyPhotosPageViewModel.cs" />
@@ -183,6 +187,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\EditPhotoPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\HelpPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

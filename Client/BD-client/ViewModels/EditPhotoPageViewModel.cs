@@ -83,22 +83,18 @@ namespace BD_client.ViewModels
             MainWindow.MainVM.SelectedIndex = -1;
         }
 
-        private bool DeleteAllTags(List<Tag> tags)
+        private bool DeleteAllTags(long photoID)
         {
-            bool deletedAll = true;
-            foreach(var tag in tags)
+            string url = MainWindow.MainVM.BaseUrl + "api/v1/tags/all/" + photoID;
+            try
             {
-                string url = MainWindow.MainVM.BaseUrl + "api/v1/tags/" + tag.Id;
-                try
-                {
-                    ApiRequest.Delete(url);
-                }
-                catch(Exception)
-                {
-                    deletedAll = false;
-                }
+                ApiRequest.Delete(url);
+                return true;
             }
-            return deletedAll;
+            catch(Exception)
+            {
+                return false;
+            }
         }
 
         private void EditSinglePhoto()    
@@ -124,7 +120,7 @@ namespace BD_client.ViewModels
             }
 
             //Delete old tags
-            if (!DeleteAllTags(Photos[SelectedIndex].Tags))
+            if (!DeleteAllTags(Photos[SelectedIndex].Id))
                 throw new Exception();
             //Post tags
             url = MainWindow.MainVM.BaseUrl + "api/v1/tags";
@@ -201,7 +197,7 @@ namespace BD_client.ViewModels
                 }
 
                 //Delete old tags
-                if (!DeleteAllTags(Photos[index].Tags))
+                if (!DeleteAllTags(Photos[index].Id))
                     return photoIndex;
 
                 //Post tags
