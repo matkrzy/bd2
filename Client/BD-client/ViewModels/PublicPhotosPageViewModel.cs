@@ -1,9 +1,13 @@
-﻿using BD_client.Data.Photos;
+﻿using BD_client.Common;
+using BD_client.Data.Photos;
 using BD_client.Domain;
+using BD_client.Domain.Enums;
+using BD_client.Services;
 using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,6 +19,14 @@ namespace BD_client.ViewModels
     public class PublicPhotosPageViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged = null;
+
+
+        //public PhotoCollection Photos { get; set; }
+
+        public NotifyTaskCompletion<PhotoCollection> Photos { get; set; }
+
+        public PhotoCollection PhotosSynchronized { get; set; }
+
         public PhotoCollection HotPhotos { get; set; }
         public PhotoCollection TrendingPhotos { get; set; }
         public PhotoCollection FreshPhotos { get; set; }
@@ -23,13 +35,15 @@ namespace BD_client.ViewModels
 
         public PublicPhotosPageViewModel(IDialogCoordinator instance)
         {
+            var path = System.IO.Directory.GetCurrentDirectory() + @"\..\..\tmp\public";
+            PhotosSynchronized = new PhotoCollection(path);
+
             dialogCoordinator = instance;
-            var basePath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + "//Img//public";
-            HotPhotos = new PhotoCollection(basePath + "//hot");
-            TrendingPhotos = new PhotoCollection(basePath + "//trending");
-            FreshPhotos = new PhotoCollection(basePath + "//fresh");
+
             LikeCmd = new RelayCommand(x => Like());
         }
+
+
 
         private async void Like()
         {

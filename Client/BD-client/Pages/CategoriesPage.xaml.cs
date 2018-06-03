@@ -57,9 +57,12 @@ namespace BD_client.Pages
 
             AddCategoryContextMenuItem.Click += async (s, e) => OnAddContextMenuButtonClick(s, e);
             RenameCategoryContextMenuItem.Click += async (s, e) => OnRenameContextMenuButtonClick(s, e);
-            RemoveCategpryContextMenuItem.Click += async (s, e) => OnRemoveContextMenuButtonClick(s, e);
-            MoveCategpryContextMenuItem.Click += (s, e) => OnMoveContextMenuButtonClick(s, e);
+            RemoveCategoryContextMenuItem.Click += async (s, e) => OnRemoveContextMenuButtonClick(s, e);
+            MoveCategoryContextMenuItem.Click += (s, e) => OnMoveContextMenuButtonClick(s, e);
             PasteCategoryContextMenuItem.Click += async (s, e) => OnPasteContextMenuButtonClick(s, e);
+            AssignToCategoryContextMenuItem.Click += async (s, e) => OnAssignToCategoryContextMenuButtonClick(s, e);
+
+            DissociatePhotosContextMenuItem.Click += async (s, e) => OnDissociatePhotosContextMenuItemClick(s, e);
 
             PasteCategoryContextMenuItem.IsEnabled = false;
 
@@ -70,7 +73,7 @@ namespace BD_client.Pages
 
         private void ResetPage(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Escape)
+            if (e.Key == Key.Escape)
             {
                 PasteCategoryContextMenuItem.IsEnabled = false;
                 CategoryToMove = null;
@@ -88,7 +91,6 @@ namespace BD_client.Pages
         /// </summary>
         private async Task OnSelectCategory(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-
             var selectedNode = e.NewValue as CategoryViewModel;
             var children = await CategoryService.GetCategoryChildren(selectedNode.Id);
 
@@ -113,13 +115,7 @@ namespace BD_client.Pages
             }
             else
             {
-                var photosToDisplay = await PhotoService.GetUsersPhotosByCategoriesIds(true, selectedNode.Id);
-                ViewModel.Photos.Photos.Clear();
-                if (photosToDisplay != null)
-                {
-                    ViewModel.Photos.Photos.AddRange(photosToDisplay);
-                }
-                ViewModel.Photos.Update();
+                await ReloadCategoryPhotos(selectedNode.Id);
             }
         }
         /// <summary>
@@ -160,14 +156,6 @@ namespace BD_client.Pages
                 AllButton.Content = "All";
             }
             All = !All;
-        }
-        /// <summary>
-        /// Wyczyść zaznaczone kategorie
-        /// </summary>
-        private void OnClearButtonClick(object sender, RoutedEventArgs e)
-        {
-            SelectedCategoriesIds.Clear();
-            SelectedCategories.Items.Clear();
         }
         /// <summary>
         /// Wyszukaj zdjęcia należące do zaznaczonych kategorii
@@ -281,7 +269,7 @@ namespace BD_client.Pages
                     Name = CategoryToMove.Name,
                     ParentId = null
                 };
-                if(await CategoryService.EditCategory(category))
+                if (await CategoryService.EditCategory(category))
                 {
                     await ReloadCategories();
                     AddRootCategoryButton.Content = "Add";
@@ -330,7 +318,7 @@ namespace BD_client.Pages
             try
             {
                 var categories = await CategoryService.GetUsersRootCategories();
-                if(categories != null)
+                if (categories != null)
                 {
                     var list = categories.Select(x => new CategoryViewModel(x)).ToList();
                     return new ObservableCollection<CategoryViewModel>(list);
@@ -342,6 +330,58 @@ namespace BD_client.Pages
             {
                 throw;
             }
+        }
+
+        private async Task OnAssignToCategoryContextMenuButtonClick(object sender, RoutedEventArgs e)
+        {
+            var selectedNode = Categories.SelectedItem as CategoryViewModel;
+            if (selectedNode != null)
+            {
+                var alreadyAssignedPhotosIds = ViewModel.Photos.Photos.Select(x => x.Id);
+                var selectPhotosModalWindow = new SelectPhotosModalWindow(alreadyAssignedPhotosIds);
+                if (selectPhotosModalWindow.ShowDialog() == true)
+                {
+                    var selectedPhotosIds = selectPhotosModalWindow.SelectedPhotosIds;
+                    foreach (var selectedPhotoId in selectedPhotosIds)
+                    {
+                        if(!(await CategoryService.AssignPhotoToCategory(selectedNode.Id, selectedPhotoId)))
+                        {
+                            ///TODO: wyświetlić komunikat o niepowodzeniu
+                        }
+                    }
+                    //Przeładowanie zdjęć w kategorii
+                    await ReloadCategoryPhotos(selectedNode.Id);
+                }
+            }
+        }
+
+        private async Task ReloadCategoryPhotos(int categoryId)
+        {
+            var photosToDisplay = await PhotoService.GetUsersPhotosByCategoriesIds(true, categoryId);
+            ViewModel.Photos.Photos.Clear();
+            if (photosToDisplay != null)
+            {
+                ViewModel.Photos.Photos.AddRange(photosToDisplay);
+            }
+            ViewModel.Photos.Update();
+        }
+
+        private async Task OnDissociatePhotosContextMenuItemClick(object sender, RoutedEventArgs e)
+        {
+            var selectedCategory = Categories.SelectedItem as CategoryViewModel;
+            var selectedPhotos = CategoryPhotosListBox.SelectedItems.Cast<Photo>();
+
+            if(selectedCategory != null && selectedPhotos != null)
+            {
+                foreach (var photo in selectedPhotos)
+                {
+                    if (!(await CategoryService.DissociatePhotoFromCategory(selectedCategory.Id, photo.Id)))
+                    {
+                        ///TODO: wyświetlić komunikat o niepowodzeniu
+                    }
+                }
+                await ReloadCategoryPhotos(selectedCategory.Id);
+            }           
         }
     }
 }

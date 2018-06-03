@@ -16,6 +16,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using Newtonsoft.Json;
 using System.IO;
+using BD_client.Services;
 
 namespace BD_client.ViewModels
 {
@@ -75,29 +76,12 @@ namespace BD_client.ViewModels
             var photoIndex = new List<int>();
             for (int i = 0; i < Photos.Count; i++)
             {
-                var values = new
+                //TODO: co z photoState i shareState ?
+                //var addedPhotoId = await PhotoService.AddPhoto(Photos[i].Name, Photos[i].Description, Photos[i].PhotoState, Photos[i].ShareState);
+                var addedPhotoId = await PhotoService.AddPhoto(Photos[i].Name, Photos[i].Description, PhotoState.ACTIVE, ShareState.PRIVATE);
+                if (await ImageService.UploadImage(addedPhotoId, Photos[i].Path, Photos[i].Name))
                 {
-                    name = Photos[i].Name,
-                    photoState = Photos[i].PhotoState.ToString(),                    
-                    shareState= Photos[i].ShareState.ToString()
-                };
-
-                var json = JsonConvert.SerializeObject(values, Formatting.Indented);
-                var photosUrl = MainWindow.MainVM.BaseUrl + "api/v1/photos";
-                var file = Photos[i].Path;
-                var reader = File.Open(file, FileMode.Open);
-                var imagesUrl = MainWindow.MainVM.BaseUrl + "api/v1/images";
-                try
-                {
-                    ApiRequest.Post(photosUrl, json);
-                    await ApiRequest.PostImage(imagesUrl, Photos[i].Name, reader);
-                    ///TODO:
-                    //Remove Photo from database if PostImage will end with error
                     photoIndex.Add(i);
-                }
-                catch (Exception e)
-                {
-
                 }
             }
             return photoIndex;

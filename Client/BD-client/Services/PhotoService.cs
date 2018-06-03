@@ -8,37 +8,16 @@ using Newtonsoft.Json;
 using BD_client.Data.Photos;
 using System.IO;
 using BD_client.Services.Base;
+using BD_client.Domain.Enums;
 
 namespace BD_client.Services
 {
     public static class PhotoService
-    {
-
-        /// <summary>
-        /// To jest do poprawy
-        /// </summary>
-        /// <returns></returns>
-        public static async Task<PhotoCollection> GetUserPhotos()
+    {  
+        public static async Task<List<Photo>> GetAllUserPhotos()
         {
-            var destination = System.IO.Directory.GetCurrentDirectory() + @"\..\..\tmp\own";
-            var response = await ApiRequest.GetAsync("api/v1/photos");
-            var stringifiedJson = await response.Content.ReadAsStringAsync();
-
-            var photosDecription = JsonConvert.DeserializeObject<List<Photo>>(stringifiedJson);
-            foreach (var photo in photosDecription)
-            {
-                var res = await ApiRequest.GetAsync($"/api/v1/images/{photo.Id}");
-                var completePath = $@"{destination}\{photo.Name}";
-                if (!File.Exists(completePath))
-                {
-                    var fileStream = new FileStream(completePath, FileMode.Create, FileAccess.Write, FileShare.None);
-                    await res.Content.CopyToAsync(fileStream);
-                    fileStream.Close();
-                }
-            }
-            MainWindow.MainVM.Photos = photosDecription;
-            return new PhotoCollection(destination);
-        }        
+            return await BaseService.GetAsync<List<Photo>>("api/v1/photos");
+        }
 
         public static async Task<List<Photo>> GetUsersPhotosByCategoriesIds(bool all, params int[] categoriesIds)
         {
@@ -46,6 +25,25 @@ namespace BD_client.Services
             var mode = all ? "all" : "any";
             var path = $"api/v1/photos/categories/{mode}/{categories}";
             return await BaseService.GetAsync<List<Photo>>(path);
+        }
+
+        public static async Task<int> AddPhoto(string name, string description, PhotoState photoState, ShareState shareState)
+        {
+            var body = new { name = name, description = description, photoState = photoState.ToString(), shareState = shareState.ToString() };
+            var res = await ApiRequest.PostAsync("api/v1/photos", body);
+            var content = await res.Content.ReadAsStringAsync();
+            var dictionary = JsonConvert.DeserializeObject<Dictionary<string, int>>(content);
+            //return await BaseService.PostAsync("api/v1/photos", body);
+            return dictionary["id"];
+        }
+
+        public static async Task<List<Photo>> GetPublicPhotos(PublicPhotoType tab, int currentPage, int photosPerPage)
+        {
+            var type = tab.ToString().ToLower();
+            var beg = currentPage * photosPerPage;
+            var end = beg + photosPerPage;
+            return await BaseService.GetAsync<List<Photo>>($"api/v1/photos/public/{type}/{beg}/{end}");
+
         }
 
     }

@@ -43,7 +43,7 @@ namespace BD_client.ViewModels
         {
             dialogCoordinator = instance;
             var path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + "//Img//photos";
-            Photos = new NotifyTaskCompletion<PhotoCollection>(PhotoService.GetUserPhotos());
+            Photos = new NotifyTaskCompletion<PhotoCollection>(GetAllUserPhotos());
         }
 
 
@@ -51,6 +51,27 @@ namespace BD_client.ViewModels
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propName));
+        }
+
+        private async Task<PhotoCollection> GetAllUserPhotos()
+        {
+            var destination = Directory.GetCurrentDirectory() + @"\..\..\tmp\own";
+            var photos = await PhotoService.GetAllUserPhotos();
+            MainWindow.MainVM.Photos = photos;
+            //TODO: różne typy zdjęć, nie tylko jpg
+            foreach (var photo in photos)
+            {
+                var completePath = $@"{destination}\{photo.Id}.jpg";
+                if (!File.Exists(completePath))
+                {
+                    // jeżeli zdjęcie nie jest jeszcze pobrane
+                    if (!(await ImageService.DownloadImageToLocation(completePath, photo.Id)))
+                    {
+                        //TODO: wyświetlić komunikat informujący o błędzie
+                    }
+                }
+            }
+            return new PhotoCollection(destination, photos);
         }
 
 

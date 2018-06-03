@@ -430,9 +430,12 @@ namespace BD_client.ViewModels
         {
             PhotosResult.Clear();
             List<int> photoIndexes = commonPart();
-            foreach (var photoIndex in photoIndexes)
+            if (photoIndexes != null)
             {
-                PhotosResult.Add(Photos[photoIndex]);
+                foreach (var photoIndex in photoIndexes)
+                {
+                    PhotosResult.Add(Photos[photoIndex]);
+                }
             }
         }
 
@@ -468,6 +471,8 @@ namespace BD_client.ViewModels
                     }
                     return result;
                 }
+                if (list1.Count == 0 && list2 == null)
+                    return result;
             }
 
             if (list2 != null)
@@ -480,6 +485,8 @@ namespace BD_client.ViewModels
                     }
                     return result;
                 }
+                if (list2.Count == 0 && list1 == null)
+                    return result;
             }
 
 

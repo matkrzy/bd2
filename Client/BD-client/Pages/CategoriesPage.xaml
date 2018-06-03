@@ -40,7 +40,6 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="155"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="150"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -57,17 +56,18 @@
                 <ContextMenu>
                     <MenuItem Name="AddCategoryContextMenuItem" Header="Add"/>
                     <MenuItem Name="RenameCategoryContextMenuItem" Header="Rename"/>
-                    <MenuItem Name="RemoveCategpryContextMenuItem" Header="Remove"/>
-                    <MenuItem Name="MoveCategpryContextMenuItem" Header="Move"/>
+                    <MenuItem Name="RemoveCategoryContextMenuItem" Header="Remove"/>
+                    <MenuItem Name="MoveCategoryContextMenuItem" Header="Move"/>
+                    <MenuItem Name="AssignToCategoryContextMenuItem" Header="Assign"/>
                     <MenuItem Name="PasteCategoryContextMenuItem" Header="Paste"/>
                 </ContextMenu>
             </TreeView.ContextMenu>
         </TreeView>
-        <ListBox Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Width="400"
-                    ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+        <ListBox Grid.Column="1" Grid.Row="0" Grid.RowSpan="3" Width="Auto"
+                    ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                     HorizontalAlignment="Left"
                     IsSynchronizedWithCurrentItem="True"
-                    x:Name="MyPhotosListBox" 
+                    Name="CategoryPhotosListBox" 
                     ItemsSource="{Binding Photos}"
                     SelectionMode="Extended"
                     MouseDoubleClick="OnPhotoDbClick">
@@ -79,7 +79,7 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                        <Image Source="{Binding Path}" Height="Auto" Width="{Binding Value, ElementName=ZoomSlider}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Stretch="UniformToFill" Margin="0 5 5 0" />
+                        <Image Source="{Binding Path}" Height ="{Binding Value, ElementName=ZoomSlider}" Width="{Binding Value, ElementName=ZoomSlider}" HorizontalAlignment="Stretch" VerticalAlignment="Top" Stretch="UniformToFill" Margin="0 5 5 0" />
                         <TextBlock Text="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
                     </StackPanel>
                 </DataTemplate>
@@ -89,6 +89,7 @@
                     <MenuItem Header="Edit" Click="OnEditPhoto"/>
                     <MenuItem Header="Download" Click="OnDownloadPhoto"/>
                     <MenuItem Header="Remove" Click="OnRemovePhoto"/>
+                    <MenuItem Name="DissociatePhotosContextMenuItem" Header="Dissociate"/>
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>
@@ -101,31 +102,10 @@
                 Style="{DynamicResource FlatSlider}"
                 SmallChange="5"
                 LargeChange="20" Grid.RowSpan="2" />
-
-        <!-- Metadata Panel -->
-        <GroupBox Grid.Column="2" Grid.Row="0" BorderThickness="0" Grid.RowSpan="2" >
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                <StackPanel>
-                    <Label Style="{StaticResource MetadataHeader}" Content="Date Image Taken:"/>
-                    <Label Content="2012-06-22 16:14:14" />
-                    <Label Style="{StaticResource MetadataHeader}" Content="Camera Model:"/>
-                    <Label Content="Canon EOS 1300D" />
-                    <Label Style="{StaticResource MetadataHeader}" Content="Width:"/>
-                    <Label Content="17000" />
-                    <Label Style="{StaticResource MetadataHeader}" Content="Height:"/>
-                    <Label Content="25000" />
-                </StackPanel>
-            </ScrollViewer>
-        </GroupBox>
-        <CheckBox Name="EnableSearching" Content="Search" HorizontalAlignment="Left" Margin="86,25,0,0" VerticalAlignment="Top" Grid.Row="1"/>
-
-        <Button Name="AddRootCategoryButton" Content="Add" HorizontalAlignment="Left" Margin="6,21,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" />
-
+        <CheckBox Name="EnableSearching" Content="Search" HorizontalAlignment="Left" Margin="79,25,0,0" VerticalAlignment="Top" Grid.Row="1" Width="66"/>
+        <Button Name="AddRootCategoryButton" Content="Add" HorizontalAlignment="Left" Margin="10,21,0,0" Grid.Row="1" VerticalAlignment="Top" Width="64" />
         <ComboBox Name="SelectedCategories" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Top" Width="90" Margin="6,3,0,0" IsEnabled="{Binding ElementName=EnableSearching, Path=IsChecked}"/>
-        <Button Name="SearchButton" Content="Search" HorizontalAlignment="Left" Margin="56,35,0,0" Grid.Row="2" VerticalAlignment="Top" Width="89" Height="13" IsEnabled="{Binding ElementName=EnableSearching, Path=IsChecked}"/>
-        <Button Content="Clear" HorizontalAlignment="Left" Margin="6,35,0,0" Grid.Row="2" VerticalAlignment="Top" Width="45" IsEnabled="{Binding ElementName=EnableSearching, Path=IsChecked}" Click="OnClearButtonClick"/>
-        <Button Name="AllButton" Content="ALL" HorizontalAlignment="Left" Margin="101,3,0,0" Grid.Row="2" VerticalAlignment="Top" Width="44" IsEnabled="{Binding ElementName=EnableSearching, Path=IsChecked}" Click="OnAllButtonClick"/>
-
-
+        <Button Name="SearchButton" Content="Search" HorizontalAlignment="Left" Margin="56,34,0,0" Grid.Row="2" VerticalAlignment="Top" Width="89" Height="13" IsEnabled="{Binding ElementName=EnableSearching, Path=IsChecked}"/>
+        <Button Name="AllButton" Content="ALL" HorizontalAlignment="Left" Margin="6,34,0,0" Grid.Row="2" VerticalAlignment="Top" Width="44" IsEnabled="{Binding ElementName=EnableSearching, Path=IsChecked}" Click="OnAllButtonClick"/>
     </Grid>
 </Page>

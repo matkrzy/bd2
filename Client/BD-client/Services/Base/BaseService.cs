@@ -24,9 +24,9 @@ namespace BD_client.Services.Base
             return res.IsSuccessStatusCode;
         }
 
-        public static async Task<bool> DeleteAsync(string path)
+        public static async Task<bool> DeleteAsync(string path, object body = null)
         {
-            var res = await ApiRequest.DeleteAsync(path);
+            var res = await ApiRequest.DeleteAsync(path, body);
             return res.IsSuccessStatusCode;
         }
 
