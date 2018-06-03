@@ -24,8 +24,8 @@
     </Page.Resources>
 
     <Grid>
-        <TextBox x:Name="description" Controls:TextBoxHelper.Watermark="Enter description" Text="{Binding Path=Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="77" Margin="387,251,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="233"/>
-        <TextBox x:Name="tags" Controls:TextBoxHelper.Watermark="Enter tags" Text="{Binding Path=Tags, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="77" Margin="134,251,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="216"/>
+        <TextBox x:Name="description" Controls:TextBoxHelper.Watermark="Enter description" Text="{Binding Path=Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="78" Margin="387,282,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="233"/>
+        <TextBox x:Name="tags" Controls:TextBoxHelper.Watermark="Enter tags" Text="{Binding Path=Tags, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="78" Margin="134,282,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="216"/>
         <Button x:Name="editBtn" Content="Edit" Height="50" Width="150" Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding EditCmd}" Margin="317,377,233,73"/>
         <Button x:Name="cancelBtn" Content="Cancel" Height="50" Width="150" Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding CancelCmd}" Margin="511,377,39,73"/>
 
@@ -43,5 +43,8 @@
             </DataGrid.ContextMenu>
 
         </DataGrid>
+        <Label x:Name="tagsLabel" Content="Photo's tags" HorizontalAlignment="Left" Margin="134,262,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="descriptionLabel" Content="Photo's description" HorizontalAlignment="Left" Margin="387,262,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="EditAllCheckbox" Content="Edit all photos in this list" HorizontalAlignment="Left" Margin="100,230,0,0" VerticalAlignment="Top" IsChecked="{Binding IsChecked}"/>
     </Grid>
 </Page>
