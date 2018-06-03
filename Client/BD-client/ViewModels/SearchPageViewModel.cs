@@ -411,7 +411,7 @@ namespace BD_client.ViewModels
 
 
 
-        private async void ShowResults()
+        private void ShowResults()
         {
             PhotosResult.Clear();
             List<int> photoIndexes = commonPart();
@@ -419,8 +419,6 @@ namespace BD_client.ViewModels
             {
                 PhotosResult.Add(Photos[photoIndex]);
             }
-
-            await dialogCoordinator.ShowMessageAsync(this, "Success", "Results");
         }
 
         private List<int> commonPart()
