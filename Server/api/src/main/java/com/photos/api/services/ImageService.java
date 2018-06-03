@@ -64,6 +64,7 @@ public class ImageService {
                 if (photo.getPath() != null) {
                     return false;
                 }
+                String x = file.getContentType();
                 photo.setPath(id.toString());
                 photoRepository.save(photo);
 
