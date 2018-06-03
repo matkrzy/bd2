@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using BD_client.Services;
 
 namespace BD_client.ViewModels
 {
@@ -106,7 +107,7 @@ namespace BD_client.ViewModels
             var photoIndex = new List<int>();
             for (int i = 0; i < Photos.Count; i++)
             {
-                var photosUrl = MainWindow.MainVM.BaseUrl + "api/v1/photos/"+Photos[i].Id;
+                var photosUrl = "/photos/"+Photos[i].Id;
                 try
                 {
                     RemovePhotoFromDisc(Photos[i].Name);

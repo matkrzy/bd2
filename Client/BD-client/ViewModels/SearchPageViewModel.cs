@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using BD_client.Domain;
 using Newtonsoft.Json;
 using System.IO;
+using BD_client.Services;
 
 namespace BD_client.ViewModels
 {
@@ -62,7 +63,7 @@ namespace BD_client.ViewModels
 
         private void GetCategories()
         {
-            string url = MainWindow.MainVM.BaseUrl + "api/v1/categories";
+            string url = "/categories";
             String responseContent = ApiRequest.Get(url);
             JsonTextReader reader = new JsonTextReader(new StringReader(responseContent));
             reader.SupportMultipleContent = true;
@@ -231,7 +232,7 @@ namespace BD_client.ViewModels
             foreach(var selectedCategory in SelectedCategoriesIds)
             {
                 photosToDisplay.Clear();
-                string url = MainWindow.MainVM.BaseUrl + "api/v1/photos/categories/any/" + selectedCategory;
+                string url = "/photos/categories/any/" + selectedCategory;
                 string response = ApiRequest.Get(url);
                 var photosFromCategory = JsonConvert.DeserializeObject<List<Photo>>(response);
                 foreach(var photo in photosFromCategory)

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Configuration;
+using BD_client.Services;
 
 namespace BD_client.ViewModels
 {
@@ -27,7 +28,6 @@ namespace BD_client.ViewModels
 
         private int _selectedIndex;
         private String _user;
-        public readonly string BaseUrl;
 
         public int SelectedIndex
         {
@@ -87,7 +87,6 @@ namespace BD_client.ViewModels
 
         public MainWindowViewModel()
         {
-            BaseUrl = ConfigurationManager.AppSettings["BaseApiUrl"];
             List = null;
             MyPhotosCmd = new RelayCommand(x => ShowMyPhotos());
             ProfileCmd = new RelayCommand(x => Profile());
@@ -140,8 +139,7 @@ namespace BD_client.ViewModels
 
         private void Logout()
         {
-            string url = MainWindow.MainVM.BaseUrl + "api/v1/account/logout";
-            ApiRequest.Post(url,null);
+            ApiRequest.Post("/account/logout", null);
             ApiRequest.JWT = null;
             MainWindow.MainVM.Page = "Pages/LogInPage.xaml";
             MainWindow.MainVM.SelectedIndex = -1;

@@ -10,6 +10,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using BD_client.Services;
 
 namespace BD_client.ViewModels
 {
@@ -132,7 +133,7 @@ namespace BD_client.ViewModels
 
         private void GetUserInfo()
         {
-            string url = MainWindow.MainVM.BaseUrl + "api/v1/users/"+ MainWindow.MainVM.User;
+            string url = "/users/"+ MainWindow.MainVM.User;
             String responseContent = ApiRequest.Get(url);
             User user = JsonConvert.DeserializeObject<User>(responseContent);
             id = user.id;
@@ -155,8 +156,7 @@ namespace BD_client.ViewModels
 
             string json = JsonConvert.SerializeObject(values, Formatting.Indented);
 
-            String url = MainWindow.MainVM.BaseUrl + "api/v1/users";
-            ApiRequest.Put(url, json);
+            ApiRequest.Put("/users", json);
         }
 
 

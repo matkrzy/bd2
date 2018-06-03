@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using BD_client.Services;
 
 namespace BD_client.ViewModels
 {
@@ -111,7 +112,7 @@ namespace BD_client.ViewModels
 
         private User GetUserInfo(string email)
         {
-            string url = MainWindow.MainVM.BaseUrl + "api/v1/users/" + email;
+            string url = "/users/" + email;
             String responseContent = ApiRequest.Get(url);
             User user = JsonConvert.DeserializeObject<User>(responseContent);
             return user;
@@ -141,7 +142,7 @@ namespace BD_client.ViewModels
                 };
 
                 var json = JsonConvert.SerializeObject(valuesPhoto, Formatting.Indented);
-                var photosUrl = MainWindow.MainVM.BaseUrl + "api/v1/shares";
+                var photosUrl = "/shares";
                 try
                 {
                     ApiRequest.Post(photosUrl, json);
