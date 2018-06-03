@@ -19,31 +19,16 @@ namespace BD_client.ViewModels
     public class PublicPhotosPageViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged = null;
-
-
-        //public PhotoCollection Photos { get; set; }
-
-        public NotifyTaskCompletion<PhotoCollection> Photos { get; set; }
-
-        public PhotoCollection PhotosSynchronized { get; set; }
-
-        public PhotoCollection HotPhotos { get; set; }
-        public PhotoCollection TrendingPhotos { get; set; }
-        public PhotoCollection FreshPhotos { get; set; }
+        public PhotoCollection Photos { get; set; }
         public ICommand LikeCmd { get; set; }
         private IDialogCoordinator dialogCoordinator;
 
-        public PublicPhotosPageViewModel(IDialogCoordinator instance)
+        public PublicPhotosPageViewModel(IDialogCoordinator instance, string photoDestination)
         {
-            var path = System.IO.Directory.GetCurrentDirectory() + @"\..\..\tmp\public";
-            PhotosSynchronized = new PhotoCollection(path);
-
+            Photos = new PhotoCollection(photoDestination);
             dialogCoordinator = instance;
-
             LikeCmd = new RelayCommand(x => Like());
         }
-
-
 
         private async void Like()
         {
