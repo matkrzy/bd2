@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -89,6 +90,17 @@ namespace BD_client.ViewModels
             }
         }
 
+        private void RemovePhotoFromDisc(string name)
+        {
+            var destination = System.IO.Directory.GetCurrentDirectory() + @"\..\..\tmp\own\"+name;
+            if (File.Exists(destination))
+            {
+                File.Delete(destination);
+            }
+            else
+                throw new Exception();
+        }
+
         private List<int> RemovePhotoFromServer()
         {
             var photoIndex = new List<int>();
@@ -97,6 +109,7 @@ namespace BD_client.ViewModels
                 var photosUrl = MainWindow.MainVM.BaseUrl + "api/v1/photos/"+Photos[i].Id;
                 try
                 {
+                    RemovePhotoFromDisc(Photos[i].Name);
                     ApiRequest.Delete(photosUrl);
                     photoIndex.Add(i);
                 }
