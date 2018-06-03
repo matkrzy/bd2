@@ -103,7 +103,7 @@ namespace BD_client.ViewModels
             var photoIndex = new List<int>();
             for (int i = 0; i < Photos.Count; i++)
             {
-                string imagePath = path +"\\"+ Photos[i].Name;
+                string imagePath = path +"\\"+ Photos[i].Id+".jpg";
                 if(await ImageService.DownloadImageToLocation(imagePath, Photos[i].Id))
                     photoIndex.Add(i);
             }

@@ -7,6 +7,8 @@ using System.Collections.ObjectModel;
 using BD_client.Domain;
 using Newtonsoft.Json;
 using System.IO;
+using BD_client.Data.Photos;
+using BD_client.Services;
 
 namespace BD_client.ViewModels
 {
@@ -52,7 +54,7 @@ namespace BD_client.ViewModels
             RemovePhotoCmd = new RelayCommand(x => RemovePhoto());
             GetCategories();
             CategorySelectedIndex = 0;
-            Path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + "//Img//photos";
+            Path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + "\\tmp\\own";
         }
 
         private void RemovePhoto()
@@ -278,8 +280,16 @@ namespace BD_client.ViewModels
             List<int> photoIndex = new List<int>();
             for(int i = 0; i<Photos.Count;i++)
             {
-                if (Photos[i].Description.ToLower().Contains(searchPhrase.ToLower()))
-                    photoIndex.Add(i);
+                if (searchPhrase != null)
+                {
+                    if (Photos[i].Description.ToLower().Contains(searchPhrase.ToLower()))
+                        photoIndex.Add(i);
+                }
+                else
+                {
+                    if (Photos[i].Description == null)
+                        photoIndex.Add(i);
+                }
             }
             return photoIndex;
         }
@@ -415,9 +425,80 @@ namespace BD_client.ViewModels
         private List<int> GetAllPhotoIndexExif()
         {
             List<int> resultPhotoIndex = null;
+            List<int> tmpResult = new List<int>();
             List<string> searchExif = GetExifFilters();
             if (searchExif != null)
             {
+                for (int i = 0; i < Photos.Count; i++)
+                {
+                    string path = Path + "\\" + Photos[i].Id+ ".jpg";
+                    ExifMetadata exif = ImageService.GetPhotoMetadata(path);
+                    foreach (var exifPhrase in searchExif)
+                    {
+                        if ((!String.IsNullOrEmpty(exif.ApplicationName) && exif.ApplicationName.ToLower().Contains(exifPhrase.ToLower())) ||
+                            (!String.IsNullOrEmpty(exif.CameraManufacturer) && exif.CameraManufacturer.ToLower().Contains(exifPhrase.ToLower())) ||
+                            (!String.IsNullOrEmpty(exif.CameraModel) && exif.CameraModel.ToLower().Contains(exifPhrase.ToLower())) ||
+                            (!String.IsNullOrEmpty(exif.Comment) && exif.Comment.ToLower().Contains(exifPhrase.ToLower())) ||
+                            (!String.IsNullOrEmpty(exif.Copyright) && exif.Copyright.ToLower().Contains(exifPhrase.ToLower())) ||
+                            (!String.IsNullOrEmpty(exif.Date) && exif.Date.ToLower().Contains(exifPhrase.ToLower())) ||
+                            (!String.IsNullOrEmpty(exif.Format) && exif.Format.ToLower().Contains(exifPhrase.ToLower()))||
+                            (!String.IsNullOrEmpty(exif.Location) && exif.Location.ToLower().Contains(exifPhrase.ToLower())) ||
+                            (!String.IsNullOrEmpty(exif.Title) && exif.Title.ToLower().Contains(exifPhrase.ToLower())))
+                            tmpResult.Add(i);
+
+                        if (exif.Authors != null)
+                        {
+                            foreach (var author in exif.Authors)
+                            {
+                                if (author.ToLower().Contains(exifPhrase.ToLower()))
+                                {
+                                    if (!tmpResult.Contains(i))
+                                        tmpResult.Add(i);
+                                }
+                            }
+                        }
+
+                        if (exif.Keywords != null)
+                        {
+                            foreach (var keyword in exif.Keywords)
+                            {
+                                if (keyword.ToLower().Contains(exifPhrase.ToLower()))
+                                {
+                                    if (!tmpResult.Contains(i))
+                                        tmpResult.Add(i);
+                                }
+                            }
+                        }
+
+                        if(exif.Rating != null)
+                        {
+                            if (exif.Rating.Value.ToString().Contains(exifPhrase))
+                            {
+                                if (!tmpResult.Contains(i))
+                                    tmpResult.Add(i);
+                            }
+                        }
+
+                        if (exif.Width != null)
+                        {
+                            if (exif.Width.Value.ToString().Contains(exifPhrase))
+                            {
+                                if (!tmpResult.Contains(i))
+                                    tmpResult.Add(i);
+                            }
+                        }
+
+                        if (exif.Height != null)
+                        {
+                            if (exif.Height.Value.ToString().Contains(exifPhrase))
+                            {
+                                if (!tmpResult.Contains(i))
+                                    tmpResult.Add(i);
+                            }
+                        }
+                    }
+                    resultPhotoIndex = Intersect(resultPhotoIndex, tmpResult);
+                }
                 return resultPhotoIndex;
             }
             else
@@ -444,12 +525,12 @@ namespace BD_client.ViewModels
             List<int> allPhotoIndexCategories = GetAllPhotoIndexCategories();
             List<int> allPhotoIndexTags = GetAllPhotoIndexTags();
             List<int> allPhotoIndexDescription = GetAllPhotoIndexDescription();
-            //List<int> allPhotoIndexExif = GetAllPhotoIndexExif();
+            List<int> allPhotoIndexExif = GetAllPhotoIndexExif();
             List<int> result = null;
 
             result = Intersect(allPhotoIndexCategories, allPhotoIndexTags);
             result = Intersect(result, allPhotoIndexDescription);
-            //result = Intersect(result, allPhotoIndexExif);
+            result = Intersect(result, allPhotoIndexExif);
 
             return result;
         }
