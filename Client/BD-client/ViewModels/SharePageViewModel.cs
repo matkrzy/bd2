@@ -147,7 +147,7 @@ namespace BD_client.ViewModels
                     ApiRequest.Post(photosUrl, json);
                     photoIndex.Add(i);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
 
                 }

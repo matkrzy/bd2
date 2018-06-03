@@ -30,9 +30,10 @@ namespace BD_client.ViewModels
         private int _categorySelectedIndex;
         private int _dataGridPhotoSelectedIndex;
         private int _dataGridSelectedIndex;
-        private String _descriptionPhrase;
-        private String _exifPhrase;
-        private String _tagsPhrase;
+        private string _descriptionPhrase;
+        private string _exifPhrase;
+        private string _tagsPhrase;
+        private string _path;
 
         public SearchPageViewModel(IDialogCoordinator instance)
         {
@@ -51,6 +52,7 @@ namespace BD_client.ViewModels
             RemovePhotoCmd = new RelayCommand(x => RemovePhoto());
             GetCategories();
             CategorySelectedIndex = 0;
+            Path = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + "//Img//photos";
         }
 
         private void RemovePhoto()
@@ -165,6 +167,19 @@ namespace BD_client.ViewModels
             {
                 _exifPhrase = value;
                 OnPropertyChanged("ExifPhrase");
+            }
+        }
+
+        public string Path
+        {
+            get
+            {
+                return _path;
+            }
+            set
+            {
+                _path = value;
+                OnPropertyChanged("Path");
             }
         }
 
@@ -415,9 +430,12 @@ namespace BD_client.ViewModels
         {
             PhotosResult.Clear();
             List<int> photoIndexes = commonPart();
-            foreach (var photoIndex in photoIndexes)
+            if (photoIndexes != null)
             {
-                PhotosResult.Add(Photos[photoIndex]);
+                foreach (var photoIndex in photoIndexes)
+                {
+                    PhotosResult.Add(Photos[photoIndex]);
+                }
             }
         }
 

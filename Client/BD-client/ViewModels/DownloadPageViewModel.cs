@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Forms;
+using BD_client.Services;
 
 namespace BD_client.ViewModels
 {
@@ -21,8 +23,6 @@ namespace BD_client.ViewModels
         public ICommand CancelCmd { get; set; }
         public ICommand DownloadCmd { get; set; }
         public ICommand RemovePhotoCmd { get; set; }
-
-        private SaveFileDialog saveFileDialog;
         private IDialogCoordinator dialogCoordinator;
         private int _dataGridSelectedIndex;
         private string _page;
@@ -56,8 +56,6 @@ namespace BD_client.ViewModels
         public DownloadPageViewModel(IDialogCoordinator instance)
         {
             dialogCoordinator = instance;
-            saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "ZIP | *.zip";
             Photos = new ObservableCollection<Photo>();
             DownloadCmd = new RelayCommand(x => Download());
             CancelCmd = new RelayCommand(x => Cancel());
@@ -85,16 +83,31 @@ namespace BD_client.ViewModels
 
         private async void Download()
         {
-            var result = saveFileDialog.ShowDialog();
-
-
-            if (result == true)
+            using (FolderBrowserDialog browser = new FolderBrowserDialog())
             {
-                //download
-                await dialogCoordinator.ShowMessageAsync(this, "Success", Photos.Count + " of " + Photos.Count + " photos was downloaded");
-                Photos.Clear();
+                browser.Description = "Select a folder";
+                if (browser.ShowDialog() == DialogResult.OK)
+                {
+                    List<int> photoIndex = await DownloadPhotos(browser.SelectedPath);
+                    await dialogCoordinator.ShowMessageAsync(this, "Result", Photos.Count + " of " + Photos.Count + " photos was downloaded");
+                    for (int i = photoIndex.Count - 1; i >= 0; i--)
+                    {
+                        Photos.RemoveAt(photoIndex[i]);
+                    }
+                }
             }
+        }
 
+        private async Task<List<int>> DownloadPhotos(string path)
+        {
+            var photoIndex = new List<int>();
+            for (int i = 0; i < Photos.Count; i++)
+            {
+                string imagePath = path +"\\"+ Photos[i].Name;
+                if(await ImageService.DownloadImageToLocation(imagePath, Photos[i].Id))
+                    photoIndex.Add(i);
+            }
+            return photoIndex;
         }
 
         private void Cancel()
