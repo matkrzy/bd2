@@ -16,6 +16,7 @@ namespace BD_client.ViewModels
         public event PropertyChangedEventHandler PropertyChanged = null;
 
         public ICommand ProfileCmd { get; set; }
+        public ICommand HelpCmd { get; set; }
         public ICommand LogoutCmd { get; set; }
         public ICommand MyPhotosCmd { get; set; }
         public ICommand PublicPhotosCmd { get; }
@@ -91,6 +92,7 @@ namespace BD_client.ViewModels
             MyPhotosCmd = new RelayCommand(x => ShowMyPhotos());
             ProfileCmd = new RelayCommand(x => Profile());
             LogoutCmd = new RelayCommand(x => Logout());
+            HelpCmd = new RelayCommand(x => Help());
             PublicPhotosCmd = new RelayCommand(x => ShowPublicPhotos());
             CategoriesCmd = new RelayCommand(x => ShowCategories());
 
@@ -112,6 +114,12 @@ namespace BD_client.ViewModels
                 SelectedIndex = -1;
                 User = "";
             }
+        }
+
+        private void Help()
+        {
+            MainWindow.MainVM.Page = "Pages/HelpPage.xaml";
+            MainWindow.MainVM.SelectedIndex = -1;
         }
 
         virtual protected void OnPropertyChanged(string propName)
