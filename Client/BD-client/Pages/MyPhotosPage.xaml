@@ -36,10 +36,7 @@
                     Name="MyPhotosListBox" 
                     ItemsSource="{Binding Photos.Result}"
                     SelectionMode="Extended"
-                    MouseDoubleClick="OnPhotoDbClick"
-
-                    SelectedItem="{Binding SelectedPhoto}">
-                    <!--^^^^^^^^^^^^^ czerwona ramka -->
+                    MouseDoubleClick="OnPhotoDbClick">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel Orientation="Horizontal"/>

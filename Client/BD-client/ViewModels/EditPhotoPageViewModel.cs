@@ -27,6 +27,7 @@ namespace BD_client.ViewModels
         private string _description;
         private string _tags;
         private int _selectedCategory;
+        private bool _isChecked;
 
         public EditPhotoPageViewModel(IDialogCoordinator instance)
         {
@@ -82,7 +83,25 @@ namespace BD_client.ViewModels
             MainWindow.MainVM.SelectedIndex = -1;
         }
 
-        private void EditPhoto()    
+        private bool DeleteAllTags(List<Tag> tags)
+        {
+            bool deletedAll = true;
+            foreach(var tag in tags)
+            {
+                string url = MainWindow.MainVM.BaseUrl + "api/v1/tags/" + tag.Id;
+                try
+                {
+                    ApiRequest.Delete(url);
+                }
+                catch(Exception)
+                {
+                    deletedAll = false;
+                }
+            }
+            return deletedAll;
+        }
+
+        private void EditSinglePhoto()    
         {
             string url = MainWindow.MainVM.BaseUrl + "api/v1/photos/" + Photos[SelectedIndex].Id;
             string[] jsonTags = Tags.Split(' ');
@@ -104,32 +123,18 @@ namespace BD_client.ViewModels
                 throw new Exception();
             }
 
+            //Delete old tags
+            if (!DeleteAllTags(Photos[SelectedIndex].Tags))
+                throw new Exception();
             //Post tags
             url = MainWindow.MainVM.BaseUrl + "api/v1/tags";
-            bool repeat = false;
             List<TagDTO> tagList = new List<TagDTO>();
             for (int i = 0; i < jsonTags.Length; i++)
             {
-                if (Photos[SelectedIndex].Tags.Count != 0)
-                {
-                    for (int j = 0; j < Photos[SelectedIndex].Tags.Count; j++)
-                    {
-                        if (jsonTags[i].Equals(Photos[SelectedIndex].Tags[j].Name))
-                        {
-                            repeat = true;
-                            break;
-                        }
-                    }
-                }
-                if (!repeat)
-                {
-                    TagDTO newTag = new TagDTO();
-                    newTag.name = jsonTags[i];
-                    newTag.photo = Photos[SelectedIndex].Id;
-                    tagList.Add(newTag);
-                }
-    
-                repeat = false;
+                TagDTO newTag = new TagDTO();
+                newTag.name = jsonTags[i];
+                newTag.photo = Photos[SelectedIndex].Id;
+                tagList.Add(newTag);
             }
             try
             {
@@ -150,17 +155,84 @@ namespace BD_client.ViewModels
 
             try
             {
-                EditPhoto();
-                await dialogCoordinator.ShowMessageAsync(this, "Success", "Photo was edited");
-                MainWindow.MainVM.Page = "Pages/MyPhotosPage.xaml";
-                MainWindow.MainVM.SelectedIndex = -1;
+                if (!IsChecked)
+                {
+                    EditSinglePhoto();
+                    await dialogCoordinator.ShowMessageAsync(this, "Success", "Photo was edited");
+                }
+                else
+                {
+                    List<int> photoIndex = EditMultiplePhotos();
+                    await dialogCoordinator.ShowMessageAsync(this, "Result", photoIndex.Count + " of " + Photos.Count + " photos was edited");
+                }
             }
             catch (Exception)
             {
                 await dialogCoordinator.ShowMessageAsync(this, "Error", "Editing failed");
             }
+            MainWindow.MainVM.Page = "Pages/MyPhotosPage.xaml";
+            MainWindow.MainVM.SelectedIndex = -1;
 
         }
+
+        private List<int> EditMultiplePhotos()
+        {
+            var photoIndex = new List<int>();
+            for (int index = 0; index < Photos.Count; index++)
+            {
+                string url = MainWindow.MainVM.BaseUrl + "api/v1/photos/" + Photos[index].Id;
+                string[] jsonTags = Tags.Split(' ');
+                string json;
+
+                //Put photos
+                var valuesPhoto = new Dictionary<string, string>
+                {
+                    { "description", Description }
+                };
+
+                try
+                {
+                    json = JsonConvert.SerializeObject(valuesPhoto, Formatting.Indented);
+                    ApiRequest.Put(url, json);
+                }
+                catch (Exception)
+                {
+                    return photoIndex;
+                }
+
+                //Delete old tags
+                if (!DeleteAllTags(Photos[index].Tags))
+                    return photoIndex;
+
+                //Post tags
+                url = MainWindow.MainVM.BaseUrl + "api/v1/tags";
+                List<TagDTO> tagList = new List<TagDTO>();
+                for (int i = 0; i < jsonTags.Length; i++)
+                {
+                    TagDTO newTag = new TagDTO();
+                    newTag.name = jsonTags[i];
+                    newTag.photo = Photos[index].Id;
+                    tagList.Add(newTag);
+                }
+
+                try
+                {
+                    if (tagList.Count != 0)
+                    {
+                        json = JsonConvert.SerializeObject(tagList, Formatting.Indented);
+                        ApiRequest.Post(url, json);
+                    }
+                }
+                catch (Exception)
+                {
+                    return photoIndex;
+                }
+
+                photoIndex.Add(index);
+            }
+            return photoIndex;
+        }
+    
 
         public string Page
         {
@@ -212,6 +284,39 @@ namespace BD_client.ViewModels
             {
                 if (SetField(ref _selectedIndex, value, "SelectedIndex"))
                     ShowPhotosDetails();
+            }
+        }
+
+        public bool IsChecked
+        {
+            get
+            {
+                return _isChecked;
+            }
+            set
+            {
+                if (SetField(ref _isChecked, value, "IsChecked"))
+                    IsCheckedTrigger();
+            }
+        }
+
+        private void IsCheckedTrigger()
+        {
+            if(IsChecked)
+            {
+                Tags = "";
+                Description = "";
+            }
+            else
+            {
+                for (int i = 0; i < Photos[SelectedIndex].Tags.Count; i++)
+                {
+                    Tags += Photos[SelectedIndex].Tags[i].Name;
+                    if(i+1!= Photos[SelectedIndex].Tags.Count)
+                        Tags += " ";
+                }
+
+                Description = Photos[SelectedIndex].Description;
             }
         }
 

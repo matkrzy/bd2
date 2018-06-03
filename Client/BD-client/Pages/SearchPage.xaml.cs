@@ -29,5 +29,9 @@ namespace BD_client.Pages
             InitializeComponent();
             DataContext = vm;
         }
+
+        private void OnPhotoDbClick(object sender, MouseButtonEventArgs e)
+        {
+        }
     }
 }

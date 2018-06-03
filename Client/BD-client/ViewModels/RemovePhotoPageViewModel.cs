@@ -113,7 +113,7 @@ namespace BD_client.ViewModels
                     ApiRequest.Delete(photosUrl);
                     photoIndex.Add(i);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
 
                 }
