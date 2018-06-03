@@ -59,7 +59,7 @@ namespace BD_client.Domain
         {
             Path = path;
             Uri = new Uri(path);
-            Image = BitmapFrame.Create(Uri);
+            //Image = BitmapFrame.Create(Uri);
             ExifMetadata = new ExifMetadata(Uri);
         }
 
