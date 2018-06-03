@@ -91,7 +91,7 @@ namespace BD_client.ViewModels
                         break;
                     }
                 }
-                if(!repeated)
+                if (!repeated)
                     Categories.Add(category);
 
                 repeated = false;
@@ -230,13 +230,13 @@ namespace BD_client.ViewModels
             List<int> photoIndex = new List<int>();
             List<Photo> photosToDisplay = new List<Photo>();
             List<Photo> tmpResult = null;
-            foreach(var selectedCategory in SelectedCategoriesIds)
+            foreach (var selectedCategory in SelectedCategoriesIds)
             {
                 photosToDisplay.Clear();
                 string url = MainWindow.MainVM.BaseUrl + "api/v1/photos/categories/any/" + selectedCategory;
                 string response = ApiRequest.Get(url);
                 var photosFromCategory = JsonConvert.DeserializeObject<List<Photo>>(response);
-                foreach(var photo in photosFromCategory)
+                foreach (var photo in photosFromCategory)
                 {
                     photosToDisplay.Add(photo);
                 }
@@ -261,7 +261,7 @@ namespace BD_client.ViewModels
         private List<int> SearchTags(string searchPhrase)
         {
             List<int> photoIndex = new List<int>();
-            for(int i = 0; i < Photos.Count; i++)
+            for (int i = 0; i < Photos.Count; i++)
             {
                 for (int j = 0; j < Photos[i].Tags.Count; j++)
                 {
@@ -278,7 +278,7 @@ namespace BD_client.ViewModels
         private List<int> SearchDescription(string searchPhrase)
         {
             List<int> photoIndex = new List<int>();
-            for(int i = 0; i<Photos.Count;i++)
+            for (int i = 0; i < Photos.Count; i++)
             {
                 if (searchPhrase != null)
                 {
@@ -431,71 +431,11 @@ namespace BD_client.ViewModels
             {
                 for (int i = 0; i < Photos.Count; i++)
                 {
-                    string path = Path + "\\" + Photos[i].Id+ ".jpg";
+                    string path = Path + "\\" + Photos[i].Id + ".jpg";
                     ExifMetadata exif = ImageService.GetPhotoMetadata(path);
                     foreach (var exifPhrase in searchExif)
                     {
-                        if ((!String.IsNullOrEmpty(exif.ApplicationName) && exif.ApplicationName.ToLower().Contains(exifPhrase.ToLower())) ||
-                            (!String.IsNullOrEmpty(exif.CameraManufacturer) && exif.CameraManufacturer.ToLower().Contains(exifPhrase.ToLower())) ||
-                            (!String.IsNullOrEmpty(exif.CameraModel) && exif.CameraModel.ToLower().Contains(exifPhrase.ToLower())) ||
-                            (!String.IsNullOrEmpty(exif.Comment) && exif.Comment.ToLower().Contains(exifPhrase.ToLower())) ||
-                            (!String.IsNullOrEmpty(exif.Copyright) && exif.Copyright.ToLower().Contains(exifPhrase.ToLower())) ||
-                            (!String.IsNullOrEmpty(exif.Date) && exif.Date.ToLower().Contains(exifPhrase.ToLower())) ||
-                            (!String.IsNullOrEmpty(exif.Format) && exif.Format.ToLower().Contains(exifPhrase.ToLower()))||
-                            (!String.IsNullOrEmpty(exif.Location) && exif.Location.ToLower().Contains(exifPhrase.ToLower())) ||
-                            (!String.IsNullOrEmpty(exif.Title) && exif.Title.ToLower().Contains(exifPhrase.ToLower())))
-                            tmpResult.Add(i);
-
-                        if (exif.Authors != null)
-                        {
-                            foreach (var author in exif.Authors)
-                            {
-                                if (author.ToLower().Contains(exifPhrase.ToLower()))
-                                {
-                                    if (!tmpResult.Contains(i))
-                                        tmpResult.Add(i);
-                                }
-                            }
-                        }
-
-                        if (exif.Keywords != null)
-                        {
-                            foreach (var keyword in exif.Keywords)
-                            {
-                                if (keyword.ToLower().Contains(exifPhrase.ToLower()))
-                                {
-                                    if (!tmpResult.Contains(i))
-                                        tmpResult.Add(i);
-                                }
-                            }
-                        }
-
-                        if(exif.Rating != null)
-                        {
-                            if (exif.Rating.Value.ToString().Contains(exifPhrase))
-                            {
-                                if (!tmpResult.Contains(i))
-                                    tmpResult.Add(i);
-                            }
-                        }
-
-                        if (exif.Width != null)
-                        {
-                            if (exif.Width.Value.ToString().Contains(exifPhrase))
-                            {
-                                if (!tmpResult.Contains(i))
-                                    tmpResult.Add(i);
-                            }
-                        }
-
-                        if (exif.Height != null)
-                        {
-                            if (exif.Height.Value.ToString().Contains(exifPhrase))
-                            {
-                                if (!tmpResult.Contains(i))
-                                    tmpResult.Add(i);
-                            }
-                        }
+                        CheckInExif(tmpResult, exif, exifPhrase, i);
                     }
                     resultPhotoIndex = Intersect(resultPhotoIndex, tmpResult);
                 }
@@ -505,6 +445,71 @@ namespace BD_client.ViewModels
                 return null;
         }
 
+        private void CheckInExif(List<int> tmpResult, ExifMetadata exif, string exifPhrase, int i)
+        {
+            if ((!string.IsNullOrEmpty(exif.ApplicationName) && exif.ApplicationName.ToLower().Contains(exifPhrase.ToLower())) ||
+    (!string.IsNullOrEmpty(exif.CameraManufacturer) && exif.CameraManufacturer.ToLower().Contains(exifPhrase.ToLower())) ||
+    (!string.IsNullOrEmpty(exif.CameraModel) && exif.CameraModel.ToLower().Contains(exifPhrase.ToLower())) ||
+    (!string.IsNullOrEmpty(exif.Comment) && exif.Comment.ToLower().Contains(exifPhrase.ToLower())) ||
+    (!string.IsNullOrEmpty(exif.Copyright) && exif.Copyright.ToLower().Contains(exifPhrase.ToLower())) ||
+    (!string.IsNullOrEmpty(exif.Date) && exif.Date.ToLower().Contains(exifPhrase.ToLower())) ||
+    (!string.IsNullOrEmpty(exif.Format) && exif.Format.ToLower().Contains(exifPhrase.ToLower())) ||
+    (!string.IsNullOrEmpty(exif.Location) && exif.Location.ToLower().Contains(exifPhrase.ToLower())) ||
+    (!string.IsNullOrEmpty(exif.Title) && exif.Title.ToLower().Contains(exifPhrase.ToLower())))
+                tmpResult.Add(i);
+
+            if (exif.Authors != null)
+            {
+                foreach (var author in exif.Authors)
+                {
+                    if (author.ToLower().Contains(exifPhrase.ToLower()))
+                    {
+                        if (!tmpResult.Contains(i))
+                            tmpResult.Add(i);
+                    }
+                }
+            }
+
+            if (exif.Keywords != null)
+            {
+                foreach (var keyword in exif.Keywords)
+                {
+                    if (keyword.ToLower().Contains(exifPhrase.ToLower()))
+                    {
+                        if (!tmpResult.Contains(i))
+                            tmpResult.Add(i);
+                    }
+                }
+            }
+
+            if (exif.Rating != null)
+            {
+                if (exif.Rating.Value.ToString().Contains(exifPhrase))
+                {
+                    if (!tmpResult.Contains(i))
+                        tmpResult.Add(i);
+                }
+            }
+
+            if (exif.Width != null)
+            {
+                if (exif.Width.Value.ToString().Contains(exifPhrase))
+                {
+                    if (!tmpResult.Contains(i))
+                        tmpResult.Add(i);
+                }
+            }
+
+            if (exif.Height != null)
+            {
+                if (exif.Height.Value.ToString().Contains(exifPhrase))
+                {
+                    if (!tmpResult.Contains(i))
+                        tmpResult.Add(i);
+                }
+            }
+
+        }
 
 
         private void ShowResults()
@@ -590,9 +595,10 @@ namespace BD_client.ViewModels
             {
                 foreach (var item2 in list2)
                 {
-                    if(item1 is int)
+                    if (item1 is int)
                     {
-                        if(IsIntEqual(Convert.ToInt32(item1), Convert.ToInt32(item2))){
+                        if (IsIntEqual(Convert.ToInt32(item1), Convert.ToInt32(item2)))
+                        {
                             if (!result.Contains(item1))
                                 result.Add(item1);
                         }
