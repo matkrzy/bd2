@@ -453,6 +453,8 @@ namespace BD_client.ViewModels
                     }
                     return result;
                 }
+                if (list1.Count == 0 && list2 == null)
+                    return result;
             }
 
             if (list2 != null)
@@ -465,6 +467,8 @@ namespace BD_client.ViewModels
                     }
                     return result;
                 }
+                if (list2.Count == 0 && list1 == null)
+                    return result;
             }
 
 

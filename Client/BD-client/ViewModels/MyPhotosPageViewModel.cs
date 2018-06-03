@@ -71,6 +71,7 @@ namespace BD_client.ViewModels
         {
             var destination = Directory.GetCurrentDirectory() + @"\..\..\tmp\own";
             var photos = await PhotoService.GetAllUserPhotos();
+            MainWindow.MainVM.Photos = photos;
             //TODO: różne typy zdjęć, nie tylko jpg
             foreach (var photo in photos)
             {
